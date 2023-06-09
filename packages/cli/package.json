@@ -1,0 +1,35 @@
+{
+    "name": "cli",
+    "version": "1.0.0",
+    "description": "命令行工具",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack",
+        "offline": "node offline.js"
+    },
+    "keywords": [],
+    "author": "0604hx <zxingming@foxmail.com>",
+    "license": "MIT",
+    "type": "module",
+    "dependencies": {
+        "@app-meta/basic": "workspace:*",
+        "@inquirer/confirm": "^1.0.11",
+        "adm-zip": "^0.5.10",
+        "chalk": "^5.2.0",
+        "cli-table3": "^0.6.3",
+        "commander": "^10.0.1",
+        "conf": "^11.0.1",
+        "form-data": "^4.0.0",
+        "got": "^12.6.0",
+        "ora": "^6.3.1",
+        "original-fs": "^1.2.0",
+        "progress": "^2.0.3"
+    },
+    "files": [
+        "dist",
+        "package.json"
+    ],
+    "bin": {
+        "meta": "dist/meta-cli.cjs"
+    }
+}

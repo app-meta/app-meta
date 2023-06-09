@@ -1,0 +1,66 @@
+{
+    "name": "client",
+    "appId":"org.app-mete",
+    "appName": "APP 元宇宙",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "test:env": "env-cmd -e dev node test/env.test.js",
+        "start": "env-cmd -e dev electron src/index.js",
+        "start:win": "chcp 65001 && env-cmd -e dev electron src/index.js",
+        "watch": "nodemon --watch src/index.js --exec \"env-cmd -e dev electron src/index.js\"",
+        "watch:win": "chcp 65001 && nodemon --watch src/index.js --exec \"env-cmd -e dev electron src/index.js\"",
+        "package": "electron-builder --dir",
+        "package:dist": "electron-builder"
+    },
+    "keywords": [],
+    "author": "0604hx <zxingming@foxmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "blueimp-md5": "^2.19.0",
+        "dayjs": "^1.11.7",
+        "form-data": "^4.0.0",
+        "got-cjs": "^12.5.4",
+        "iconv-jschardet": "^2.0.32",
+        "minimist": "^1.2.8",
+        "node-notifier": "^10.0.1",
+        "tracer": "^1.1.6"
+    },
+    "devDependencies": {
+        "@types/node": "^18.14.0",
+        "electron": "23.1.0",
+        "electron-builder": "^23.6.0",
+        "env-cmd": "^10.1.0",
+        "nodemon": "^2.0.20"
+    },
+    "build": {
+        "appId": "org.app-mete",
+        "productName": "APP元宇宙",
+        "artifactName": "${productName}-${version}.${ext}",
+        "copyright": "Copyright © 2009-2023 集成显卡",
+        "asar": true,
+        "compression": "maximum",
+        "asarUnpack": [
+            "./node_modules/node-notifier/**/*"
+        ],
+        "extraResources":  [
+            { "from": "./resources/icon", "to": "icon"}
+        ],
+        "files": [
+            "src/**/*",
+            "index.html"
+        ],
+        "win": {
+            "icon": "../ui/public/icons.png",
+            "target": [
+                {
+                    "target": "7z",
+                    "arch": [
+                        "ia32"
+                    ]
+                }
+            ]
+        }
+    }
+}

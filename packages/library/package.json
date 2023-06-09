@@ -1,0 +1,24 @@
+{
+    "name": "@app-meta/library",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack"
+    },
+    "keywords": [],
+    "author": "0604hx <zxingming@foxmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@app-meta/basic": "workspace:*",
+        "blueimp-md5": "^2.19.0",
+        "dayjs": "^1.11.7",
+        "mustache": "^4.2.0",
+        "pako": "^2.1.0",
+        "papaparse": "^5.4.0",
+        "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
+    },
+    "devDependencies": {
+        "webpack-cli": "^5.1.1"
+    }
+}

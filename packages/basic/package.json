@@ -1,0 +1,13 @@
+{
+    "name": "@app-meta/basic",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {},
+    "keywords": [],
+    "author": "0604hx <zxingming@foxmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "crypto-js": "^4.1.1"
+    }
+}
