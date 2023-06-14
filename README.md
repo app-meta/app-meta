@@ -19,6 +19,8 @@
 
 > 基于 [SpringBoot3](https://spring.io/projects/spring-boot) + [VUE3](https://cn.vuejs.org/) + [Naive UI](https://www.naiveui.com) + [Electron](https://www.electronjs.org) 应用快速开发、发布平台，旨在帮助使用者（包含但不限于开发人员、业务人员）快速响应业务需求，此仓库为前端，后端仓库详见[app-meta-server](https://github.com/0604hx/app-meta-server)。
 
+![](docs/imgs/平台概述.jpg)
+
 可前往[screenshot](docs/screenshots)查看平台运行时截图。
 
 ## 开发说明

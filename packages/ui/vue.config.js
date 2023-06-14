@@ -138,7 +138,14 @@ module.exports = {
                 })
             )
         }
-        config.target = "web"
+        config.target = "web",
+        /**
+         * txt、md 类文件的引入
+         * 详见 https://webpack.js.org/guides/asset-modules
+         */
+        config.module.rules.push(
+            { test: /\.(txt|md)/, type: 'asset/source' }
+        )
     },
     devServer
 }

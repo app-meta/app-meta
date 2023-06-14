@@ -6,6 +6,7 @@ import Main from "@V/Main.vue"
 import Tag from "@C/custom/tag.vue"
 
 import "@S/FastApp"
+import { defaultRoute, loadCommonData } from "@S/Auth"
 
 window.__META__ = _VERSION_
 
@@ -13,6 +14,9 @@ let blankRoutes = [
     { path: '/login', name: 'login', component: () => import('@V/登录/Login.vue') },
     { path: '/logout', name: 'logout', component: () => import('@V/登录/Logout.vue') },
     { path: '/login-cas', name: 'login-cas', component: () => import('@V/登录/Login-cas.vue') },
+
+    // 中转车站
+    { path: defaultRoute, name:'welcome', component: () => import('@V/welcome.vue') }
 ]
 
 // 仅当测试环境才加载 demo、实验室功能等页面
@@ -20,13 +24,14 @@ if(process.env.NODE_ENV==='test'){
     blankRoutes.push(
         { path: '/demo/excel', name: 'demo-excel', component: () => import('@V/快应用/在线Excel/Demo.vue') },
         { path: '/lab-func/sfc-loader', name: 'lab-sfc', component: () => import('@V/@LAB-FUNC/sfc-loader.vue') },
+        { path: '/demo', name: 'demo', component: () => import('@V/Demo.vue') }
     )
 }
 
 let router = BuildRouter(
     Main,
     {
-        homePage: "/home",
+        homePage: defaultRoute,
         mainRoutes: [
             { path: '/home', name: 'home',meta:{title:"首页"}, component: () => import('@V/首页/Home.vue') },
 
@@ -62,8 +67,6 @@ let router = BuildRouter(
             { path: '/system/account', name: 'sys-account', meta:{title:"用户管理"}, component: () => import('@V/系统管理/组织/Account.vue') },
             { path: '/system/terminal', name: 'sys-terminal', meta:{title:"后端服务管理"}, component: () => import('@V/系统管理/后端服务/Index.vue') },
             { path: '/system/member', name: 'sys-member', meta:{title:"会员终端管理"}, component: () => import('@V/系统管理/会员终端/Index.vue') },
-
-            { path: '/demo', name: 'demo', component: () => import('@V/Demo.vue') },
         ],
         windowRoutes: [
             //快应用页面编辑
@@ -104,7 +107,7 @@ if(process.env.NODE_ENV==='test'){
     initApp(router).then(afterInit)
 }
 else {
-    FETCH_JSON(`${window.SERVER}/welcome`, {}, true).then(d=>{
+    loadCommonData().then(d=>{
         if(d && d.success===true){
             let { settings, user } = d.data
             initApp(router, settings||{}, user).then(afterInit)

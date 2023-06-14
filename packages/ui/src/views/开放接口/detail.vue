@@ -1,11 +1,14 @@
 <template>
     <n-form v-if="apiId" :show-feedback="true" size="small" :label-width="80" label-placement="top">
-        <n-grid x-gap="20" :cols="3">
+        <n-grid x-gap="20" :cols="4">
             <n-form-item-gi label="是否生效">
                 <n-switch v-model:value="bean.active" />
             </n-form-item-gi>
             <n-form-item-gi label="访问授权">
                 <AuthSelector ref="authRef" v-model:value="bean.serviceAuth" :tooltip="true"></AuthSelector>
+            </n-form-item-gi>
+            <n-form-item-gi label="数据源">
+                <n-select :options="sources" placeholder="不选则使用默认数据源" v-model:value="bean.sourceId"></n-select>
             </n-form-item-gi>
             <n-form-item-gi>
                 <template #label>
@@ -95,6 +98,7 @@
     let bean = ref({})
     let params = ref([])
     let loading = ref(false)
+    let sources = ref([])
 
     let mdEditor = ref()
 
@@ -106,6 +110,7 @@
     const toSave = ()=> {
         bean.value.summary = mdEditor.value.getMarkdown()
         bean.value.params = JSON.stringify(params.value)
+
         RESULT("/system/api/update-detail", bean.value, d=> M.ok(`接口更新成功`) )
     }
 
@@ -120,5 +125,9 @@
 
     watch(()=>props.apiId, refresh)
 
-    onMounted( refresh )
+    onMounted(()=>{
+        refresh()
+
+        RESULT("/dbm/source/list",{}, d=> sources.value=d.data.map(v=>({value:v.id, label:v.name})))
+    })
 </script>

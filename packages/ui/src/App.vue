@@ -22,7 +22,7 @@
                         </div>
                     </template>
                 </Suspense> -->
-                <router-view></router-view>
+                <router-view v-if="routerEnable"></router-view>
             </div>
 
             <n-watermark v-if="watermark" :content="water.text" cross fullscreen :font-color="water.color"
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, computed, onMounted, nextTick } from 'vue'
     import { useRouter, useRoute } from 'vue-router'
     import { darkTheme, useOsTheme, zhCN, dateZhCN } from 'naive-ui'
 
@@ -57,6 +57,8 @@
         return _theme
     })
 
+    let routerEnable = ref(true)
+
     let watermark       = ref(false)
     let water = { text:"", fontSize:16, rotate:-15, color:"rgba(128, 128, 128, .15)" }
 
@@ -78,16 +80,27 @@
     }
 
     /**
-     * 设置用户信息
+     * 手动刷新 vue-router
+     * 不会出现页面空白,地址栏会不会出现快速切换的过程,用户体验好
      */
-    let setupUser = user=>{
+    const refreshRouter = ()=>{
+        routerEnable.value = false
+        nextTick(()=> routerEnable.value = true)
+    }
+
+    /**
+     * 设置用户信息
+     *
+     * @params {Object} user
+     * @params {Function} 回调函数
+     */
+    const setupUser = (user, onDone)=>{
         let account = { id: user.id, name: user.name, ip: user.ip, roles: user.roles, isAdmin: Array.isArray(user.roles) && user.roles.includes("ADMIN") }
         //锁定用户对象，不支持修改
         Object.keys(account).forEach(k => {
             Object.defineProperty(account, k, { value: account[k], writable: false, enumerable: true, configurable: true })
         })
         window.User = account
-        // console.debug("用户加载完成", account)
 
         if(Config.watermark != 'false'){
             let r           = Math.random()
@@ -98,6 +111,8 @@
             water.rotate    = r > 0.5? -15 : r > 0.3? 15:30
             watermark.value = true
         }
+
+        onDone && onDone()
     }
 
     onMounted(() => {
@@ -109,15 +124,10 @@
             if(user && user.id)
                 setupUser(user)
             else
-                RESULT("/whoami", {}, d=> setupUser(d.data))
+                RESULT("/whoami", {}, d=> setupUser(d.data, null)) //()=> setTimeout(refreshRouter, 1000)
         })
+
+        //刷新路由
+        E.on('reload-router', refreshRouter)
     })
 </script>
-
-<style lang="less">
-    .default-background {
-        .layout {
-            /* background: #fafafa !important; */
-        }
-    }
-</style>

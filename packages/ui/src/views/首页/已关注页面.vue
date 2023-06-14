@@ -9,13 +9,14 @@
                 这里显示你关注的功能页面（看不到已经关注的功能页面时请使用此按钮进行强制刷新）
             </n-tooltip>
         </template>
-        <template #header-extra>
+        <!--如需在该面板下跳转到关注管理，请去除下方注释-->
+        <!-- <template #header-extra>
             <router-link class="hover-item" to="/mine/link" title="管理我的关注">
                 <n-button circle size="small" plain type="primary" quaternary>
                     <template #icon><n-icon :component="Cog" class="icon" /></template>
                 </n-button>
             </router-link>
-        </template>
+        </template> -->
 
         <template v-if="beans.length>0">
             <n-grid :cols="cols" responsive="screen" x-gap="10">

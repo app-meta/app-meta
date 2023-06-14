@@ -50,11 +50,11 @@
     import { Check, Github, Atom, Vuejs, User, Lock } from '@vicons/fa'
 
     import L from "./"
+    import { defaultRoute } from "@S/Auth"
 
-    const router = useRouter()
     const route = useRoute()
 
-    let redirect = "/"
+    let redirect = defaultRoute
 
     let { working, loginWithPwd, onLoginDone } = L()
     const user = reactive({
@@ -67,10 +67,7 @@
         if(!name || !password) return M.warn(`用户名或者密码不能为空`)
 
         // API("sys-auth-login-api", _(user))
-        loginWithPwd(name, password).then(token=>{
-            onLoginDone(token)
-            router.replace(redirect)
-        })
+        loginWithPwd(name, password).then(token=>onLoginDone(token, redirect))
     }
 
     onMounted(()=>{

@@ -5,7 +5,7 @@ import { Command, Argument, Option } from 'commander'
 import confirm from '@inquirer/confirm'
 import FormData from 'form-data'
 
-import { appName } from '../core/base.js'
+import { appName, optionOfId, optionOfKey, optionOfName } from '../core/base.js'
 import { buildTableRows, callServer, isFile, printOK, printObj, printObjects, printTable, sleep, startLoading, stopLoading } from '../core/util.js'
 import chalk from 'chalk'
 
@@ -100,6 +100,22 @@ export default (app=new Command())=> {
     sys.command("log-version")
         .description(`获取平台后端存储的更新记录（通常为调用 system update 命令）`)
         .action(downloadVerLog)
+
+    const cache = sys.command("cache")
+        .description(`系统缓存（后端）管理`)
+        .action(async ()=> printObjects(await callServer("/system/cache/list")) )
+
+    cache.command("clean")
+        .description(`清空指定缓存（使用 -n, --name 指定名称，多个用英文逗号隔开）`)
+        .option(...optionOfKey)
+        .option(...optionOfId)
+        .action(async ps=>{
+            const answer = await confirm({ message: `确定清空 ${ps.key} 的缓存（ID=${ps.id||'不限'}）吗？`, default: false })
+            if(answer != true)  return
+
+            await callServer('/system/cache/clean', ps)
+            printOK()
+        })
 
     const account =  sys.command("account [id]")
         .description("用户管理")

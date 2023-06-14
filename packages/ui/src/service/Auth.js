@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-11-02 13:34:30
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-03-29 13:34:34
+ * @Last Modified time: 2023-06-13 10:57:42
  */
 
 export function checkRole(requireRole) {
@@ -39,3 +39,17 @@ export const tryLoginWithCAS = fromUrl =>{
     }
     return true
 }
+
+/**
+ * 从远程服务器获取基本信息（包含基础配置项、当前登录信息）
+ * 返回 Promise，可在 then 回调中获取数据：
+ *  let { settings, user } = d.data
+ *
+ * @returns
+ */
+export const loadCommonData = ()=> FETCH_JSON(`${window.SERVER}/welcome`, {}, true)
+
+/**
+ * 默认路由地址
+ */
+export const defaultRoute = "/welcome"

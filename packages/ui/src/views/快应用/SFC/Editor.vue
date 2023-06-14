@@ -6,6 +6,7 @@
                 <div :style="{lineHeight:(headerHeight-10)+'px'}"><n-text depth="3">左侧为代码编辑，右侧为预览（在编辑区按下 <Tag>CTRL+S</Tag> 可即时渲染）</n-text></div>
 
                 <n-space>
+                    <n-button type="primary" @click="toHelp" secondary>帮助（CTRL+H）</n-button>
                     <n-button type="primary" @click="toView" secondary>预览（CTRL+S）</n-button>
                     <n-button type="primary" @click="toSave">保存</n-button>
                 </n-space>
@@ -25,6 +26,12 @@
             </n-layout>
         </n-layout>
     </n-layout>
+
+    <n-drawer v-model:show="help" width="920">
+        <n-drawer-content title="单文件组件（Single File Component）说明" :closable="true" :body-content-style="{padding:'10px'}">
+            <MDRender :code="About" />
+        </n-drawer-content>
+    </n-drawer>
 </template>
 
 <script setup>
@@ -35,14 +42,18 @@
     import CodeEditor from "@C/editor.code.vue"
     import Title from "@V/widget/page.title.vue"
 
+    import About from "./说明.md"
+
     import { template } from "."
     import SFCRender from "./sfc-render.vue"
+    import MDRender from "@C/markdown/md.viewer.vue"
 
-    const siderWidth = "50%"
+    const siderWidth        = "50%"
     const headerHeight      = 50
     const collapsedWidth    = 15
 
-    let sfc = ref()
+    let sfc                 = ref()
+    let help                = ref(false)
 
     let { id, bean, inited, loading , updateContent } = pageEditor(template)
 
@@ -52,11 +63,14 @@
             e.preventDefault()
             toView()
         }
+        else if(ctrlKey == true && keyCode == 72){
+            e.preventDefault()
+            toHelp()
+        }
     }
 
-    const onLoad = ()=> M.ok(`组件已刷新`)
-
-    const toView = ()=> sfc.value.refresh()
-
-    let toSave = () => updateContent(bean.value)
+    const toHelp    = ()=> help.value = true
+    const onLoad    = ()=> M.ok(`组件已刷新`)
+    const toView    = ()=> sfc.value.refresh()
+    const toSave    = () => updateContent(bean.value)
 </script>

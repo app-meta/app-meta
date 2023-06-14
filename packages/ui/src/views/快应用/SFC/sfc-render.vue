@@ -43,15 +43,15 @@
         loadModule(`async-sfc.vue`, {
             moduleCache: {
                 vue,
-                'vue-router': { useRoute, useRouter },
+                'vue-router'                : { useRoute, useRouter },
 
-                "@Pagination": P,
-                "@C/chart.vue": Chart,
-                "@C/markdown/md.viewer.vue": MDRender,
-                "@CC/file.import.vue": FileImportor,
-                "@C/dbclick.input.vue": ClickInput,
-                "@C/uploader.vue": Uploader,
-                "@V/widget/page.title.vue": Title
+                "@Pagination"               : P,
+                "@C/chart.vue"              : Chart,
+                "@C/markdown/md.viewer.vue" : MDRender,
+                "@CC/file.import.vue"       : FileImportor,
+                "@C/dbclick.input.vue"      : ClickInput,
+                "@C/uploader.vue"           : Uploader,
+                "@V/widget/page.title.vue"  : Title
             },
             getFile: () => props.code,
             addStyle: () => {},
@@ -67,11 +67,6 @@
             error = e
             state.value = -1
             props.fail && props.fail(e)
-            // if(typeof(props.fail) == 'function')
-            //     props.fail(e)
-            // else{
-            //     M.showError(e, `渲染 SFC 出错`)
-            // }
         })
     }
 
