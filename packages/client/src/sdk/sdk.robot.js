@@ -10,7 +10,10 @@ module.exports = {
      *  progress == 100：任务完成了
      */
     'progress': (e, p, info)=>{
-        progress(getWindowId(e), p ,info)
+        let winId = getWindowId(e)
+        progress(winId, p ,info)
+
+        if(p<0) onNotify(winId, null, `[异常]${info}`)
     },
     'data': (e, data, saveToFs)=>{
         onData(getWindowId(e), data, saveToFs)
@@ -36,11 +39,11 @@ module.exports = {
      * ① 在主日志记录
      * ② 在任务单独文件进行记录
      *
-     * @param {*} _
+     * @param {*} e
      * @param {*} msg
      * @param {*} level
      */
-    'log-robot':  (_, msg, level)=>{
+    'log-robot':  (e, msg, level)=>{
         logger[level](msg)
 
         onLog(getWindowId(e), msg)

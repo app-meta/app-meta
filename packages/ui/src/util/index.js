@@ -36,7 +36,12 @@ window.isClient = !!window.META
  */
 window.callClient = (id, ...ps)=>{
     if(isClient && window.META[id]){
-        console.debug(`%c[调用客户端接口]`, "background:#2080f0;padding:3px;color:white", `ID=${id}`)
+        if(process.env.NODE_ENV === 'production'){
+            console.debug(`%c[调用客户端接口]`, "background:#2080f0;padding:3px;color:white", `ID=${id}`)
+        }
+        else
+            console.debug(`%c[调用客户端接口]`, "background:#2080f0;padding:3px;color:white", `ID=${id}`, ...ps)
+
         return META[id](...ps).catch(e=>{
             let msg = e.message
             let index = msg.indexOf(":")

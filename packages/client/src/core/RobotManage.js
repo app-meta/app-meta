@@ -8,7 +8,6 @@ const ScriptRobot = require("./Robot")
 const { callServer } = require("../service/Http")
 
 const PAGE = "page"
-const PARAMS = "params"
 
 const workers = []            //当前执行任务的列表
 
@@ -30,6 +29,10 @@ const withWorker = (windowIdOrUuid, todo)=> {
 
     todo(worker)
 }
+
+const onNotify = (windowId, title, body) => withWorker(windowId, worker=>{
+    notice(title??worker.getName(), body, iconPath("robot"))
+})
 
 module.exports = {
     repairAndCheck (item){
@@ -56,7 +59,7 @@ module.exports = {
                 workers.push(robot)
                 logger.debug(`Robot#${robot.getUUID()} 加入队列...`)
                 // 统计执行次数
-                callServer("/app/launch", {aid: robot.aid, pid:robot.pid})
+                callServer("/app/launch", {aid: robot.aid, pid:robot.pid}).catch(e=> logger.error(`调用 /app/launch 接口失败`, e))
 
                 robot.onClosed = ({ uuid, aid, pid, bean, startOn, params, logs })=>{
                     let index = workers.findIndex(w=>w.uuid == uuid)
@@ -77,7 +80,9 @@ module.exports = {
                             logs        : JSON.stringify(logs)
                         }
 
-                        callServer("/page/robot/save", d).then(v=> logger.debug(`保存 ROBOT 运行信息（返回ID=${v.data}`))
+                        callServer("/page/robot/save", d)
+                            .then(v=> logger.debug(`保存 ROBOT 运行信息（返回ID=${v.data}`))
+                            .catch(e=> logger.error(`保存 ROBOT 运行信息出错`, e))
                     }
                 }
             }
@@ -131,9 +136,7 @@ module.exports = {
         worker.onTextData(line, `${name}.csv`)
     },
 
-    onNotify :(windowId, title, body) => withWorker(windowId, worker=>{
-        notice(title??worker.getName(), body, iconPath("robot"))
-    }),
+    onNotify,
 
     onLog :(windowId, msg, level="INFO")=> withWorker(windowId, worker=> worker.log(`${level} ${msg}`)),
 

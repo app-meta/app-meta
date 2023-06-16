@@ -1,8 +1,8 @@
 {
     "name": "client",
-    "appId":"org.app-mete",
+    "appId": "org.app-mete",
     "appName": "APP 元宇宙",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "",
     "main": "src/index.js",
     "scripts": {
@@ -18,34 +18,38 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "dependencies": {
+        "axios": "^1.4.0",
         "blueimp-md5": "^2.19.0",
         "dayjs": "^1.11.7",
         "form-data": "^4.0.0",
-        "got-cjs": "^12.5.4",
         "iconv-jschardet": "^2.0.32",
         "minimist": "^1.2.8",
+        "mustache": "^4.2.0",
         "node-notifier": "^10.0.1",
         "tracer": "^1.1.6"
     },
     "devDependencies": {
         "@types/node": "^18.14.0",
         "electron": "23.1.0",
-        "electron-builder": "^23.6.0",
+        "electron-builder": "^24.4.0",
         "env-cmd": "^10.1.0",
         "nodemon": "^2.0.20"
     },
     "build": {
         "appId": "org.app-mete",
         "productName": "APP元宇宙",
-        "artifactName": "${productName}-${version}.${ext}",
+        "artifactName": "${productName}.${ext}",
         "copyright": "Copyright © 2009-2023 集成显卡",
         "asar": true,
         "compression": "maximum",
         "asarUnpack": [
             "./node_modules/node-notifier/**/*"
         ],
-        "extraResources":  [
-            { "from": "./resources/icon", "to": "icon"}
+        "extraResources": [
+            {
+                "from": "./resources/icon",
+                "to": "icon"
+            }
         ],
         "files": [
             "src/**/*",

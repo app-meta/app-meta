@@ -10,7 +10,7 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "dependencies": {
-        "@app-meta/basic": "workspace:*",
+        "@app-meta/basic": "1.0.0",
         "blueimp-md5": "^2.19.0",
         "dayjs": "^1.11.7",
         "mustache": "^4.2.0",

@@ -12,6 +12,8 @@ module.exports ={
     "run": async (id, params={}) => {
         logger.debug(`尝试启动机器人 #${id}`)
         let { data } = await callServer("/page/detail", {id})
+        if(data == null)    throw `无法获取机器人 #${id} 的信息（可能未启用或已被移除，请联系管理员）`
+
         let { aid, content, name } = data
         if(isDev)   logger.debug("获取 ROBOT 信息", data)
 

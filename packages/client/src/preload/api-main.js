@@ -26,7 +26,7 @@ contextBridge.exposeInMainWorld('META', {
      * @param {*} msg
      * @param {*} title
      */
-    notification(msg, title = "通知") {
+    notify(msg, title = "通知") {
         // let notice = new Notification(title, { body: msg })
         ipcRenderer.send("notification", msg, title)
     },
@@ -120,7 +120,7 @@ contextBridge.exposeInMainWorld('META', {
     },
 
     // 启动指定的机器人
-    runRobot: (id) => ipcRenderer.invoke('robot.run', id),
+    runRobot: (id, params={}) => ipcRenderer.invoke('robot.run', id, params),
 
     // 将指定文本复制到粘贴板中
     copyText: text=> ipcRenderer.send('copyText', text),

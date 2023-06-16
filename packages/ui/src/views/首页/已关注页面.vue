@@ -19,7 +19,7 @@
         </template> -->
 
         <template v-if="beans.length>0">
-            <n-grid :cols="cols" responsive="screen" x-gap="10">
+            <n-grid :cols="cols" responsive="screen" x-gap="10" y-gap="10">
                 <n-gi v-for="(item, index) in beans">
                     <n-button block secondary  @click="runPage(item)">
                         <template #icon><n-icon :component="item.tpl.icon" :class="item.tpl.theme" /></template>

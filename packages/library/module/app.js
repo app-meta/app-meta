@@ -64,11 +64,12 @@ export const loadAndRun = (appOrId)=> new Promise((ok, fail)=>{
 
 /**
  * 启动某个机器人
- * @param {*} id
+ * @param {String|Number}   id
+ * @param {Object}          params
  * @returns
  */
-export const runRobot = id=> {
+export const runRobot = (id, params={})=> {
     if(!window.META)    throw Error(`RPA 机器人需要在<原生环境>下执行，请在桌面客户端启动`)
 
-    return typeof(callClient)==='function'? callClient('runRobot', id) : META.runRobot(id)
+    return typeof(callClient)==='function'? callClient('runRobot', id, params) : META.runRobot(id, params)
 }

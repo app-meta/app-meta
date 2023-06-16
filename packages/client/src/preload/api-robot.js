@@ -38,7 +38,7 @@ contextBridge.exposeInMainWorld('META', {
      */
     log (msg, level="info"){
         log(`[${level.toUpperCase()}]`, msg)
-        ipcRenderer.send("log-robot", msg, level.toUpperCase())
+        ipcRenderer.send("log-robot", msg, level.toLowerCase())
     },
 
     /**

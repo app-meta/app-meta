@@ -1,79 +1,51 @@
-const { got } = require("got-cjs")
-const { readFileSync } = require("fs")
+/**
+ * 2023-06-16
+ *  不知为何，electron-builder 打包后运行 exe 报 require() ES Module not supported 错误（引入 got 库时）
+ *  但是直接通过 electron . 执行就没有问题
+ *  尝试更换 electron、electron-builder、got 版本均未果
+ *  时间所迫，更换为 axios
+ *
+ *
+ *  const { got } = require("got-cjs")
+ */
+
+const axios = require("axios")
 const logger = require("../common/logger")
-const { basename } = require("path")
 const FormData = require("form-data")
 const { createReadStream } = require("fs")
 const C = require("../Config")
 const { isDev } = require("../Runtime")
 
-// const axios = require("axios"
-// const iconv = require('iconv-lite')
 let MUA = ""
 const method = "POST"
 
-/**
- * 使用 axios 无法处理中文乱码，试了好多方法均告失败
- * 故选择 got 库
- */
-// export function FETCH(url, data, options={}){
-//     return new Promise((ok, fail)=>{
-//         let headers = Object.assign(
-//             {
-//                 // "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-//                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
-//             },
-//             options.headers||{}
-//         )
-//         axios({
-//             url,
-//             data,
-//             ...options,
-//             headers
-//         })
-//         .then(response=>{
-//             console.debug(response.data)
-
-//             // ok(iconv.decode(response.data, "utf8", {stripBOM: false, addBOM: true}))
-//             ok(response.data)
-//         })
-//         .catch(e=> {
-//             fail(e)
-//         })
-//     })
-// }
-
 const UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
 
-// export function REMOTE(url, data, options={}){
-//     return new Promise(async (ok, fail)=>{
-//         let result = await got(
-//             url,
-//             {
-//                 method: "POST",
-//                 json: data,
-//                 headers: Object.assign({"User-Agent": UserAgent}, options.headers||{})
-//             }
-//         )
-//         .json()
-//         .catch(e=> fail(e.message))
-
-//         ok(result)
-//     })
+// 基于 GOT 的历史代码
+// exports.REMOTE = async function(url, data, options={}){
+//     return await got(
+//         url,
+//         {
+//             method,
+//             json: data,
+//             headers: Object.assign({"User-Agent": UserAgent}, options.headers||{})
+//         }
+//     )
+//     .json()
+//     .catch(e=> {throw Error(e.message)})
 // }
 
-exports.REMOTE = async function(url, data, options={}){
-    return await got(
+exports.REMOTE = async (url, data, options={}) => new Promise(ok=>{
+    axios({
         url,
-        {
-            method,
-            json: data,
-            headers: Object.assign({"User-Agent": UserAgent}, options.headers||{})
-        }
-    )
-    .json()
+        data,
+        ...options,
+        headers: Object.assign({"User-Agent": UserAgent}, options.headers||{}),
+        method
+    })
+    .then(response=> ok(response.data))
     .catch(e=> {throw Error(e.message)})
-}
+})
 
 /**
  * 提交文件到远程服务器
@@ -131,12 +103,17 @@ exports.callServer = async (action, json, options={})=>{
 
     if(isDev) logger.debug(`调用接口 ${url}， 参数：${JSON.stringify(json)}`)
 
-    let result = await got(url, { method, json, headers: Object.assign({ MUA }, options.headers||{}) }).json()
-    if(result.success === true)
-        return result
+    // let result = await got(url, { method, json, headers: Object.assign({ MUA }, options.headers||{}) }).json()
+    let result = await axios({url, method, data: json, headers: Object.assign({ MUA }, options.headers||{}) })
+    let { data } = result
+    if(data.success === true)
+        return data
 
-    throw Error(`调用接口 ${action} 出错：${result?.message}`)
+    throw Error(`调用接口 ${action} 出错：${data?.message}`)
 }
 
-exports.setToken = token => MUA = token
+exports.setToken = token => {
+    MUA = token
+    if(isDev) logger.debug(`设置 token`, token)
+}
 exports.getToken = ()=> MUA

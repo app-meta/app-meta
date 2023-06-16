@@ -87,3 +87,17 @@ export function pageEditor(defaultVal, translator, padding=true){
 export const loadPages = (aid, loading)=> new Promise((ok)=> RESULT("/page/list", {form:{EQ_aid:aid}}, d=> ok(d.data), {loading}))
 
 export const loadContent = id => new Promise((ok, fail)=> GET("/page/content", {id}, ok, fail))
+
+/**
+ * 注册全局的 CTRL+S 事件
+ * @param {String} key 'KeyS'
+ */
+export const initCtrlAndS = (handler, keyName="s")=>{
+    document.onkeydown = e => {
+        let {ctrlKey, key} = e
+        if(ctrlKey==true && key==keyName){
+            e.preventDefault()
+            handler && handler()
+        }
+    }
+}

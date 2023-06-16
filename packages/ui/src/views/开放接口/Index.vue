@@ -23,7 +23,7 @@
                 <n-layout-sider collapse-mode="transform" :collapsed-width="collapsedWidth" show-trigger="arrow-circle" content-style="padding: 12px;" :native-scrollbar="false" :width="siderWidth" bordered>
                     <n-input-group size="small">
                         <n-input v-model:value="keyword" placeholder="通过名称过滤接口" />
-                        <n-popover trigger="click" width="300px" :show="showAdd">
+                        <n-popover trigger="click" width="300px" :show="showAdd" @clickoutside="showAdd=false"	>
                             <template #trigger>
                                 <n-button secondary @click="showAdd=true" type="primary">新增接口</n-button>
                             </template>

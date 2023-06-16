@@ -99,7 +99,7 @@
 
 <script setup>
     import { ref } from 'vue'
-    import { pageEditor } from "../"
+    import { pageEditor, initCtrlAndS } from "../"
     import { Check, Upload, Robot, QuestionCircle } from "@vicons/fa"
 
     import CodeEditor from "@C/editor.code.vue"
@@ -118,4 +118,6 @@
 
         updateContent(JSON.stringify(bean.value))
     }
+
+    initCtrlAndS(toSave)
 </script>

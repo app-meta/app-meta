@@ -21,7 +21,7 @@ const log = (msg, ...ps)=>console.debug(`%c[数据接口] ${msg}`, "background:#
  * 以 POST 形式与后端进行交互
  * @param {*} model
  * @param {*} action
- * @returns
+ * @returns Promise
  */
 const send = (model, action="", json=true)=>{
     if(!aid) throw Error("DATA 模块尚未初始化，请先调用 init 方法")
@@ -104,7 +104,7 @@ export const setDebug = _debug => debug = _debug === true
  *
  * 示例：
  * H.data.getUserInfo().then(user=>{})
- * @returns
+ * @returns 用户信息
  */
 export const getUserInfo = async ()=>{
     let user = await send(null, `whoami`)
@@ -116,7 +116,6 @@ export const getUserInfo = async ()=>{
  * @param {*} rows
  * @param {*} _pid
  * @param {*} ps
- * @returns
  */
 export const insert = (rows, _pid="", ps={})=>{
     let model = { aid , pid: _pid||pid }
@@ -135,7 +134,6 @@ export const insert = (rows, _pid="", ps={})=>{
  * 更新数据（按确定的 id）
  * @param {*} id
  * @param {*} newVal
- * @returns
  */
 export const  update = (id, newVal)=>{
     let model = { aid }
@@ -178,7 +176,6 @@ const _buildMatchModel = modelOrId=>{
         { label:"在", value:"IN" },
         { label:"不在", value:"NIN" }
     ]
- * @returns
  */
 export const query = (modelOrId={})=>{
     // let model = { aid }
@@ -202,7 +199,6 @@ export const query = (modelOrId={})=>{
 /**
  * 参数同 query
  * @param {*} modelOrId
- * @returns
  */
 export const remove = (modelOrId)=> send(_buildMatchModel(modelOrId), "data/delete")
 
@@ -269,22 +265,19 @@ export const exportToCSV = (modelOrId={}, headers=[], filename)=> _exportData(mo
 /**
  * 读取数据块，返回的内容是 text，需要自行转换为目标格式
  * @param {*} uuid
- * @returns
  */
 export const getBlock = uuid=> send({aid, uuid }, "data/block/get")
 
 /**
  * 赋值（覆盖）数据块
  * @param {*} uuid 唯一ID
- * @param {*} text 数据内容，为空则视为删除该数据块
- * @returns
+ * @param {String|Object} text 数据内容，为空则视为删除该数据块
  */
-export const setBlock = (uuid, text) =>send({aid, uuid, text }, "data/block/set")
+export const setBlock = (uuid, text) =>send({aid, uuid, text: typeof(text)=='string'? text: JSON.stringify(text) }, "data/block/set")
 
 /**
  * 返回全部的数据块
  * 量可能较大，慎用
- * @returns
  */
 export const listBlock = ()=> send({aid}, "data/block/list")
 
@@ -292,20 +285,17 @@ export const listBlock = ()=> send({aid}, "data/block/list")
  * 返回应用详细信息，包含两个属性
  *  app         应用基本信息
  *  property    应用其他属性（如窗口大小等）
- * @returns
  */
 export const getAppDetail = ()=> send({ id: aid}, "app/detail")
 
 /**
  * 获取应用下的页面清单（仅限开启访问）
- * @returns
  */
 export const listPage = ()=> send({form:{EQ_aid:aid, EQ_active:true}}, "page/list")
 
 /**
  * 获取指定页面的附件清单
  * @param {*} id    不指定则为预设的 pid
- * @returns
  */
 export const listAttach = (id=pid)=> send({id}, "page/document-list")
 
@@ -320,7 +310,6 @@ const buildServiceUrl = (path, specialAid)=> `service/${specialAid || aid}/${pat
  * @param {*} specialAid        在某些情况下，需要调用跨应用的服务，传递此参数将覆盖默认的 aid
  * @param {*} responseHandler   fetch 方法的响应处理，默认是转换为 JSON 格式
  *                              如果后端返回文件流，则可以参考 _exportData 进行 blob 处理
- * @returns
  */
 export const service = (path, data, useJson=true, specialAid, responseHandler)=> withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, responseHandler)
 
@@ -331,6 +320,5 @@ export const service = (path, data, useJson=true, specialAid, responseHandler)=>
  * @param {*} data
  * @param {*} useJson
  * @param {*} specialAid
- * @returns
  */
 export const serviceForText = (path, data, useJson=true, specialAid) => service(path, data, useJson, specialAid, res=>res.text())

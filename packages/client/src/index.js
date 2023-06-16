@@ -136,6 +136,9 @@ app.on('window-all-closed', () => {
     }
 })
 app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) restoreOrCreateWindow()})
+/**
+ * 系统开启第二个实例时触发，通常用于伪协议响应
+ */
 app.on('second-instance', restoreOrCreateWindow)
 
 app.whenReady()
@@ -143,7 +146,7 @@ app.whenReady()
         API()
 
         logger.debug(`环境 process.env.NODE_ENV=${process.env.NODE_ENV}`)
-        let ps = require("minimist")(process.argv.slice(2))
+        let ps = require("minimist")(process.argv.slice(app.isPackaged ? 1: 2))
         //指定执行默认脚本
         if (!!ps.script) {
             logger.info(`命令行执行脚本 ${ps.script}(DIR=${__dirname}) ...`)

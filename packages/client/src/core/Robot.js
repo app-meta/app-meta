@@ -7,6 +7,7 @@
  */
 const { join } = require("path")
 const { BrowserWindow } = require("electron")
+const Mustache = require('mustache')
 
 const { compact, datetime } = require("../common/date")
 const logger = require("../common/logger")
@@ -121,6 +122,7 @@ module.exports = class {
         let web = this.window.webContents
 
         //打开任务主页面
+        logger.info(`开启机器人${this.id}，首页为 ${this.bean.url}`)
         this.window.loadURL(this.bean.url, { extraHeaders: this.bean.headers })
 
         // 添加事件监听
@@ -319,29 +321,65 @@ module.exports = class {
         let taskClone = Object.assign({}, this.bean)
         delete taskClone['code']
 
-        return `
-            if(window.${code} !== true){
-                setTimeout(function(){
-                    const robot = ${U.toJSON(taskClone)}
-                    const params = ${U.toJSON(this.params)}
-                    const counter = ${this.counter++}
-                    const caches = ${U.toJSON(this.caches)}
+        let model = {
+            ticket  : code,                     //任务代码唯一标识
+            id      : this.id,                  //任务ID
+            robot   : U.toJSON(taskClone),      //机器人基本信息（JSON 格式串）
+            params  : U.toJSON(this.params),    //提交的参数（JSON 格式串）
+            counter : this.counter ++,          //计数器
+            caches  : U.toJSON(this.caches),    //缓存数据（JSON 格式串）
+            script,                             //实际要执行的代码
+            delay   : this.bean.delay           //延迟（秒）
+        }
 
-                    console.log('Robot init ok, ID=${this.id}, PARAMS=', params,'COUNTER=', counter)
+        return Mustache.render(
+            `if(window.{{ticket}} !== true){
+                setTimeout(async function(){
+                    const robot = {{{robot}}}
+                    const params = {{{params}}}
+                    const counter = {{{counter}}}
+                    const caches = {{{caches}}}
+
+                    console.log('Robot init ok, ID={{id}}, PARAMS=', params,'COUNTER=', counter)
                     try{
-                        ${script}
+                        {{{script}}}
                     }catch(error){
                         console.error("error on run web script:", error)
                         META.log("脚本执行出错："+error.message, "error")
                         // META.failed("脚本执行出错： " + error.message, 3000)
                     }
-                }, 1000*${this.bean.delay})
+                }, 1000*{{delay}})
 
-                window.${code}=true
-                if(!window.__UUID__) window.__UUID__ = "${this.id}"
-                console.log("${code} set to true...", Date())
-            }
-        `
+                window.{{ticket}}=true
+                if(!window.__UUID__) window.__UUID__ = "{{id}}"
+                console.log("{{ticket}} set to true...", Date())
+            }`,
+            model
+        )
+
+        // return `
+        //     if(window.${code} !== true){
+        //         setTimeout(async function(){
+        //             const robot = ${U.toJSON(taskClone)}
+        //             const params = ${U.toJSON(this.params)}
+        //             const counter = ${this.counter++}
+        //             const caches = ${U.toJSON(this.caches)}
+
+        //             console.log('Robot init ok, ID=${this.id}, PARAMS=', params,'COUNTER=', counter)
+        //             try{
+        //                 ${script}
+        //             }catch(error){
+        //                 console.error("error on run web script:", error)
+        //                 META.log("脚本执行出错："+error.message, "error")
+        //                 // META.failed("脚本执行出错： " + error.message, 3000)
+        //             }
+        //         }, 1000*${this.bean.delay})
+
+        //         window.${code}=true
+        //         if(!window.__UUID__) window.__UUID__ = "${this.id}"
+        //         console.log("${code} set to true...", Date())
+        //     }
+        // `
     }
 
     /**

@@ -11,6 +11,8 @@
 npx electron . --script={任务路径}
 
 # e.g.:
+npx electron src/index.js --script=../robot/oschina.js
+
 # 生产模式运行单个脚本
 npx electron . --script=../demo-robot/OSCHINA.js
 

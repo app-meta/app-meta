@@ -134,7 +134,7 @@ const pageLink = async ps=>{
 }
 
 const pageLinks = async ps=>{
-    let res = await callServer("/system/page/link/list", {EQ_uid: ps.uid, pagination:{pageSize:50}})
+    let res = await callServer("/system/page/link/list", {form:{ EQ_uid: ps.uid }, pagination:{pageSize:50}})
     let cols = ['id', 'aid', 'pid', 'name', 'template', 'addOn']
     printTable(res.data.map(i=>cols.map(c=>i[c])), cols)
 }
