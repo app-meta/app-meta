@@ -13,3 +13,6 @@ formValueProvider["${lastMonthBegin}"]  = ()=> H.date.addDay(-1, H.date.beginOf(
 formValueProvider["${lastMonthEnd}"]    = ()=> H.date.addDay(-1, H.date.endOf(), 'month')
 formValueProvider["${yearBegin}"]       = ()=> H.date.beginOf('year')
 formValueProvider["${yearEnd}"]         = ()=> H.date.endOf('year')
+
+
+export const terminalStatus = {'online':"运行中", 'stopped':"已停止"}

@@ -8,9 +8,9 @@
 <script setup>
     import { ref,onMounted, h,nextTick, unref, toRaw } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
-    import { NTag, NSwitch,NPopconfirm,NInput,NIcon,NTooltip,NButton, NSpace } from 'naive-ui'
+    import { NTag, NSwitch,NPopconfirm,NInput,NIcon,NTooltip,NButton, NSpace, NDropdown } from 'naive-ui'
 
-    import { Plus,Trash,Check, Edit, Eye, ShieldAlt, FileWord, Download, Upload, SyncAlt } from '@vicons/fa'
+    import { Plus,Trash,Check, Edit, Eye, ShieldAlt, ShieldVirus, FileWord, Download, Upload, SyncAlt } from '@vicons/fa'
 
     import { templates, findTemplate } from "./"
     import CreatePage from "./create-page.vue"
@@ -81,7 +81,17 @@
                 return [
                     UI.iconBtn(Eye, ()=> toView(row), {title:"浏览页面", disabled:row.template=='server'}),
                     UI.iconBtn(Edit, ()=> toEdit(row), {title:"编辑页面"}),
-                    UI.iconBtn(ShieldAlt, ()=> toAuth(row), {title:"修改页面权限"}),
+                    // UI.iconBtn(ShieldAlt, ()=> toAuth(row), {title:"修改访问权限"}),
+                    // UI.iconBtn(ShieldAlt, ()=> toAuth(row, "editAuth"), {title:"修改编辑/维护权限", type:"warning"}),
+                    h(
+                        NDropdown,
+                        {
+                            trigger:"click",
+                            options: [{label:"访问权限",key:"serviceAuth"}, {label:"修改/维护权限",key:"editAuth"}],
+                            onSelect:key=> toAuth(row, key)
+                        },
+                        ()=>UI.iconBtn(ShieldAlt, null, {title:"分配访问/维护权限"})
+                    ),
                     UI.iconBtn(FileWord, ()=> docRef.value.open(row.id, row.name), {title:"附件管理"}),
                     UI.iconBtn(Download, ()=> toExport(row), {title:"导出页面（JSON格式）"}),
                     h(
@@ -107,6 +117,7 @@
     let authRef = ref()
     let authText= ref("")
     let authRow = {}
+    let authType= ""
 
     let docRef  = ref()
 
@@ -134,16 +145,17 @@
         row[key] = value
     })
 
-    let toAuth = row=>{
-        authText.value = row.serviceAuth
+    let toAuth = (row, key="serviceAuth")=>{
+        authText.value = row[key]
+        authType = key
         authRow = row
 
-        nextTick(()=> authRef.value.open(row.name))
+        nextTick(()=> authRef.value.open(`⌈${row.name}⌋ 的${key=='serviceAuth'?"访问权限":"管理权限"}`))
     }
 
     let onAuthChange = v=>{
-        authRow.serviceAuth = v
-        modify(authRow, "serviceAuth", v, `授权信息已更新`)
+        authRow[authType] = v
+        modify(authRow, authType, v, `授权信息⌈${authType}⌋已更新`)
     }
 
     let toExport = row=>{

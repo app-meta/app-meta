@@ -30,6 +30,14 @@ export const withPost = (action="", data, json=true, contextPath=window.SERVER, 
     ).then(handler)
 }
 
+export const withGet = (action="", contextPath=window.SERVER, handler=handleResponse)=> fetch(
+        `${contextPath}${action[0]=='/'?"":"/"}${action}`,
+        {
+            method:"GET",
+            headers:{"MUA": localStorage.getItem("MUA")}
+        }
+    ).then(handler)
+
 
 /**
  * 打开新页面（同源）

@@ -4,6 +4,7 @@
  * @Last Modified by: 集成显卡
  * @Last Modified time: 2023-06-13 10:57:42
  */
+export const ADMIN = "ADMIN"
 
 export function checkRole(requireRole) {
     let roles = window.User ? (User.roles || []) : []
@@ -19,6 +20,13 @@ export const hasAllRole = (...items)=>{
     let roles = window.User ? (User.roles || []) : []
     return items.every(r=> roles.includes(r))
 }
+
+/**
+ *
+ * @param  {...String} items
+ * @returns
+ */
+export const isAdminOr = (...items)=> hasAnyRole(ADMIN, ...items)
 
 /**
  * 尝试跳转到 CAS 登录，使用方式：

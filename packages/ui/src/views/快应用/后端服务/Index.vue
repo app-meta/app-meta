@@ -25,8 +25,17 @@
 
     const newQ = ()=>({title:'', type:0, required:false})
 
+    // const config = {
+    //     "dbHost": "",       //数据库地址
+    //     "dbPort": 3306,     //数据库端口
+    //     "dbName": "",       //数据库名
+    //     "dbPwd": "",        //数据库密码
+    //     "dbUser": "",       //数据库用户名
+    //     "port": 10000,      //应用服务端口
+    //     "useDB": false      //是否启用数据库
+    // }
     let { id, aid, bean, inited, updateContent } = pageEditor(
-        { mode:INSIDE, language:"node" },
+        { mode:INSIDE, language:"node", dbHost:"localhost" },
         d=> JSON.parse(d),
         false
     )

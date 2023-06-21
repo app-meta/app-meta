@@ -8,7 +8,7 @@
     import { NTooltip, NTag, NSpace } from 'naive-ui'
     import { Bug, Clock,Hourglass,HourglassEnd, Stop, SyncAlt, Trash } from '@vicons/fa'
 
-    const statusList = {'online':"运行中", 'stopped':"已停止"}
+    import { terminalStatus } from "@S/FastApp"
 
     let loading = ref(false)
     let beans = ref([])
@@ -24,7 +24,7 @@
                 row.vmVersion
             ])
         },
-        { title:"状态", key:"status", render:row=> h(NTag, {bordered:false, type: row.status=='online'?"success":"warning"}, ()=>statusList[row.status])},
+        { title:"状态", key:"status", render:row=> h(NTag, {bordered:false, type: row.status=='online'?"success":"warning"}, ()=>terminalStatus[row.status])},
         { title:"启动于", key:"uptime", width: 180, render: row=> H.date.datetime(row.uptime) },
         { title:"内存", key:"mem", width:140, render:row=> H.filesize(row.mem) },
         { title:"CPU(%)", key:"cpu", width:140 },

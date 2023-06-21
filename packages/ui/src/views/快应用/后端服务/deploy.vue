@@ -1,5 +1,9 @@
 <template>
-    <n-card title="🟣部署新版本" segmented size="small">
+    <n-card title="应用运行情况" size="small">
+        <Status :aid="aid" />
+    </n-card>
+
+    <n-card title="部署新版本" class="mt-2" segmented size="small">
         <n-form :show-feedback="false" label-placement="top">
             <n-grid cols="8" x-gap="12">
                 <n-form-item-gi label="版本号">
@@ -11,22 +15,22 @@
 
                 <n-form-item-gi label="上传资源文件">
                     <Uploader action="/page/terminal/deploy" :data="bean" accept=".zip,.js,.jar" :noticeOnOk="false" @ok="uploadDone">
-                        <n-button type="primary" block size="large"> <template #icon><n-icon :component="PaperPlane" /></template> 上传资源包</n-button>
+                        <n-button type="primary" block size="large"> <template #icon><n-icon :component="Upload" /></template> 上传资源包</n-button>
                     </Uploader>
                 </n-form-item-gi>
             </n-grid>
         </n-form>
     </n-card>
 
-    <VersionList ref="versionList" class="mt-2" :aid="aid" :pid="pid" height="calc(100vh - 270px)" />
+    <VersionList ref="versionList" class="mt-2" :aid="aid" :pid="pid" height="calc(100vh - 425px)" />
 </template>
 
 <script setup>
     import { ref, reactive } from 'vue'
-    import { PaperPlane } from "@vicons/fa"
+    import { PaperPlane, Upload } from "@vicons/fa"
 
     import Uploader from "@C/uploader.vue"
-
+    import Status from "./status.vue"
     import VersionList from "../widget/version-list.vue"
 
     const props = defineProps({

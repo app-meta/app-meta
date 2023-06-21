@@ -235,6 +235,7 @@ export const callServer = async (action, data={}, bodyType=0, withToken=true, op
         */
         console.log(chalk.magenta(`--------------------------------- 首行内容 ---------------------------------`))
         console.log(await readFirstLine(saveToFile))
+        console.log(chalk.magenta(`--------------------------------- 首行内容 ---------------------------------`))
     }
     else{
         let res = await got.post(url, body).json()

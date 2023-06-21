@@ -179,6 +179,7 @@
             return new Promise((ok)=>{
                 let value = ps.value
                 dialog.create({
+                    style: ps.style,
                     title,
                     bordered: false,
                     showIcon: ps.icon,
@@ -190,11 +191,12 @@
                     content: ()=>[
                         h(ps.type=='number'? NInputNumber : NInput, {
                             defaultValue: value,
+                            placeholder: ps.placeholder,
                             type: ps.type,
-                            rows: ps.type=='textarea'?5:1,
+                            rows: ps.type=='textarea'?(ps.rows??5):1,
                             "on-update:value": v=> value = v,
                         }),
-                        ps.message? h(NText, {depth:3, class:"mt-1"}, UI.html(ps.message)) : undefined
+                        ps.message? h('div',{class:"mt-2"}, h(NText, {depth:3}, UI.html(ps.message))) : undefined
                     ],
                     onPositiveClick: ()=> ok(value)
                 })

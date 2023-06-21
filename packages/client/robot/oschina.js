@@ -13,6 +13,8 @@ document.querySelectorAll(".headline,.tab-page").forEach(v=>{
     })
 })
 
+alert("数据获取完成")
+
 
 META.notify("从开源中国（OSCHINA）首页咨询栏获取到关键字 "+keyword+" 相关文章 "+texts.length+" 篇，请查看日志获取详细的信息")
 // META.data(texts)

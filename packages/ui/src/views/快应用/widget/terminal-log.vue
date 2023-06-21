@@ -25,7 +25,7 @@
         aid:{type:String}
     })
 
-    let { beans , form, pagination, refresh } = P(props.aid?`/terminal/log-${props.aid}`:`/system/terminal/log`)
+    let { beans , form, pagination, refresh } = P(props.aid?`/page/terminal/trace-${props.aid}`:`/system/terminal/trace`)
 
     const columns = computed(()=>{
         let cs = [{ title:"序号", align:"center", width:60, render:(row, index)=>index+1 }]

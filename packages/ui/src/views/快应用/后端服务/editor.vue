@@ -53,7 +53,13 @@
                         <n-text depth="3" class="ml-3">勾选后则需要填写详细的数据库信息</n-text>
                     </n-form-item>
                     <template v-if="bean.useDB">
-                        <n-form-item label="数据库地址"><n-input v-model:value="bean.dbHost" /></n-form-item>
+                        <n-form-item label="数据库地址">
+                            <n-input-group>
+                                <n-input v-model:value="bean.dbHost" />
+                                <n-input-group-label size="large">:</n-input-group-label>
+                                <n-input-number style="width:220px" v-model:value="bean.dbPort" :min="0" placeholder="端口" />
+                            </n-input-group>
+                        </n-form-item>
                         <n-form-item label="数据库名称"><n-input v-model:value="bean.dbName" /></n-form-item>
                         <n-form-item label="数据库用户"><n-input v-model:value="bean.dbUser" /></n-form-item>
                         <n-form-item label="数据库密码"><n-input type="password" v-model:value="bean.dbPwd" /></n-form-item>

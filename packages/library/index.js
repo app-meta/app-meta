@@ -8,6 +8,7 @@ import * as util from './module/util'
 import * as api from './module/api'
 import * as app from './module/app'
 import * as data from './module/data'
+import * as service from './module/service'
 
 import { openUrl, withPost as post } from "./common"
 
@@ -22,7 +23,8 @@ export {
 
     api,
     app,
-    data
+    data,
+    service
 }
 
 /**

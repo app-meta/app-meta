@@ -1,10 +1,12 @@
-import { createReadStream, existsSync, readFileSync, statSync } from 'fs'
+import { createReadStream, existsSync, readFileSync, statSync, mkdirSync } from 'fs'
 
 import FormData from 'form-data'
 
 import { Command, Argument } from 'commander'
-import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfPid, optionOfUid, optionOfValue } from '../core/base.js'
-import { callServer, isDir, isFile, printDebug, printOK, printObj, printTable, zipDir } from '../core/util.js'
+import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfId, optionOfOutput, optionOfPid, optionOfUid, optionOfValue } from '../core/base.js'
+import { callServer, isDir, isFile, printDebug, printOK, printObj, printObjects, printTable, startLoading, stopLoading, zipDir } from '../core/util.js'
+import { join, dirname } from 'path'
+import chalk from 'chalk'
 
 const DIST = "dist"
 
@@ -139,8 +141,39 @@ const pageLinks = async ps=>{
     printTable(res.data.map(i=>cols.map(c=>i[c])), cols)
 }
 
+const listOrDownload = async ps=>{
+    if(!ps.aid)   throw `请通过 -a,--aid 指定应用ID`
+    if(ps.download===true){
+        let output = join(ps.aid, ps.path)
+        let dir = dirname(output)
+        existsSync(dir) || mkdirSync(dir, { recursive: true })
+
+        await callServer("/page/terminal/file", {id: ps.aid, key: ps.path, value:"download"}, 0, true, {}, output)
+    }
+    else{
+        let toRow = f=> [f.type==0?chalk.magenta('目录'):chalk.blue('文件'), f.name, f.type==0?"-":`${f.size} B`, f.time]
+        let res = await callServer("/page/terminal/file", {id: ps.aid, key: ps.path})
+        let { file, content } = res.data
+
+        let row = toRow(file)
+        console.log(`路径：${ps.path??"/"}`)
+        console.log(`类型：${row[0]}`)
+        console.log(`大小：${row[2]}`)
+        console.log(`更新：${row[3]}`)
+        console.log()
+
+        if(file.type == 0)
+            printTable((content??[]).map(toRow), `目录结构`)
+        else{
+            console.log(chalk.magenta(`文件前 10 行内容`))
+            content.forEach(v=> console.log(v))
+        }
+    }
+}
+
 export default (app=new Command())=> {
     const page = app.command("page [id]")
+        .alias("p")
         .description(
             Array.of(
                 `功能页面相关`,
@@ -167,6 +200,28 @@ export default (app=new Command())=> {
         .option('--version [string]', "版本号（默认为当前日期）")
         .option('-m, --message [string]', "更新描述信息")
         .action(deploy)
+
+    page.command("file")
+        .description(`显示后端服务部署的目录结构或下载文件（该功能仅限 template=server）`)
+        .option(...optionOfAid)
+        .option(...optionOfOutput)
+        .option('-d, --download', "下载文件")
+        .option('-p, --path [string]', "文件/目录路径，默认为根目录")
+        .action(listOrDownload)
+
+    page.command("status [id]")
+        .description(`显示后端服务的运行状态（该功能仅限 template=server）`)
+        .option(...optionOfAid)
+        .action(async (id, ps)=>{
+            id??=ps.aid
+            if(!id) throw `请通过 -a,--aid 指定应用ID`
+
+            startLoading(`读取应用 #${id} 的运行状态...`)
+            let res = await callServer("/page/terminal/overview", {id})
+            stopLoading()
+
+            printObj(res.data)
+        })
 
     page.command("create")
         .alias("c")

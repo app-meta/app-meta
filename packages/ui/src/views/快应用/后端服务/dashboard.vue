@@ -27,7 +27,7 @@
     let loading = ref(true)
 
     onMounted(() => {
-        RESULT("/page/terminal/log-overview", {id: props.aid}, d=>{
+        RESULT("/page/terminal/trace-overview", {id: props.aid}, d=>{
             let dd = d.data
             if(dd.used && dd.total) dd.used /= dd.total
 
