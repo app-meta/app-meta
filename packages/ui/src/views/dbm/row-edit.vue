@@ -2,7 +2,7 @@
 <template>
     <n-drawer v-model:show="active" :width="width" :close-on-esc="false">
         <n-drawer-content title="数据行编辑" :closable="true">
-            <n-form :show-feedback="false" label-placement="left" label-width="100">
+            <n-form :show-feedback="false" label-placement="left" :label-width="labelWidth">
                 <n-space vertical>
                     <n-form-item v-for="item in items" :label="item.id">
                         <template #label>
@@ -41,6 +41,7 @@
         sourceId:{type:[Number, String]}
     })
 
+    let labelWidth = ref(100)
     let active = ref(false)
     let items = ref({})
     let values = {}
@@ -63,6 +64,7 @@
 
         values = {}
         cols.forEach(c=> values[c.id]=c.value)
+        labelWidth.value = 40 + 6*Math.max(...cols.map(c=>c.id.length))
 
         items.value = cols
         active.value = true

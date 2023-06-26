@@ -42,8 +42,9 @@ export default (app=new Command())=> {
         .description(`对指定数据源执行 SQL 语句（使用 -f,--file 可执行 SQL 文件）`)
         .option(...optionOfFile)
         .option('-d, --db <string>', "指定数据库名称")
+        .option('-b, --batch', "批量执行SQL（支持多行）")
         .action(async (sourceId, sql, ps)=>{
-            let model = { sourceId, action:"SQL", db: ps.db }
+            let model = { sourceId, action:"SQL", db: ps.db, batch: ps.batch===true }
             model.sql = toBase64(sql ?? tryLoadFile(ps.file))
 
             let res = await callServer("/dbm", model)

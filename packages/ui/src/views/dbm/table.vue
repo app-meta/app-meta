@@ -1,5 +1,6 @@
 <template>
-    <n-data-table v-if="ok" :columns="columns" :data="rows" :style="{height}" :bordered="false" striped size="small" flex-height :row-props="rowProps" />
+    <n-data-table v-if="ok" :columns="columns" class="db-table-view" :data="rows" :style="{height}" :bordered="false" striped size="small"
+        :scroll-x="scrollX" flex-height :row-props="rowProps" />
 </template>
 
 <script setup>
@@ -13,8 +14,10 @@
     })
     const resizable = true
     const ellipsis  = true
+    const width     = 120
 
     let ok = ref(false)
+    let scrollX = ref(window.screen.availWidth - 50)
     let heads = []
     let columns = []
     let rows = []
@@ -29,7 +32,7 @@
             if(head){
                 let hs = items.shift()
                 heads = (Array.isArray(hs)?hs:[hs])
-                let cs = heads.map((key, i)=>({ title: key, key:i, resizable, ellipsis, render:row=> row[i] }))
+                let cs = heads.map((key, i)=>({ title: key, key:i, resizable, ellipsis, width, render:row=> row[i],className:"db-cell" }))
                 if(cs.length>1){
                     //增加展开行
                     cs.unshift({
@@ -37,6 +40,7 @@
                         renderExpand: bean => h(TableExpand, {heads, bean}) // JSON.stringify(row)
                     })
                 }
+                scrollX.value = cs.length * width + 100
                 columns = cs
             }
             //适配 expand
@@ -53,3 +57,11 @@
 
     defineExpose({ update })
 </script>
+
+<style lang="less">
+    .db-table-view {
+        .db-cell {
+            padding:2px !important;
+        }
+    }
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <n-card title="本应用服务访问总览">
+    <n-card size="small" title="本应用服务访问总览">
         <n-spin :show="loading">
             <n-grid :x-gap="12" :cols="4">
                 <n-gi><n-statistic label="总调用次数"><template #prefix><n-icon :component="Hourglass" /></template> {{overview.total}}</n-statistic></n-gi>
@@ -10,7 +10,9 @@
         </n-spin>
     </n-card>
 
-    <LogList height="calc(100vh - 280px)" :aid="aid" />
+    <div class="mt-2">
+        <LogList height="calc(100vh - 230px)" :aid="aid" />
+    </div>
 </template>
 
 <script setup>
@@ -29,7 +31,10 @@
     onMounted(() => {
         RESULT("/page/terminal/trace-overview", {id: props.aid}, d=>{
             let dd = d.data
-            if(dd.used && dd.total) dd.used /= dd.total
+            if(dd.used && dd.total) {
+                dd.used /= dd.total
+                dd.used.toFixed && (dd.used = dd.used.toFixed(2))
+            }
 
             overview.value = dd
             loading.value = false

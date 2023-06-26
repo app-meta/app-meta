@@ -27,7 +27,7 @@
     import { RouterLink } from "vue-router"
     import {
         Home, Cog, Cogs, Wrench, Database, ShieldAlt, Parking,GlobeAsia, Icons, ChartPie, UserShield, AppStore, InfoCircle, Html5, Bullhorn,
-        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,BezierCurve, UserCircle
+        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit
     } from "@vicons/fa"
 
     import Banner from "@CC/Banner.vue"
@@ -65,7 +65,7 @@
             items.push(menuItem("dbm-source", "数据源维护", Database))
         }
         if(isAdminOr("API_ADMIN")){
-            items.push(menuItem("api", "开放接口", BezierCurve))
+            items.push(menuItem("api", "开放接口", Code))
         }
 
         if(window.User && User.isAdmin){
@@ -73,10 +73,14 @@
                 label:"管理员功能", key:"admin-menu", icon:UI.buildIcon2(ShieldAlt),
                 children:[
                     menuItem("sys-dashboard", "数据总览", TachometerAlt),
-                    menuItem("app-home", "应用管理", AppStore),
-                    menuItem("sys-ui", "资源更新", Html5),
-                    menuItem("sys-page-link", "页面关注维护", Star),
-                    menuItem("sys-terminal", "后端服务", Server),
+                    {
+                        label:"应用/页面维护", key:"app-manage", icon: UI.buildIcon2(AppStore),
+                        children:[
+                            menuItem("app-home", "应用管理", AppStore),
+                            menuItem("sys-page-link", "页面关注维护", Star),
+                            menuItem("sys-terminal", "后端服务/SERVER", Server),
+                        ]
+                    },
                     {
                         label:"组织及权限", key:"account", icon: UI.buildIcon2(Sitemap),
                         children:[
@@ -86,6 +90,7 @@
                     {
                         label:"系统维护", key:"system", icon: UI.buildIcon2(Cog),
                         children:[
+                            menuItem("sys-ui", "资源更新", Html5),
                             menuItem("sys-member", "授权会员终端", IdCard),
                             menuItem("sys-notice", "公告维护", Bullhorn),
                             menuItem("sys-setting", "系统设置", Wrench),
@@ -109,6 +114,7 @@
             // },
             { label: '我的应用', key:"app-mine", icon:()=>UI.buildIcon(AppStore) },
             { label: '我的关注', key:"mine-link", icon:()=>UI.buildIcon(Star) },
+            { label: '我维护的功能页', key:"mine-edit", icon:()=>UI.buildIcon(Edit) },
         ]
         if(isAdminOr("DEVELOPER")) items.push({ label:"访问本地前端项目", key:"dev-h5", icon:()=> UI.buildIcon(Html5) })
 

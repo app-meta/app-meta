@@ -2,7 +2,10 @@
 <template>
     <!-- style="width:960px;margin:0px auto;" -->
     <n-card title="后端服务配置" segmented size="small">
-        <n-form :show-feedback="false" size="large" label-placement="left" label-width="200">
+        <n-alert :bordered="false" type="info">
+            首次使用时，请编辑本页内容并保存，仅当 <Tag>部署方式</Tag> 设置为 <Tag>平台部署</Tag> 才能解锁 ⌈上传与部署⌋ 面板
+        </n-alert>
+        <n-form :show-feedback="false" size="large" label-placement="left" label-width="140">
             <n-space vertical>
                 <n-form-item label="部署方式">
                     <n-radio-group v-model:value="bean.mode">

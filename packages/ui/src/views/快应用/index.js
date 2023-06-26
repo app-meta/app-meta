@@ -41,6 +41,24 @@ export const renderProps = {
     data: {type:String, default:"[]"}
 }
 
+export function pageManage(router){
+    let toView = row=>{
+        if(row.template == 'robot')
+            return M.confirm(`运行机器人`, `确定执行网页机器人⌈${row.name}⌋吗？`, ()=> H.app.runRobot(row.id))
+        let r = router.resolve({name:`app-view`, params:{aid:row.aid, pid: row.id}})
+        H.openUrl(r.href, {title: row.name, center:true })
+    }
+
+    let toEdit = row=>{
+        let r = router.resolve({name:`app-page-${row.template}`, params:{id:row.id, aid:row.aid}})
+        let width = Math.floor(window.screen.availWidth * 0.9)
+        let height = Math.floor(window.screen.availHeight * 0.8)
+        H.openUrl(r.href, {title:`${row.name}·编辑页面`, center:true, width, height })
+    }
+
+    return { toView, toEdit }
+}
+
 export function pageEditor(defaultVal, translator, padding=true){
     let {id, aid}   = useRoute().params
     let bean        = ref(defaultVal)
@@ -100,4 +118,24 @@ export const initCtrlAndS = (handler, keyName="s")=>{
             handler && handler()
         }
     }
+}
+
+/**
+ *
+ * @param {Object} row
+ * @param {String} key
+ * @param {*} value
+ * @param {String} tip
+ * @returns
+ */
+export const modifyPage = (row, key, value, tip="操作成功")=> new Promise(ok=> RESULT("/page/modify", {id: row.id, key, value}, d=> {
+    window.M.ok(tip)
+    row[key] = value
+    ok()
+}))
+
+
+export const toView = id=>{
+    const router = useRouter()
+    console.debug(router)
 }

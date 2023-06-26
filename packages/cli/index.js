@@ -11,6 +11,7 @@ import other from "./module/other.js"
 import page from "./module/page.js"
 import system from "./module/system.js"
 import dbm from "./module/dbm.js"
+import service from "./module/service.js"
 import openapi from "./module/openapi.js"
 import data from "./module/data.js"
 
@@ -19,6 +20,7 @@ const app = new Command()
 common(app)
 page(app)
 data(app)
+service(app)
 dbm(app)
 openapi(app)
 other(app)

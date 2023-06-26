@@ -48,6 +48,7 @@ let router = BuildRouter(
 
             /**个人中心 */
             { path: '/mine/link', name: 'mine-link', meta:{title:"关注管理"}, component: () => import('@V/个人中心/我的关注.vue') },
+            { path: '/mine/edit', name: 'mine-edit', meta:{title:"我维护的功能页"}, component: () => import('@V/个人中心/我的维护.vue') },
 
             /**其他页面 */
             { path: '/other/about', name: 'o-about', meta:{title:"关于"}, component: () => import('@V/其他/About.vue') },

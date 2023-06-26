@@ -8,7 +8,7 @@
                 <Tag size="large">{{bean.type}}</Tag>
                 <n-text class="text-3xl">{{bean.name}}</n-text>
                 <n-select @update:value="onSelectDb" style="width:200px" filterable placeholder="请选择数据库" v-model:value="model.db" :options="dbOptions"></n-select>
-                <n-select @update:value="onSelectTable" style="width:200px" filterable placeholder="请选择表" v-model:value="model.table" :options="tableOptions"></n-select>
+                <n-select @update:value="onSelectTable" style="width:200px" filterable :placeholder="tableTip" v-model:value="model.table" :options="tableOptions"></n-select>
                 <n-popover placement="bottom" trigger="click" @update:show="onDetail">
                     <template #trigger><n-button :disabled="!model.table" secondary title="选择表后可以查看其结构">显示表结构</n-button></template>
                     <n-spin v-if="loading"></n-spin>
@@ -33,7 +33,7 @@
 
         <n-tabs type="card"  @close="handleClose" closable class="mt-2" v-model:value="tab">
             <n-tab-pane :name="SQL" display-directive="show:lazy" tab="SQL 脚本" :closable="false">
-                <n-input type="textarea" size="small" placeholder="请输入SQL代码，按 CTRL+ENTER 执行（注意查询添加 LIMIT 以提高性能）" :rows="8"
+                <n-input type="textarea" size="small" placeholder="请输入SQL代码，按 CTRL+ENTER / CTRL+SHIFT+ENTER（多行） 执行（注意查询添加 LIMIT 以提高性能）" :rows="8"
                     v-model:value="model.sql" @keyup="handleKeyUp" :loading="running" :readonly="running" />
 
                 <TableView class="mt-3" ref="sqlResultTable" style="height: calc(100vh - 360px)"/>
@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, reactive } from 'vue'
+    import { ref, onMounted, reactive, nextTick } from 'vue'
     import { useRoute } from 'vue-router'
 
     import { loadItems, detectForm } from "."
@@ -77,6 +77,8 @@
     let tableDetail = ref([])
     let tableDatas = {}
 
+    let tableTip = ref("请选择表")
+
     let tab = ref(SQL)
     let panels = ref([])
 
@@ -88,16 +90,14 @@
         inited.value = true
     }
 
-    const handleKeyUp = ({ctrlKey, keyCode})=>{
+    const handleKeyUp = ({ctrlKey, shiftKey, keyCode})=>{
         if(ctrlKey==true && keyCode==13){
-            // CTRL+ENTER
-            console.debug("执行sql", model.sql)
             running.value = true
             let started = Date.now()
-            RESULT("/dbm", Object.assign({}, model, {sql: H.secret.toBase64(model.sql)}), d=> {
+            RESULT("/dbm", Object.assign({}, model, {sql: H.secret.toBase64(model.sql), batch: shiftKey}), d=> {
                 running.value = false
                 let used = Date.now() - started
-                M.info(`SQL 执行完成（耗时 ${~~used} ms）`)
+                M.info(`SQL${shiftKey?"(多行模式)":""} 执行完成（耗时 ${~~used} ms）`)
 
                 sqlResultTable.value.update(d.data)
             }, {loading: running})
@@ -106,7 +106,8 @@
 
     const onSelectDb = v=> loadItems(id, v).then(d=>{
         tableOptions.value = UI.buildOptions(d)
-        M.ok(`切换数据库⌈${v}⌋（${d.length}个表）`)
+        // M.ok(`切换数据库⌈${v}⌋（${d.length}个表）`)
+        tableTip.value = `共 ${d.length} 个表`
     })
 
     const onSelectTable = table=>{
@@ -166,8 +167,14 @@
         RESULT("/dbm/source/detail", {id}, d=> {
             let { data } = d
             if(data && data.id == id){
-                if(data.db)
+                if(data.db){
                     onDatabases(data.db)
+                    // 自动选择数据库
+                    nextTick(()=>{
+                        onSelectDb(data.db)
+                        model.db = data.db
+                    })
+                }
                 else
                     loadItems(id).then(onDatabases)
 

@@ -10,7 +10,6 @@ import { checkConfigValue, config } from './config.js'
 import { appName } from './base.js'
 import { aes } from '@app-meta/basic'
 import { pipeline } from 'stream/promises'
-import { PassThrough } from 'stream'
 import ora from 'ora'
 
 // export const UID = "uid"
@@ -182,7 +181,7 @@ export const startLoading = (textOrOptions)=> {
  *
  * @param {String}  action
  * @param {Object}  data
- * @param {boolean} bodyType    0=JSON 格式，1=Form，2=BODY（发送文件）
+ * @param {boolean} bodyType    0=JSON 格式，1=Form，2=BODY（发送文件），3=GET 方式提交
  * @param {boolean} withToken
  * @param {Object}  options
  * @returns
@@ -192,9 +191,11 @@ export const callServer = async (action, data={}, bodyType=0, withToken=true, op
     data.channel ??= "cli"
 
     let body = Object.assign({}, options)
-    body[bodyType==0?'json': (bodyType==1?'form':'body')] = data
+    if(bodyType != 3)
+        body[bodyType==0?'json': (bodyType==1?'form':'body')] = data
 
     if(!configs)    loadConfig()
+    let method = bodyType == 3 ? "get":"post"
 
     // 构建 header
     let headers = {}
@@ -225,7 +226,7 @@ export const callServer = async (action, data={}, bodyType=0, withToken=true, op
     let url = `${configs.host}${action}`
     if(!!saveToFile && typeof(saveToFile) == 'string'){
         await pipeline(
-            got.stream.post(url, body),
+            got.stream[method](url, body),
             createWriteStream(saveToFile)
         )
         console.log(`服务器响应写入到 ${saveToFile}（SIZE=${statSync(saveToFile).size})\n`)
@@ -238,7 +239,7 @@ export const callServer = async (action, data={}, bodyType=0, withToken=true, op
         console.log(chalk.magenta(`--------------------------------- 首行内容 ---------------------------------`))
     }
     else{
-        let res = await got.post(url, body).json()
+        let res = await got[method](url, body).json()
         if(res.success===true){
             res.used = ((Date.now() - started)/1000).toFixed(3)
             return res

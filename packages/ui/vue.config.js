@@ -107,7 +107,8 @@ module.exports = {
                 '@Store'        : resolve("src/store"),
                 '@S'            : resolve("src/service"),                       //接口相关
                 '@T'            : resolve("src/theme"),                         //主题相关
-                '@U'            : resolve("src/util")                           //通用工具
+                '@U'            : resolve("src/util"),                          //通用工具
+                '@F'            : resolve("src/views/快应用")
             }
         }
 

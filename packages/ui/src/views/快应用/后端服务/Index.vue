@@ -37,7 +37,7 @@
     let { id, aid, bean, inited, updateContent } = pageEditor(
         { mode:INSIDE, language:"node", dbHost:"localhost" },
         d=> JSON.parse(d),
-        false
+        true
     )
 
     let canDeploy = ref(bean.value.mode==INSIDE)

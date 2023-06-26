@@ -12,7 +12,7 @@
 
     import { Plus,Trash,Check, Edit, Eye, ShieldAlt, ShieldVirus, FileWord, Download, Upload, SyncAlt } from '@vicons/fa'
 
-    import { templates, findTemplate } from "./"
+    import { templates, findTemplate, pageManage } from "./"
     import CreatePage from "./create-page.vue"
     import ClickInput from "@C/dbclick.input.vue"
     import Template from "../widget/page.template.vue"
@@ -22,7 +22,8 @@
     let aid = useRoute().params.id
     const router = useRouter()
 
-    let oldTitle = ref("")
+    const { toView, toEdit } = pageManage(router)
+
     let height = "calc(100% - 0px)"
     let align = "center"
     let columns = [
@@ -121,19 +122,6 @@
 
     let docRef  = ref()
 
-    let toView = row=>{
-        if(row.template == 'robot')
-            return M.confirm(`运行机器人`, `确定执行网页机器人⌈${row.name}⌋吗？`, ()=> H.app.runRobot(row.id))
-        let r = router.resolve({name:`app-view`, params:{aid:row.aid, pid: row.id}})
-        H.openUrl(r.href, {title: row.name, center:true })
-    }
-
-    let toEdit = row=>{
-        let r = router.resolve({name:`app-page-${row.template}`, params:{id:row.id, aid}})
-        let width = Math.floor(window.screen.availWidth * 0.9)
-        let height = Math.floor(window.screen.availHeight * 0.8)
-        H.openUrl(r.href, {title:`${row.name}·编辑页面`, center:true, width, height })
-    }
     let refresh = ()=> RESULT("/page/list", {form:{EQ_aid:aid}}, d=> beans.value=d.data, {loading})
 
     let modify = (row, key, value, tip="操作成功")=> RESULT("/page/modify", {id: row.id, key, value}, d=> {

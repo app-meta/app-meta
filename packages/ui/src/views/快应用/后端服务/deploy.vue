@@ -22,7 +22,7 @@
         </n-form>
     </n-card>
 
-    <VersionList ref="versionList" class="mt-2" :aid="aid" :pid="pid" height="calc(100vh - 425px)" />
+    <VersionList ref="versionList" class="mt-2" :aid="aid" :pid="pid" height="calc(100vh - 405px)" />
 </template>
 
 <script setup>

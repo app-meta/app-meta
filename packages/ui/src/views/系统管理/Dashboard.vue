@@ -7,27 +7,27 @@
         <template #header-extra>操作系统版本：{{os.os}}</template>
         <n-grid :cols="5" :x-gap="gap" :y-gap="gap">
             <n-gi>
-                <n-alert :show-icon="false" type="info" title="启动日期">
+                <n-alert :show-icon="false" :bordered="border" type="info" title="启动日期">
                     <n-text class="text-2xl">{{os.started}}</n-text>
                 </n-alert>
             </n-gi>
             <n-gi>
-                <n-alert :show-icon="false" type="info" title="处理器信息">
+                <n-alert :show-icon="false" :bordered="border" type="info" title="处理器信息">
                     <n-text class="text-2xl">{{os.osCpu}}</n-text>
                 </n-alert>
             </n-gi>
             <n-gi>
-                <n-alert :show-icon="false" type="info" title="线程总数">
+                <n-alert :show-icon="false" :bordered="border" type="info" title="线程总数">
                     <n-text class="text-2xl">{{os.threads}}<n-text depth="3" class="text-sm ml-1">个</n-text></n-text>
                 </n-alert>
             </n-gi>
             <n-gi>
-                <n-alert :show-icon="false" type="info" title="平台内存(已用/总)">
+                <n-alert :show-icon="false" :bordered="border" type="info" title="平台内存(已用/总)">
                     <n-text class="text-2xl">{{os.memory}}/{{os.memoryMax}}<n-text depth="3" class="text-sm ml-1">MB</n-text></n-text>
                 </n-alert>
             </n-gi>
             <n-gi>
-                <n-alert :show-icon="false" type="info" title="系统内存(空闲/总)">
+                <n-alert :show-icon="false" :bordered="border" type="info" title="系统内存(空闲/总)">
                     <n-text class="text-2xl">{{os.osMemFree}}/{{os.osMem}}<n-text depth="3" class="text-sm ml-1">MB</n-text></n-text>
                 </n-alert>
             </n-gi>
@@ -37,7 +37,7 @@
     <n-card title="应用数据统计" size="small" class="mt-3">
         <n-grid v-if="cols>0" :cols="cols" :x-gap="gap" :y-gap="gap">
             <n-gi v-for="item in bean">
-                <n-alert :show-icon="false" :type="getTheme(item)" :title="item.label">
+                <n-alert :show-icon="false" :bordered="border" :type="getTheme(item)" :title="item.label">
                     <n-text class="text-4xl">
                         <n-number-animation :from="0" show-separator :to="item.value" />
                         <n-text v-if="item.suffix" depth="3" class="text-sm ml-1">{{item.suffix}}</n-text>
@@ -68,7 +68,8 @@
 
     import { findTemplate } from "../快应用"
 
-    const gap           = 15
+    const border        = false
+    const gap           = 12
     const chartHeight   = 400
     const topNameOnY    = false      //热度排行是否横向显示
 
