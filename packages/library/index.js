@@ -99,20 +99,42 @@ export const copyTo = (obj, pretty=false)=> {
     else if(navigator.clipboard)
         navigator.clipboard.writeText(text)
     else {
-        // 创建text area
-        let textArea = document.createElement("textarea")
-        textArea.value = text
-        // 使text area不在viewport，同时设置不可见
-        textArea.style.position = "absolute"
-        textArea.style.opacity = 0
-        textArea.style.left = "-99999px"
-        textArea.style.top = "-99999px"
-        document.body.appendChild(textArea)
-        textArea.focus()
-        textArea.select()
+        // // 创建text area
+        // let textArea = document.createElement("textarea")
+        // textArea.value = text
+        // // 使text area不在viewport，同时设置不可见
+        // textArea.style.position = "absolute"
+        // textArea.style.opacity = 0
+        // textArea.style.left = "-99999px"
+        // textArea.style.top = "-99999px"
+        // document.body.appendChild(textArea)
+        // textArea.focus()
+        // textArea.select()
+        // document.execCommand('copy')
+        // textArea.remove()
+
+        const textarea = document.createElement('textarea')
+        textarea.addEventListener('focusin', (event) => event.stopPropagation())
+        textarea.value = text
+        textarea.setAttribute('readonly', '')
+        textarea.style.cssText =  'position:fixed; pointer-events:none; z-index:-9999; opacity:0;'
+
+        document.body.appendChild(textarea)
+        textarea.select()
         document.execCommand('copy')
-        textArea.remove()
+        document.body.removeChild(textarea)
     }
+}
+
+/**
+ * 判断参数是否为一个有内容的字符串
+ * @param {*} v
+ * @returns
+ */
+export const hasText = v=>{
+    if(v == null)   return false
+    if(typeof(v)==='string') return /[^\s]/.test(v)
+    return false
 }
 
 export { openUrl, post }

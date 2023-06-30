@@ -2,7 +2,7 @@
 <template>
     <n-space justify="space-between">
         <n-space>
-            <n-input v-model:value="form.LIKE_uid_name" placeholder="ID或者用户名" clearable />
+            <n-input v-model:value="form.LIKE_id_name" placeholder="ID或者用户名" clearable />
             <n-button secondary circle type="success" @click="refresh">
                 <template #icon><n-icon :component="Search" /> </template>
             </n-button>

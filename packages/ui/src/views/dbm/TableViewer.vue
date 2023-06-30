@@ -1,9 +1,9 @@
 <template>
     <n-space>
-        <n-input v-model:value="model.condition" style="width:460px">
+        <n-input v-model:value="model.condition" style="width:460px" @keyup="handleKeyUp">
             <template #prefix><Tag>WHERE</Tag></template>
         </n-input>
-        <n-input v-model:value="model.columns" style="width:320px">
+        <n-input v-model:value="model.columns" style="width:320px" @keyup="handleKeyUp">
             <template #prefix><Tag>列</Tag></template>
         </n-input>
         <n-button secondary type="primary" @click="refresh"><template #icon><n-icon :component="Search" /></template></n-button>
@@ -39,6 +39,8 @@
             }
         )
     }
+
+    const handleKeyUp = ({ctrlKey, key})=> ctrlKey && key=='Enter' && refresh()
 
     onMounted( refresh )
 </script>

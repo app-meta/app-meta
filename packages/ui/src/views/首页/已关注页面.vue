@@ -1,10 +1,10 @@
 <!--显示我的已关注页面-->
 <template>
-    <n-card class="hover">
+    <n-card class="hover" size="small">
         <template #header>
             <n-tooltip>
                 <template #trigger>
-                    <n-tag size="large" @click="refreshCache" :bordered="false" type="primary" class="text-lg cursor-pointer">我的快捷功能</n-tag>
+                    <n-tag @click="refreshCache" :bordered="false" class="cursor-pointer">我的快捷功能</n-tag>
                 </template>
                 这里显示你关注的功能页面（看不到已经关注的功能页面时请使用此按钮进行强制刷新）
             </n-tooltip>
@@ -24,7 +24,7 @@
                     <n-button block secondary  @click="runPage(item)">
                         <template #icon><n-icon :component="item.tpl.icon" :class="item.tpl.theme" /></template>
                         <!-- {{item.name}} -->
-                        <n-ellipsis><Title :text="item.name" /></n-ellipsis>
+                        <n-ellipsis><Title size="small" :text="item.name" /></n-ellipsis>
                     </n-button>
                 </n-gi>
             </n-grid>

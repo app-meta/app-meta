@@ -104,7 +104,6 @@
 
         loadContent(pid)
             .then(dd=>{
-                console.debug(dd, state.value)
                 if(dd.success != true){
                     return state.value = 4
                 }

@@ -106,7 +106,7 @@ export default (app=new Command())=> {
         .action(async ()=> printObjects(await callServer("/system/cache/list")) )
 
     cache.command("clean")
-        .description(`清空指定缓存（使用 -n, --name 指定名称，多个用英文逗号隔开）`)
+        .description(`清空指定缓存（使用 -k, --key 指定名称，多个用英文逗号隔开）`)
         .option(...optionOfKey)
         .option(...optionOfId)
         .action(async ps=>{

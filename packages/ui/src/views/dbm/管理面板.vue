@@ -33,8 +33,10 @@
 
         <n-tabs type="card"  @close="handleClose" closable class="mt-2" v-model:value="tab">
             <n-tab-pane :name="SQL" display-directive="show:lazy" tab="SQL 脚本" :closable="false">
-                <n-input type="textarea" size="small" placeholder="请输入SQL代码，按 CTRL+ENTER / CTRL+SHIFT+ENTER（多行） 执行（注意查询添加 LIMIT 以提高性能）" :rows="8"
-                    v-model:value="model.sql" @keyup="handleKeyUp" :loading="running" :readonly="running" />
+                <!-- <n-input type="textarea" size="small" placeholder="请输入SQL代码，按 CTRL+ENTER / CTRL+SHIFT+ENTER（多行） 执行（注意查询添加 LIMIT 以提高性能）" :rows="8"
+                    v-model:value="model.sql" @keyup="handleKeyUp" :loading="running" :readonly="running" /> -->
+                <CodeEditor placeholder="请输入SQL代码，按 CTRL+ENTER / CTRL+SHIFT+ENTER（多行） 执行（注意查询添加 LIMIT 以提高性能）" :keyBinds="[{key:'Ctrl-Enter'}]"
+                    @keyup="handleKeyUp" v-model:value="model.sql" ref="editor" language="sql" style="height: 190px;" />
 
                 <TableView class="mt-3" ref="sqlResultTable" style="height: calc(100vh - 360px)"/>
             </n-tab-pane>
@@ -61,6 +63,7 @@
     import TableView from "./table.vue"
     import TableViewer from "./TableViewer.vue"
     import RowEdit from "./row-edit.vue"
+    import CodeEditor from "@C/editor.code.vue"
 
     const route = useRoute()
     const id = route.params.id
@@ -91,7 +94,11 @@
     }
 
     const handleKeyUp = ({ctrlKey, shiftKey, keyCode})=>{
+        if(running.value === true)  return
+
         if(ctrlKey==true && keyCode==13){
+            if(!H.hasText(model.sql))   return M.warn(`请输入 SQL 语句`)
+
             running.value = true
             let started = Date.now()
             RESULT("/dbm", Object.assign({}, model, {sql: H.secret.toBase64(model.sql), batch: shiftKey}), d=> {
