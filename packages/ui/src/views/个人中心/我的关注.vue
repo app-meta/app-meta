@@ -19,7 +19,6 @@
     import Template from "@V/widget/page.template.vue"
 
     import { templates, findTemplate } from "../快应用"
-    import { runPage } from "@S/Runner"
     import P from "@Pagination"
 
     let { beans , form, pagination, refresh } = P(`/page/link/list`)
@@ -58,4 +57,9 @@
             }
         }
     ]
+
+    const toDelete = (id, index)=> RESULT("/page/link/remove/"+id, {}, d=> {
+        M.notice.ok(`数据删除成功`)
+        beans.value.splice(index, 1)
+    })
 </script>

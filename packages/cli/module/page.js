@@ -85,7 +85,7 @@ const deploy = async (packageName, ps, cmd)=>{
 }
 
 const detail = async id=>{
-    let res = await callServer('/page/detail', {id})
+    let res = await callServer('/page/detail', {id, channel:"cli"})
     console.log(`页面 #${id} 详细`)
     console.log(res.data)
 }

@@ -113,6 +113,7 @@
 
     const onSelectDb = v=> loadItems(id, v).then(d=>{
         tableOptions.value = UI.buildOptions(d)
+        model.table = ""
         // M.ok(`切换数据库⌈${v}⌋（${d.length}个表）`)
         tableTip.value = `共 ${d.length} 个表`
     })
@@ -129,9 +130,9 @@
     }
 
     const handleClose = name=>{
-        let i = panels.value.findIndex(p=>p.name==name)
-        if(i>=0){
-            panels.value.splice(i, 1)
+        let nameIndex = panels.value.findIndex(p=>p.name==name)
+        if(nameIndex>=0){
+            panels.value.splice(nameIndex, 1)
             if(name == tab.value){
                 tab.value = panels.value.length==0? SQL : panels.value[Math.min(nameIndex, panels.value.length - 1)].name
             }

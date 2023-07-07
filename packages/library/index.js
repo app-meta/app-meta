@@ -99,20 +99,6 @@ export const copyTo = (obj, pretty=false)=> {
     else if(navigator.clipboard)
         navigator.clipboard.writeText(text)
     else {
-        // // 创建text area
-        // let textArea = document.createElement("textarea")
-        // textArea.value = text
-        // // 使text area不在viewport，同时设置不可见
-        // textArea.style.position = "absolute"
-        // textArea.style.opacity = 0
-        // textArea.style.left = "-99999px"
-        // textArea.style.top = "-99999px"
-        // document.body.appendChild(textArea)
-        // textArea.focus()
-        // textArea.select()
-        // document.execCommand('copy')
-        // textArea.remove()
-
         const textarea = document.createElement('textarea')
         textarea.addEventListener('focusin', (event) => event.stopPropagation())
         textarea.value = text

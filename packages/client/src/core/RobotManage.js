@@ -59,7 +59,7 @@ module.exports = {
                 workers.push(robot)
                 logger.debug(`Robot#${robot.getUUID()} 加入队列...`)
                 // 统计执行次数
-                callServer("/app/launch", {aid: robot.aid, pid:robot.pid}).catch(e=> logger.error(`调用 /app/launch 接口失败`, e))
+                callServer("/app/launch", {aid: robot.aid, pid:robot.pid, channel:"client"}).catch(e=> logger.error(`调用 /app/launch 接口失败`, e))
 
                 robot.onClosed = ({ uuid, aid, pid, bean, startOn, params, logs })=>{
                     let index = workers.findIndex(w=>w.uuid == uuid)

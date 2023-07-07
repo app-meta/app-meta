@@ -64,7 +64,7 @@
 
         values = {}
         cols.forEach(c=> values[c.id]=c.value)
-        labelWidth.value = 40 + 6*Math.max(...cols.map(c=>c.id.length))
+        labelWidth.value = 40 + 6.5 * Math.max(...cols.map(c=>c.id.length))
 
         items.value = cols
         active.value = true
@@ -80,7 +80,6 @@
         //检测变动数量
         if(Object.keys(changes).length == 0)  return M.warn(`系统检测到数据未修改`)
 
-        console.debug(changes)
         _do(changes)
     }
     const toDel = ()=> _do()
