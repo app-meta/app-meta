@@ -34,11 +34,15 @@ export const templates = [
 ]
 export const findTemplate = tpl=> templates.find(v=>v.id==tpl) || {text:"未知", theme:"error", summary:`未知的模板类型⌈${tpl}⌋`, icon:ExclamationTriangle }
 
+/**
+ * 渲染器属性
+ */
 export const renderProps = {
     aid: {type:String, default:""},
     page: {type:Object},
     pid:{type:[Number, String], default:""},
-    data: {type:String, default:"[]"}
+    data: {type:String, default:"[]"},
+    params: {type:Object, default:()=>({})}
 }
 
 export function pageManage(router){

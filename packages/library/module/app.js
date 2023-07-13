@@ -1,4 +1,5 @@
 import { withPost, openUrl } from "../common"
+import { compress } from "./io"
 
 /**
  * 运行应用，默认以新窗口打开（不判断应用预设的属性，如窗口大小）
@@ -9,12 +10,17 @@ export const run=(id)=> runPage(id, null, true)
 
 /**
  * 运行页面
- *
+ * @param {*} aid
+ * @param {*} pid
+ * @param {*} blank     是否在新页面打开（新窗口）
+ * @param {*} params    参数（通过 URL 传递）
  */
-export const runPage=(aid, pid, blank=false)=>{
+export const runPage=(aid, pid, blank=false, params)=>{
     let url = `${location.origin}${location.pathname}#/app/${aid}`
     if(pid)
         url += `/${pid}`
+    if(params)
+        url += `?params=${encodeURIComponent(compress(params))}`
     blank? H.openUrl(url): location.href = url
 }
 

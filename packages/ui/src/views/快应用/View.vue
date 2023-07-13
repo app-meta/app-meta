@@ -61,6 +61,8 @@
      */
     let state   = ref(-1)
     let data    = undefined
+    // 增加页面参数传递
+    let params  = {}
 
     let viewer  = ()=> {
         let tpl = bean.page.template
@@ -75,7 +77,12 @@
             tpl=='sfc'?         SFCRender:
             null
         if(com == null) throw Error(`应用⌈${bean.page.name}⌋未定义对应的渲染器，请联系管理员`)
-        return h(com, {data, aid, page: bean.page})
+        return h(com, {data, aid, page: bean.page, params})
+    }
+
+    const loadParamsFromQuery = ()=>{
+        let p = route.query.params
+        window.pageParams = params = p? JSON.parse(H.io.unCompress(decodeURIComponent(p))) : {}
     }
 
     const defaultHome = ()=> h(DefaultHome, {app: bean.app})
@@ -107,6 +114,8 @@
                 if(dd.success != true){
                     return state.value = 4
                 }
+                loadParamsFromQuery()
+
                 //运行小程序
                 if(template === 'h5')
                     return FETCH_JSON(window.SERVER+"/app/launch", {aid, pid, channel}, true).then(()=> location.href = dd.data)
@@ -137,5 +146,7 @@
         }
     })
 
+    loadParamsFromQuery()
+    console.debug(params)
     onMounted( refresh )
 </script>

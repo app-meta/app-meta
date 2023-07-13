@@ -1,7 +1,7 @@
 <template></template>
 <script setup>
     import { ref, h } from 'vue'
-    import { useMessage, useNotification, useDialog,NButton, NText, NInput, NInputNumber, useLoadingBar, NTable, NTr, NTd, NTh, NTabs, NTabPane } from "naive-ui"
+    import { useMessage, useNotification, useDialog,NButton, NText, NCard, NSpace, NInput, NInputNumber, useLoadingBar, NTable, NTr, NTd, NTh, NTabs, NTabPane } from "naive-ui"
 
     const notification  = useNotification()
     const message       = useMessage()
@@ -12,42 +12,34 @@
     let showMsg = (content, type="info")=> message[type](content)
 
     /**
-     *
-     * @params filename 若设置则视为支持导出（以此为文件名）
+     * data         需要显示的数组
+     * onRowClick   行点击的回调函数
      */
-    const renderTable = (data, filename, onRowClick)=> ()=> {
+    const renderTable = (data, onRowClick, ps={})=> {
         let id = `TABLE${Math.floor(Math.random()*1000)}`
         let handlerClick =  onRowClick && typeof(onRowClick)=='function'
-        let items = [
-            h(
-                NTable,
-                {size:"small", striped:true, id},
-                ()=> data.map((row, rowIndex)=> h(
+        window._showDataTableId = id
+        return h(
+            NTable,
+            { class:"m-dialog-table", size:"small", striped:true, singleColumn:true, id, ...ps },
+            // ()=> data.map((row, rowIndex)=> h(
+            //     NTr,
+            //     { onClick: handlerClick?()=>onRowClick(row, rowIndex): undefined },
+            //     ()=>row.map(cell=> h(rowIndex==0?NTh:NTd, ()=>cell))
+            // ))
+            ()=> [
+                h('thead', h(NTr,{}, ()=>data[0].map(cell=> h(NTh, ()=>cell)))),
+                h('tbody', data.slice(1).map(row=> h(
                     NTr,
                     { onClick: handlerClick?()=>onRowClick(row, rowIndex): undefined },
-                    ()=>row.map(cell=> h(rowIndex==0?NTh:NTd, ()=>cell))
-                ))
-            )
-        ]
-        if(!!filename) {
-            items.push(
-                h('div', {class:"text-center mt-2"}, h(
-                    NButton,
-                    {
-                        size:"small", type:"primary", secondary:true,
-                        onClick:()=> {
-                            let ele = document.querySelector(`#${id}`)
-                            if(!ele)    return M.error(`待导出的 Table 对象不存在`)
-
-                            H.excel.saveTable(ele, filename)
-                        }
-                    },
-                    ()=>"导出表格到Excel"
-                ))
-            )
-        }
-        return items
+                    ()=>row.map(cell=> h(NTd, ()=>cell))
+                )))
+            ]
+        )
     }
+
+    const renderHTML = t=> h('div',{innerHTML: t})
+
 
     /**
      * 注册到全局 window 属性，方便其他页面使用
@@ -128,35 +120,92 @@
         /**
          * 以对话框的形式展示数据
          *
+         * 示例：
+         * M.showData({'第一章':[["标题","世说新语解读"],['主讲人','张大师'],['时长','60分钟']],'第二章':[["标题","西游记新式解读"],['主讲人','李专家'],['时长','120分钟']]},{tabs:false, buttons:[{action:'excel'}]})
+         *
          * @params data 若为数组则以表格展示；字符串则以 HTML 展示；Object 则以 Tabs 形式展示
          * @params ps   详见 https://www.naiveui.com/zh-CN/light/components/dialog#useDialog-API
          *              如果想要确认交互，请传递 {positiveText:"确认", onPositiveClick:()=>console.debug("点击了确认按钮")}
+         *              buttons: [
+         *                  { text:"内容", theme:"类型，默认为primary", action: 字符串 或者回调函数 ()=>{} }
+         *              ]
          */
         showData (data, ps={}){
-            ps = Object.assign({title:"数据展示", width: "800px", showIcon: true, transformOrigin:"center", onRowClick: undefined, pre:false}, ps)
+            ps = Object.assign(
+                {
+                    title:"数据展示",                //对话框标题
+                    width: "800px",                 //对话框宽度
+                    showIcon: true,                 //是否显示图标
+                    transformOrigin:"center",       //弹框动画起源位置
+                    onRowClick: undefined,          //表格行点击回调（仅针对二维数组）
+                    pre:false,                      //原样展示文本内容（使用 pre 标签）
+                    tabs: true,                     //展示 Map/Object 时使用 tabs 组件，设置为 false 时则采用瀑布式垂直展示
+                },
+                ps
+            )
+            let items = []
             if(Array.isArray(data) && Array.isArray(data[0])){
-                ps.content = renderTable(data, ps.filename, ps.onRowClick)
+                items.push(renderTable(data, ps.onRowClick))
             }
             else if(typeof(data) === 'string'){
-                ps.content = ps.pre? ()=>h('pre', {class:"break", style:{'line-height':"100%"}}, data) : UI.html(data)
+                items.push(ps.pre? h('pre', {class:"break", style:{'line-height':"100%"}}, data) : renderHTML(data))
             }
             else if(typeof(data) === 'object'){
-                ps.content = ()=>h(
-                    NTabs,
-                    {},
-                    ()=>Object.keys(data).map((title, index)=>h(
-                        NTabPane,
-                        {name: "DIALOG-TAB-"+index, tab:title},
-                        Array.isArray(data[title])?
-                            renderTable(data[title], ps.filename, ps.onRowClick)
-                            :
-                            UI.html(data[title])
-                    ))
+                items.push(
+                    ps.tabs === true?
+                        h(NTabs, {}, ()=>Object.keys(data).map((title, index)=>h(
+                            NTabPane,
+                            {name: "DIALOG-TAB-"+index, tab:title},
+                            Array.isArray(data[title])?
+                                renderTable(data[title], ps.onRowClick)
+                                :
+                                renderHTML([title])
+                        )))
+                        :
+                        h(NSpace, {vertical:true}, ()=> Object.keys(data).map((title, index)=>h(
+                            NCard,
+                            { title, size:"small" },
+                            ()=>Array.isArray(data[title])?
+                                renderTable(data[title], ps.onRowClick, {bordered:false, bottomBordered:false})
+                                :
+                                renderHTML([title])
+                        )))
                 )
             }
             else if(typeof data ==='function')
-                ps.content = data
+                items.push(data)
 
+            if(Array.isArray(ps.buttons)){
+                items.push(
+                    h(
+                        NSpace,
+                        {class:"text-center mt-2", justify:"center"},
+                        ()=> ps.buttons.map(btn=>{
+                            let isExcel = btn.action==='excel'
+                            if(isExcel && !btn.text) btn.text = "导出表格到 Excel"
+                            return h(
+                                NButton,
+                                {
+                                    type: btn.theme??"primary",
+                                    onClick:()=> {
+                                        if(isExcel){
+                                            // 如果需要下载多个表格，可以通过 class="m-dialog-table" 获取并筛选
+                                            let ele = document.querySelector(`#${_showDataTableId}`)
+                                            if(!ele)    return M.error(`待导出的 Table 对象不存在`)
+
+                                            H.excel.saveTable(ele, btn.params||`表格导出.xlsx`)
+                                        }
+                                        else if(typeof(btn.action)==='function')
+                                            btn.action()
+                                    }
+                                },
+                                ()=> btn.text
+                            )
+                        })
+                    )
+                )
+            }
+            ps.content = ()=> items
             ps.style = {width:ps.width, maxWidth:"100%"}
             return dialog.create(ps)
         },
