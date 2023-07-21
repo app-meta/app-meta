@@ -188,7 +188,6 @@ export const startLoading = (textOrOptions)=> {
  */
 export const callServer = async (action, data={}, bodyType=0, withToken=true, options={}, saveToFile)=> {
     let started = Date.now()
-    data.channel ??= "cli"
 
     let body = Object.assign({}, options)
     if(bodyType != 3)
@@ -198,7 +197,7 @@ export const callServer = async (action, data={}, bodyType=0, withToken=true, op
     let method = bodyType == 3 ? "get":"post"
 
     // 构建 header
-    let headers = {}
+    let headers = { CHANNEL: "cli" }
     if(withToken){
         if(!token){
             token = loadLocalToken()

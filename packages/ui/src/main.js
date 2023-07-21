@@ -8,7 +8,9 @@ import Tag from "@C/custom/tag.vue"
 import "@S/FastApp"
 import { defaultRoute, loadCommonData } from "@S/Auth"
 
-window.__META__ = _VERSION_
+window.__META__ = _VERSION_                                     //应用版本号
+window.isClient = !!window.META                                 //是否为客户端运行（exe）
+window.CHANNEL  = window.isClient?"client":"browser"            //渠道信息
 
 let blankRoutes = [
     { path: '/login', name: 'login', component: () => import('@V/登录/Login.vue') },

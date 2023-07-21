@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-08-23 13:04:59
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-06-06 11:43:39
+ * @Last Modified time: 2023-07-20 18:05:27
  *
  *
  * 注意：
@@ -188,7 +188,7 @@ window.RESULT=(url,data,onOk, ps={})=>{
             if(ps.fail)     ps.fail(e)
         },
         ps.json,
-        ps.headers
+        { CHANNEL: window.CHANNEL, ...ps.headers}
     )
 }
 
@@ -239,7 +239,7 @@ window.DOWNLOAD=(url, data, ps={})=>{
         ps
     )
     let form = new FormData()
-    let headers = {}
+    let headers = { CHANNEL: window.CHANNEL }
     if(ps.json){
         Object.keys(data).forEach(k=> form.append(k, data[k]))
 

@@ -95,7 +95,7 @@
      * @params {Function} 回调函数
      */
     const setupUser = (user, onDone)=>{
-        let account = { id: user.id, name: user.name, ip: user.ip, roles: user.roles, isAdmin: Array.isArray(user.roles) && user.roles.includes("ADMIN") }
+        let account = { ...user, isAdmin: Array.isArray(user.roles) && user.roles.includes("ADMIN") }
         //锁定用户对象，不支持修改
         Object.keys(account).forEach(k => {
             Object.defineProperty(account, k, { value: account[k], writable: false, enumerable: true, configurable: true })

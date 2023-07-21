@@ -19,6 +19,8 @@
 
     import P from "@Pagination"
 
+    import Channel from "@CC/channel.vue"
+
     const props = defineProps({
         height:{type:String, default:"400px"},
         query:{type:Boolean, default:false},
@@ -32,6 +34,7 @@
         if(props.query)
             cs.push({ title:"应用", width:140, key:"aid" })
         cs.push(...[
+            { title:"终端", key:"channel", width:45, render:row=> h(Channel, {channel:row.channel})},
             { title:"用户", key:"uid", width:100 },
             { title:"method", key:"method", width:100 },
             { title:"服务地址（URL）", key:"url" },

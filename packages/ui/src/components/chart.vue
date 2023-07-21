@@ -153,8 +153,9 @@ pieChart.value.update(
                 formatter:'{value} '+ps.danwei
             }
         }
-        if(props.toolbox) option.toolbox = toolbox
-        if(ps.customColor) option.color = ps.customColor
+        if(ps.legend)       option.legend = ps.legend
+        if(props.toolbox)   option.toolbox = toolbox
+        if(ps.customColor)  option.color = ps.customColor
 
         chart.setOption(option)
         if(ps.dispatchs && ps.dispatchs.length){

@@ -24,7 +24,7 @@ export const withPost = (action="", data, json=true, contextPath=window.SERVER, 
         `${contextPath}${action[0]=='/'?"":"/"}${action}`,
         {
             method: "POST",
-            headers:{"MUA": localStorage.getItem("MUA"), 'Content-Type': json?'application/json':'application/x-www-form-urlencoded'},
+            headers:{ CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA"), 'Content-Type': json?'application/json':'application/x-www-form-urlencoded'},
             body: data ? (json ? JSON.stringify(data) : stringify(data)):undefined
         }
     ).then(handler)
@@ -34,7 +34,7 @@ export const withGet = (action="", contextPath=window.SERVER, handler=handleResp
         `${contextPath}${action[0]=='/'?"":"/"}${action}`,
         {
             method:"GET",
-            headers:{"MUA": localStorage.getItem("MUA")}
+            headers:{ CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA")}
         }
     ).then(handler)
 

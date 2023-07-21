@@ -26,8 +26,6 @@ let _ = ref=> {
 window._    = _
 window._raw = ref=> toRaw(unref(ref))
 
-window.isClient = !!window.META
-
 /**
  * 调用客户端接口（invoke 方式，需要返回值）
  * @param {*} id
