@@ -116,4 +116,30 @@ exports.setToken = token => {
     MUA = token
     if(isDev) logger.debug(`设置 token`, token)
 }
+
+/**
+ * 发送数据（POST）到指定地址，RequestBody/JSON 格式
+ * @param {*} url
+ * @param {*} data
+ * @param {*} options
+ * @returns
+ */
+exports.withPost = async (url, data, options={})=>{
+    let ps = Object.assign({ headers:{"User-Agent":"app-meta/client" }, token: false }, options)
+    if(ps.token === true) Object.assign(ps.headers, { MUA })
+
+    if(isDev)   logger.debug(`[POST 数据] 到 ${url}`)
+
+    try {
+        let result = await axios({url, method, data, headers: ps.headers})
+        return result.data
+    } catch (error) {
+        throw Error(`[POST 数据] 出错：${error?.message}`)
+    }
+}
+
+/**
+ * 获取 token
+ * @returns
+ */
 exports.getToken = ()=> MUA

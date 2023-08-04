@@ -56,32 +56,30 @@ const deploy = async (packageName, ps, cmd)=>{
         await zipDir(originDir, packFile)
         console.log(`已打包到 ${packageName}.pack.zip （${(statSync(packFile).size/1024).toFixed(1)} KB）`)
     }
-    else {
-        if(!existsSync(packFile)) throw `文件 ${packFile} 不存在，请先打包...`
 
-        if(!pkg){
-            pkg = loadPkgJSON(`${root}/package.json`)
-            debug && printDebug(`读取 package.json 文件，appId=${pkg.appId} pageId=${pkg.pageId} template=${pkg.template}`)
-        }
+    if(!existsSync(packFile)) throw `文件 ${packFile} 不存在，请先打包...`
 
-
-        ps.aid ??= pkg.appId
-        ps.pid ??= pkg.pageId
-        ps.version ??= (now=>`${now.getFullYear()-2000}.${now.getMonth()+1}.${now.getDate()}`)(new Date)
-        ps.message ??= ""
-        if(!(ps.aid && ps.pid))  throw `未指定 appId、pageId（请通过 -a、-p 或者 package.json 定义）`
-
-        let body = new FormData()
-        body.append('file', createReadStream(packFile))
-        body.append('version', ps.version)
-        body.append('summary', ps.message)
-        body.append('aid', ps.aid)
-        body.append('pid', ps.pid)
-
-        debug && printDebug(`即将上传文件，template=${pkg.template} version=${ps.version} message=${ps.message}`)
-        let res = await callServer(`/page/${pkg.template||"h5"}/deploy`, body, 2)
-        printOK("部署完成")
+    if(!pkg){
+        pkg = loadPkgJSON(root)
+        debug && printDebug(`读取 package.json 文件，appId=${pkg.appId} pageId=${pkg.pageId} template=${pkg.template}`)
     }
+
+    ps.aid ??= pkg.appId
+    ps.pid ??= pkg.pageId
+    ps.version ??= (now=>`${now.getFullYear()-2000}.${now.getMonth()+1}.${now.getDate()}`)(new Date)
+    ps.message ??= ""
+    if(!(ps.aid && ps.pid))  throw `未指定 appId、pageId（请通过 -a、-p 或者 package.json 定义）`
+
+    let body = new FormData()
+    body.append('file', createReadStream(packFile))
+    body.append('version', ps.version)
+    body.append('summary', ps.message)
+    body.append('aid', ps.aid)
+    body.append('pid', ps.pid)
+
+    debug && printDebug(`即将上传文件，template=${pkg.template} version=${ps.version} message=${ps.message}`)
+    let res = await callServer(`/page/${pkg.template||"h5"}/deploy`, body, 2)
+    printOK("部署完成")
 }
 
 const detail = async id=>{

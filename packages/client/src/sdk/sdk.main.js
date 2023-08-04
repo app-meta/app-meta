@@ -8,7 +8,8 @@ const U = require("../common/util")
 const C = require("../Config")
 const R = require("../Runtime")
 const Global = require("../service/Global")
-const { REMOTE, REMOTE_UPLOAD } = require("../service/Http")
+const { REMOTE, REMOTE_UPLOAD, getToken } = require("../service/Http")
+const { createMainWindow } = require("../service/Helper")
 
 /**
  * VITE 下按照下方代码动态导入
@@ -51,7 +52,17 @@ let handlers = {
     'remote-api': async (suffix, data, ps={})=> await (ps._FILE_===true? REMOTE_UPLOAD : REMOTE)(`${C.serverHost}${C.serverContext}${suffix}`, data, ps),
 
     //模拟发送事件
-    'event' : (channel, ps)=> Global.sendEvent(channel,ps)
+    'event' : (channel, ps)=> Global.sendEvent(channel,ps),
+
+    /**
+     * 打开本地前端窗口
+     * @param {*} url
+     * @param {*} withToken
+     */
+    'open-local-url': (url, withToken=true)=>{
+        logger.debug(`打开本地地址（token=${withToken}） ${url}`)
+        createMainWindow(url, true, withToken?`localStorage.setItem("MUA", "${getToken()}")`:undefined)
+    }
 }
 
 /**

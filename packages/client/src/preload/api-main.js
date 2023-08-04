@@ -125,5 +125,7 @@ contextBridge.exposeInMainWorld('META', {
     // 将指定文本复制到粘贴板中
     copyText: text=> ipcRenderer.send('copyText', text),
 
-    token : v=> ipcRenderer.invoke('app.token', v)
+    token : v=> ipcRenderer.invoke('app.token', v),
+
+    // openLocalUrl : (url, withToken=true) => ipcRenderer.invoke("open-local-url", url, withToken)
 })

@@ -1,5 +1,5 @@
 const { getRobotInfo } = require("../core/RobotManage")
-const { callServer } = require("../service/Http")
+const { callServer, withPost } = require("../service/Http")
 const { getWindowId } = require("./tool")
 
 const _buildMatchModel = (modelOrId, pid)=>{
@@ -76,5 +76,15 @@ module.exports = {
      */
     'data.service': (e, path, data, useJson=true, specialAid)=> withRobot(e, (aid)=>{
         return RESULT(buildServiceUrl(path, specialAid||aid), data)
-    })
+    }),
+
+    /**
+     * 发送数据到指定的地址
+     * @param {*} e
+     * @param {*} url
+     * @param {*} data
+     * @param {*} ps
+     * @returns
+     */
+    'post': (e, url, data, ps={})=> withRobot(e, (aid, pid)=> withPost(url, data, ps))
 }

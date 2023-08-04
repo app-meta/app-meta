@@ -125,7 +125,14 @@
     const otherMenuClick = name=> {
         if(name == 'dev-h5'){
             M.prompt(`访问本地前端项目`,{message:"在客户端中打开本地开发中的前端项目，此功能用于小程序开发测试", value:'http://localhost:'}).then(url=>{
-                H.openUrl(url)
+                if(!url)   return M.warn(`请输入地址`)
+
+                if(!window.isClient) {
+                    H.openUrl(url)
+                    M.ok.warn(`打开本地前端项目`, `检测到非客户端环境，部分功能将受限制`)
+                }
+                else
+                    API("open-local-url", url)
             })
         }
         else

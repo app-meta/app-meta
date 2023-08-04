@@ -9,7 +9,13 @@ const data = {
     insert  : (rows)=> ipcRenderer.invoke("data.insert", rows),
     query   : (modelOrId={})=>ipcRenderer.invoke("data.query", modelOrId),
     getBlock: uuid=> ipcRenderer.invoke("data.getBlock", uuid),
-    setBlock: (uuid, text)=> ipcRenderer.invoke("data.setBlock", uuid, text)
+    /**
+     * 在机器人中设置 block 数据
+     * @param {String} uuid
+     * @param {String|Object} textOrObj
+     * @returns
+     */
+    setBlock: (uuid, textOrObj)=> ipcRenderer.invoke("data.setBlock", uuid, typeof(textOrObj)==='string'? textOrObj: JSON.stringify(textOrObj))
 }
 
 contextBridge.exposeInMainWorld('META', {
@@ -142,6 +148,9 @@ contextBridge.exposeInMainWorld('META', {
 
         return canvas.toDataURL(format)
     },
+
+    post : (url, data, ps)=> ipcRenderer.invoke('post', url, data, ps),
+
     //=====================================================================================================
     /**
      * 测试主进程与渲染经常的通信

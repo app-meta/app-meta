@@ -227,7 +227,15 @@
             ps = Object.assign({theme:'info', icon:false, type:'text'}, ps)
             return new Promise((ok)=>{
                 let value = ps.value
-                dialog.create({
+                let onOk = ()=> {
+                    if(value != null && (ps.type=='number' || !!value ))
+                        ok(value)
+                    else{
+                        M.warn(`请输入内容`)
+                        return false
+                    }
+                }
+                let instance = dialog.create({
                     style: ps.style,
                     title,
                     bordered: false,
@@ -244,10 +252,16 @@
                             type: ps.type,
                             rows: ps.type=='textarea'?(ps.rows??5):1,
                             "on-update:value": v=> value = v,
+                            "on-keyup": ({code})=> {
+                                if(code === 'Enter'){
+                                    onOk()
+                                    instance.destroy()
+                                }
+                            }
                         }),
                         ps.message? h('div',{class:"mt-2"}, h(NText, {depth:3}, UI.html(ps.message))) : undefined
                     ],
-                    onPositiveClick: ()=> ok(value)
+                    onPositiveClick: onOk
                 })
             })
         }

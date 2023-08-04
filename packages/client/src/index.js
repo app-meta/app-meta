@@ -1,5 +1,5 @@
 const { join } = require('path')
-const { app, protocol, BrowserWindow, Menu }= require('electron')
+const { app, protocol, BrowserWindow, Menu, shell }= require('electron')
 
 const API = require('./sdk')
 const R = require('./Runtime')
@@ -8,6 +8,7 @@ const logger = require('./common/logger')
 const { onBootstrap } = require('./core/Init')
 const { repairAndCheck, runRobot } = require('./core/RobotManage')
 const { setToken } = require('./service/Http')
+const { mainPreload, createMainWindow } = require('./service/Helper')
 
 //不提示安全信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -21,7 +22,6 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 let mainWindow  = null
-const preload   = join(__dirname, 'preload/api-main.js')
 
 /**
  * Restore existing BrowserWindow or Create new BrowserWindow
@@ -37,26 +37,7 @@ async function restoreOrCreateWindow() {
 }
 
 async function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: C.windowWidth,
-        height: C.windowHeight + (R.isDev ? 150 : 0),
-        show: true,
-        fullscreen: C.windowMax,
-        // 背景透明
-        // transparent: true,
-        // mac标题栏
-        // titleBarStyle: 'hiddenInset',
-        backgroundColor: R.background,
-        // 隐藏标题栏
-        // frame: true,
-        webPreferences: {
-            // nodeIntegration : process.env.ELECTRON_NODE_INTEGRATION,
-            // contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-            webSecurity     : false, //R.isDev? false: true,
-            nativeWindowOpen: true,
-            preload
-        },
-    });
+    mainWindow = createMainWindow()
 
     // mainWindow.setMenu(null)
     // 设置全局菜单不显示，如果某个窗口需要菜单，则通过 window.setMenu 方法
@@ -83,7 +64,6 @@ async function createWindow() {
 
     mainWindow.once('ready-to-show', ()=>{
         if(R.isDev) logger.debug("主窗口触发 ready-to-show 事件...")
-        if (R.isDev) mainWindow.webContents.openDevTools()
 
         R.mainWindowID = mainWindow.id
     })
@@ -97,17 +77,18 @@ async function createWindow() {
 
     webContents.setWindowOpenHandler( detail => {
         let { url, referrer } = detail
-        logger.debug(`打开页面：${url}`, `（内部页面=${url.indexOf(referrer.url)==0}）`)
+        let isInner = url.indexOf(referrer.url)==0
+        logger.debug(`打开页面：${url}`, `（内部页面=${isInner}, referrer=${referrer.url}）`)
         // logger.debug(JSON.stringify(detail, null, 4))
 
-        //打开内部网页
-        if(url.indexOf(referrer.url)==0){
+        //打开内部网页 或者 本地调试的前端项目
+        if(isInner || url.startsWith("http://localhost:")){
             return {
                 action: 'allow',
                 overrideBrowserWindowOptions:{
                     //隐藏菜单栏
                     autoHideMenuBar: true,
-                    webPreferences:{ nativeWindowOpen: true, preload }
+                    webPreferences:{ nativeWindowOpen: true, preload: mainPreload }
                 }
             }
         }

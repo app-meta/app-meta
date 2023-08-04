@@ -6,7 +6,8 @@
         </n-button>
     </n-space>
 
-    <n-data-table class="mt-2" :columns="columns" :pagination="pagination" :loading="pagination.loading" :data="beans" :style="{height}"
+    <!-- :pagination="pagination"  -->
+    <n-data-table class="mt-2" :columns="columns" :loading="pagination.loading" :data="beans" :style="{height}"
         :remote="true" :bordered="false" striped size="small" flex-height />
 </template>
 
@@ -45,7 +46,7 @@
                     h(
                         NPopconfirm,
                         {
-                            onPositiveClick:()=> toDelete(row.id, rowIndex),
+                            onPositiveClick:()=> toDelete(row.pid, rowIndex),
                             "positive-button-props": {type:"error"}
                         },
                         {
