@@ -1,5 +1,5 @@
 const { getRobotInfo } = require("../core/RobotManage")
-const { callServer } = require("../service/Http")
+const { callServer, withPost } = require("../service/Http")
 const { getWindowId } = require("./tool")
 
 const _buildMatchModel = (modelOrId, pid)=>{
@@ -61,9 +61,25 @@ module.exports = {
         return RESULT("/data/query", model)
     }),
 
+    /**
+     * 更新指定数据对象（限定 ID）
+     * @param {*} e
+     * @param {Number} id
+     * @param {Object} obj
+     * @returns
+     */
+    'data.update': (e, id, obj)=> withRobot(e, aid=> RESULT("/data/update", { aid, id, obj })),
+
     'data.getBlock': (e,uuid)=> withRobot(e, (aid)=> RESULT("/data/block/get", {aid, uuid})),
 
-    'data.setBlock': (e,uuid, text)=> withRobot(e, aid=> RESULT("/data/block/set", {aid, uuid, text})),
+    /**
+     *
+     * @param {*} e
+     * @param {String} uuid
+     * @param {String|Object} text
+     * @returns
+     */
+    'data.setBlock': (e,uuid, text)=> withRobot(e, aid=> RESULT("/data/block/set", {aid, uuid, text: typeof(text)==='string'? text: JSON.stringify(text)})),
 
     /**
      * 暂不支持非 JSON 参数的提交
@@ -76,5 +92,15 @@ module.exports = {
      */
     'data.service': (e, path, data, useJson=true, specialAid)=> withRobot(e, (aid)=>{
         return RESULT(buildServiceUrl(path, specialAid||aid), data)
-    })
+    }),
+
+    /**
+     * 发送数据到指定的地址
+     * @param {*} e
+     * @param {*} url
+     * @param {*} data
+     * @param {*} ps
+     * @returns
+     */
+    'post': (e, url, data, ps={})=> withRobot(e, (aid, pid)=> withPost(url, data, ps))
 }

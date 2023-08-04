@@ -16,6 +16,7 @@
         "client:start-win": "pnpm -F client start:win",
         "client:watch": "pnpm -F client watch",
         "client:watch-win": "pnpm -F client watch:win",
+        "cli:package": "pnpm -F cli package",
         "server": "pnpm -F server start"
     },
     "keywords": [

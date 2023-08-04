@@ -98,16 +98,17 @@ contextBridge.exposeInMainWorld('META', {
     addListener (channel, handler, uuid=0){
         console.debug(`[MAIN] 添加事件监听器 ${channel} (UID=${uuid})`)
 
-        listeners[name(channel, uuid)] = handler
-        ipcRenderer.on(channel, handler)
+        let proxyHandler = (_, ...ps)=> handler(...ps)
+        listeners[name(channel, uuid)] = proxyHandler
+        ipcRenderer.on(channel, proxyHandler)
     },
 
     addListenerOnce (channel, handler){
         console.debug(`[MAIN] 添加事件单次监听器 ${channel}`)
-        ipcRenderer.once(channel, handler)
+        ipcRenderer.once(channel, (_, ...ps)=> handler(...ps))
     },
 
-    removeListener (channel, handler, uuid=0){
+    removeListener (channel, uuid=0){
         console.debug(`[MAIN] 移除事件监听器 ${channel} (UID=${uuid})`)
 
         let funcName = name(channel, uuid)
@@ -125,5 +126,7 @@ contextBridge.exposeInMainWorld('META', {
     // 将指定文本复制到粘贴板中
     copyText: text=> ipcRenderer.send('copyText', text),
 
-    token : v=> ipcRenderer.invoke('app.token', v)
+    token : v=> ipcRenderer.invoke('app.token', v),
+
+    // openLocalUrl : (url, withToken=true) => ipcRenderer.invoke("open-local-url", url, withToken)
 })

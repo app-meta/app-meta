@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
+    import { ref, computed } from 'vue'
 
     import { pageEditor } from "../"
     import Editor from "./editor.vue"
@@ -40,7 +40,7 @@
         true
     )
 
-    let canDeploy = ref(bean.value.mode==INSIDE)
+    let canDeploy = computed(()=> bean.value.mode==INSIDE)
 
     const updater = (terminal, onDone)=>{
         updateContent(JSON.stringify(terminal), ()=>{

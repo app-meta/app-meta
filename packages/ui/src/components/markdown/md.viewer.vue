@@ -51,7 +51,7 @@
                     'base',
                 ]
             }),
-            pluginsForViewer
+            plugins: pluginsForViewer
         })
     })
 </script>

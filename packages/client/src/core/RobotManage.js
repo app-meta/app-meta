@@ -6,6 +6,7 @@ const { notice } = require("../service/notice")
 const { iconPath } = require("./App")
 const ScriptRobot = require("./Robot")
 const { callServer } = require("../service/Http")
+const { broadcastAll } = require("../service/Global")
 
 const PAGE = "page"
 
@@ -59,7 +60,12 @@ module.exports = {
                 workers.push(robot)
                 logger.debug(`Robot#${robot.getUUID()} 加入队列...`)
                 // 统计执行次数
-                callServer("/app/launch", {aid: robot.aid, pid:robot.pid, channel:"client"}).catch(e=> logger.error(`调用 /app/launch 接口失败`, e))
+                callServer("/app/launch", {aid: robot.aid, pid:robot.pid}).catch(e=> logger.error(`调用 /app/launch 接口失败`, e))
+
+                /*
+                广播机器人运行的事件，参数一为机器人基本信息{id，aid，name}，参数二为启动参数
+                 */
+                broadcastAll('robot.start', item.page, item.params)
 
                 robot.onClosed = ({ uuid, aid, pid, bean, startOn, params, logs })=>{
                     let index = workers.findIndex(w=>w.uuid == uuid)
@@ -83,6 +89,9 @@ module.exports = {
                         callServer("/page/robot/save", d)
                             .then(v=> logger.debug(`保存 ROBOT 运行信息（返回ID=${v.data}`))
                             .catch(e=> logger.error(`保存 ROBOT 运行信息出错`, e))
+
+                        //广播事件
+                        broadcastAll('robot.done', pid, d)
                     }
                 }
             }

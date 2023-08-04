@@ -18,6 +18,7 @@ const { isDev } = require("../Runtime")
 
 let MUA = ""
 const method = "POST"
+const CHANNEL = "client"
 
 const UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
 
@@ -104,7 +105,7 @@ exports.callServer = async (action, json, options={})=>{
     if(isDev) logger.debug(`调用接口 ${url}， 参数：${JSON.stringify(json)}`)
 
     // let result = await got(url, { method, json, headers: Object.assign({ MUA }, options.headers||{}) }).json()
-    let result = await axios({url, method, data: json, headers: Object.assign({ MUA }, options.headers||{}) })
+    let result = await axios({url, method, data: json, headers: Object.assign({ MUA, CHANNEL }, options.headers||{}) })
     let { data } = result
     if(data.success === true)
         return data
@@ -116,4 +117,30 @@ exports.setToken = token => {
     MUA = token
     if(isDev) logger.debug(`设置 token`, token)
 }
+
+/**
+ * 发送数据（POST）到指定地址，RequestBody/JSON 格式
+ * @param {*} url
+ * @param {*} data
+ * @param {*} options
+ * @returns
+ */
+exports.withPost = async (url, data, options={})=>{
+    let ps = Object.assign({ headers:{ "User-Agent":"app-meta/client" }, token: false }, options)
+    if(ps.token === true) Object.assign(ps.headers, { MUA })
+
+    if(isDev)   logger.debug(`[POST 数据] 到 ${url}`)
+
+    try {
+        let result = await axios({url, method, data, headers: ps.headers})
+        return result.data
+    } catch (error) {
+        throw Error(`[POST 数据] 出错：${error?.message}`)
+    }
+}
+
+/**
+ * 获取 token
+ * @returns
+ */
 exports.getToken = ()=> MUA

@@ -26,6 +26,7 @@ if(process.env.NODE_ENV==='test'){
     blankRoutes.push(
         { path: '/demo/excel', name: 'demo-excel', component: () => import('@V/快应用/在线Excel/Demo.vue') },
         { path: '/lab-func/sfc-loader', name: 'lab-sfc', component: () => import('@V/@LAB-FUNC/sfc-loader.vue') },
+        { path: '/lab-func/md-mermaid', name: 'lab-md', component: () => import('@V/@LAB-FUNC/md-mermaid.vue') },
         { path: '/demo', name: 'demo', component: () => import('@V/Demo.vue') }
     )
 }

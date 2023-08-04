@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "build": "webpack",
-        "offline": "node offline.js"
+        "offline": "node offline.js",
+        "package": "webpack && node offline.js"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",

@@ -35,3 +35,4 @@
 2023-05-09|6.8MB|2304KB|增加`font-awesome`图标库
 2023-05-12|7.65MB|2630KB|增加`dompurify`、`html2pdf.js`库
 2023-06-02|9.10MB|3003KB|增加`vue3-sfc-loader`库
+2023-08-08|12.3MB|4004KB|增加`mermaid`库（渲染 uml）

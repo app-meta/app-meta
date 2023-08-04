@@ -154,7 +154,7 @@
 
     let buildId = ()=> app.value.id = pinyin.getCamelChars(app.value.name)
 
-    const _onInit = (_app, _property={ winMax:false, winWidth:920, winHeight:480, winFrame:true, native: false }) => {
+    const _onInit = (_app, _property={ winMax:false, winWidth:1280, winHeight:760, winFrame:true, native: false }) => {
         app.value = _app
         property.value = _property
         inited.value = true

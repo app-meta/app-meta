@@ -32,7 +32,7 @@ module.exports ={
     sendEvent(channel, ps) {
         withMainWindow(web=>{
             web.send(channel, ps)
-            logger.debug(`发送 ${channel} 事件到主窗口: `, ps)
+            if(R.isDev) logger.debug(`[GLOBAL] 发送 ${channel} 事件到主窗口: `, ps)
         })
     },
 
@@ -45,8 +45,33 @@ module.exports ={
     sendNotice(msg, title, type = "info") {
         withMainWindow( web=> {
             web.send('notice', msg, title, type)
-            logger.debug(`发送 NOTICE·${type} 到主窗口：title=${title} msg=${msg}`)
+            R.isDev && logger.debug(`[GLOBAL] 发送 NOTICE·${type} 到主窗口：title=${title} msg=${msg}`)
         })
+    },
+
+    /**
+     * 给全部窗口广播事件
+     * @param {String} channel
+     * @param {Number} ignoreWindowId
+     * @param  {...any} ps
+     */
+    broadcast (channel, ignoreWindowId, ...ps){
+        R.isDev && logger.debug(`[GLOBAL] 广播事件 ${channel}`, ps)
+        for(let win of BrowserWindow.getAllWindows()){
+            if(win.id == ignoreWindowId)    continue
+
+            win.webContents.send(channel, ...ps)
+            R.isDev && logger.debug(`[GLOBAL] 广播事件 ${channel} 到窗口 #${win.id}`)
+        }
+    },
+
+    /**
+     * 给全部窗口广播事件
+     * @param {String} channel
+     * @param  {...any} ps
+     */
+    broadcastAll (channel, ...ps){
+        this.broadcast(channel, null, ...ps)
     },
 
     /**
@@ -55,7 +80,7 @@ module.exports ={
      * @param {*} file
      */
     saveStringToFile(content, file) {
-        logger.info(`保存文本到：${file}`)
+        logger.info(`[GLOBAL] 保存文本到：${file}`)
         fs.writeFileSync(path.resolve(file), content, { encoding: Config.encoding })
     },
 
@@ -66,11 +91,11 @@ module.exports ={
      */
     saveStringToFileWithSelect(content, filename) {
         let result = dialog.showSaveDialogSync({ title: "保存到", message: "保存到", defaultPath: filename })
-        logger.debug(`保存数据，选择的文件为：`, result)
+        R.isDev && logger.debug(`[GLOBAL] 保存数据，选择的文件为：`, result)
 
         if (result)
             this.saveStringToFile(content, result)
         else
-            logger.debug(`用户取消了保存...`)
+            R.isDev && logger.debug(`[GLOBAL] 用户取消了保存...`)
     }
 }
