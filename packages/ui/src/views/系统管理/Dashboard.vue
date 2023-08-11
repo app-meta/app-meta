@@ -55,6 +55,10 @@
         </n-gi>
         <n-gi>
             <n-card size="small" title="页面/功能热度TOP10">
+                <template #header-extra>
+                    <n-button text @click="toDashboard" type="info" size="small" title="查看应用总访问量统计"><template #icon><n-icon :component="TachometerAlt" /></template></n-button>
+                </template>
+
                 <Chart :style="{height: chartHeight+'px'}" ref="hotChart" :yCategory="topNameOnY"></Chart>
             </n-card>
         </n-gi>
@@ -62,11 +66,13 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, h, onMounted } from 'vue'
+    import { TachometerAlt } from "@vicons/fa"
 
     import Chart from "@C/chart.vue"
 
     import { findTemplate } from "../快应用"
+    import Dashboard from "@VW/app.overview.vue"
 
     const border        = false
     const gap           = 12
@@ -113,6 +119,8 @@
         drawTop(d.tops)
         drawPie(d.templates)
     }
+
+    const toDashboard = ()=> M.dialog({title:`应用总访问统计`,showIcon:false, style:{width: "1280px"}, content:()=> h(Dashboard, {aid: ""})})
 
     onMounted(() => RESULT("/system/dashboard/overview", {}, d => refresh(d.data)))
 </script>

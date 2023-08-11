@@ -14,7 +14,7 @@
 <script setup>
     import { ref, onMounted, h } from 'vue'
     import { useRouter } from 'vue-router'
-    import { Search, Plus, Trash, Edit, Table, Database, CodeBranch, Microsoft, Code } from "@vicons/fa"
+    import { Search, Plus, Trash, Edit, Table, Database, CodeBranch, Microsoft, Code, TachometerAlt } from "@vicons/fa"
     import { NPopconfirm } from 'naive-ui'
 
     import { runApp } from "@S/Runner"
@@ -22,6 +22,7 @@
     import Logo from "@VW/app.logo.vue"
     import Active from "@VW/app.active.vue"
     import Category from "@VW/app.category.vue"
+    import Dashboard from "@VW/app.overview.vue"
 
     const router = useRouter()
     const props = defineProps({
@@ -46,7 +47,7 @@
         { title:"热度/访问量", width:100, key:"launch" },
         { title:"简介", key:"summary",ellipsis:true },
         {
-            width:130, align:"center",
+            width:160, align:"center",
             title: ()=> UI.iconBtn(Plus, ()=> toEdit(), {type:"primary", secondary:true}),
             render(row, rowIndex) {
                 return [
@@ -55,6 +56,7 @@
                         UI.iconBtn(Code, ()=> toVersion(row.id), {title:"网页机器人管理"})
                         :
                         UI.iconBtn(Microsoft, ()=> router.push({name:"app-page", params:{id: row.id}}), {title:"页面管理"}),
+                    UI.iconBtn(TachometerAlt, ()=> toDashboard(row), {title:"访问数据统计"}),
                     UI.iconBtn(Database, ()=> toData(row.id), {title:"管理应用数据库"}),
                     h(
                         NPopconfirm,
@@ -79,6 +81,8 @@
     })
     let toData = id=> router.push({name:"app-data", params:{id}})
     let toStart = row=> runApp(row)
+
+    const toDashboard = row=> M.dialog({title:`${row.name}/应用访问统计`,showIcon:false, style:{width: "1280px"}, content:()=> h(Dashboard, {aid: row.id})})
 
     onMounted(() => {
 

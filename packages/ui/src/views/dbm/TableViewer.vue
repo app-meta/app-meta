@@ -1,6 +1,6 @@
 <template>
     <n-space>
-        <n-input v-model:value="model.condition" style="width:460px" @keyup="handleKeyUp">
+        <n-input v-model:value="model.condition" style="width:560px" @keyup="handleKeyUp" placeholder="统计查询，若需要增加 ORDER、GROUP 等可通过前置 1=1">
             <template #prefix><Tag>WHERE</Tag></template>
         </n-input>
         <n-input v-model:value="model.columns" style="width:320px" @keyup="handleKeyUp">
@@ -40,7 +40,7 @@
         )
     }
 
-    const handleKeyUp = ({ctrlKey, key})=> ctrlKey && key=='Enter' && refresh()
+    const handleKeyUp = ({key})=> key=='Enter' && refresh()
 
     onMounted( refresh )
 </script>

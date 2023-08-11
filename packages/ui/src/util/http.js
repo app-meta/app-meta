@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-08-23 13:04:59
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-07-20 18:05:27
+ * @Last Modified time: 2023-08-17 10:21:38
  *
  *
  * 注意：
@@ -47,7 +47,7 @@ let _dealWithErrorRequest = (url, error, onFail)=>{
  * @returns
  */
 window.FETCH_JSON = (url, body, widthToken=false, method="post")=> {
-    let headers = {'Content-Type': 'application/json'}
+    let headers = {'Content-Type': 'application/json', CHANNEL }
     if(widthToken)  headers["MUA"] = localStorage.getItem("MUA") || window.TOKEN || ""
 
     return fetch(url, {method, body:JSON.stringify(body), headers})

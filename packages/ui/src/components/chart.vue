@@ -134,7 +134,7 @@ pieChart.value.update(
                 return Object.assign({
                     type:"line",
                     smooth:true,
-                    areaStyle:{},
+                    areaStyle:{opacity: 0.8},
                     markLine: props.markLineAvg? (props.pie?{}: {data:[{type:'average'}]}) : undefined,
                     markPoint: props.markPointMax? { data:[{type: 'max'},{type: 'min'}]}: undefined
                 }, Array.isArray(s)? {data: s}: s)

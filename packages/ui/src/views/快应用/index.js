@@ -26,11 +26,11 @@ export const templates = [
     { id:"wenjuan",text:"调查问卷", theme: INPUT, icon:ListAltRegular, summary:"运用统一设计的问卷向被调查者了解情况或征询意见收集信息的调查方法"},
     { id:"table",text:"数据表格", theme: OUTPUT, icon:Table, summary:"以二维表格的形式展示数据，支持多条件筛选、自定义列"},
     { id:"chart",text:"统计图表", theme: OUTPUT, icon:ChartPie, summary:"用于制作台账、统计图等数据可视化页面"},
-    { id:"robot",text:"RPA机器人", theme: MIX, icon: Robot, summary:"基于 WEB 的 RPA 机器人（主要用于数据采集，需要目标网站支持 Chrome 浏览器）"},
+    { id:"robot",text:"RPA机器人", theme: MIX, icon: Robot, summary:"基于 WEB 的 RPA 机器人（主要用于数据采集，需要目标网站支持 Chrome 浏览器），需要在客户端环境下运行"},
     //SFC add on 2023-06-02
     { id:"sfc",text:"单文件组件", theme: MIX, icon: Vuejs, summary:"自定义Vue3页面（template+script+style），能够使用全局组件及接口"},
     { id:"h5",text:"H5小程序", theme: MIX, icon: Html5, summary:"自由灵活的 HTML5 页面（适用于具备开发能力的技术人员）"},
-    { id:"server",text:"后端服务", theme: MIX, icon: Server, summary:"部署在服务器的后端服务（目前仅支持 Node.js 开发语言）", onCreate:aid=>({name:`ENDPOINT-SERVICE`, search:false})},
+    { id:"server",text:"后端服务", theme: MIX, icon: Server, summary:"部署在服务器的后端服务（目前仅支持 Node.js、Java 开发语言）", onCreate:aid=>({name:`ENDPOINT-SERVICE`, search:false})},
 ]
 export const findTemplate = tpl=> templates.find(v=>v.id==tpl) || {text:"未知", theme:"error", summary:`未知的模板类型⌈${tpl}⌋`, icon:ExclamationTriangle }
 
