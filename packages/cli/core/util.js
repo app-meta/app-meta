@@ -64,8 +64,12 @@ export const loadConfig = (required=true)=>{
 
 export const printObj = (title, obj={}, nameLen=15)=>{
     console.group(title)
-    for(let key in obj)
-        console.log(`${key.padEnd(nameLen," ")}${obj[key]??"(未定义)"}`)
+    if(typeof(obj) === 'string')
+        console.log(obj)
+    else {
+        for(let key in obj)
+            console.log(`${key.padEnd(nameLen," ")}${obj[key]??"(未定义)"}`)
+    }
     console.groupEnd()
 }
 

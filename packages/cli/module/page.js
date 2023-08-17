@@ -78,8 +78,13 @@ const deploy = async (packageName, ps, cmd)=>{
     body.append('pid', ps.pid)
 
     debug && printDebug(`即将上传文件，template=${pkg.template} version=${ps.version} message=${ps.message}`)
+    printTable({ template: pkg.template, version:ps.version, message: ps.message })
+
     let res = await callServer(`/page/${pkg.template||"h5"}/deploy`, body, 2)
     printOK("部署完成")
+
+    if(res.data)
+        console.info(`${res.data}`.replace(/<br>/g, "\n"))
 }
 
 const detail = async id=>{

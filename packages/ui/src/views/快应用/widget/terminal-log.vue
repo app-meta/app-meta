@@ -37,7 +37,8 @@
             { title:"终端", key:"channel", width:45, render:row=> h(Channel, {channel:row.channel})},
             { title:"用户", key:"uid", width:100 },
             { title:"method", key:"method", width:100 },
-            { title:"服务地址（URL）", key:"url" },
+            {  title:"服务地址", key:"host" },
+            { title:"PATH", key:"url" },
             { title:"耗时（ms）", key:"used", width:100 },
             {
                 title:"响应码", key:"code", width:100,

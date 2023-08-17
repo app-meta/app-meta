@@ -30,7 +30,18 @@ Commands:
 
 * `pnpm build` 使用 webpack 进行打包
 * `pnpm offline` 将打包后的文件及`package.json`压缩为离线包
-* 在其他机器上解压上一步包，执行`npm link`即可完成全局安装，届时可以通过`meta -h`使用 😀
+* 在其他机器上解压上一步包（到指定位置），在目录下执行`npm link`即可完成全局安装，届时可以通过`meta -h`使用 😀
+
+### 应用配置
+
+1. 管理员配置`终端会员`（设置用户ID及密钥）
+2. 设置用户：meta config uid {ID}
+3. 设置密钥：meta config secret {密钥}
+4. 检测信息：meta info
+
+### 如何更新
+
+把最新的`meta-cli.cjs`覆盖旧文件即可
 
 ## 二次开发
 
