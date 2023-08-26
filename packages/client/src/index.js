@@ -8,6 +8,8 @@ const logger = require('./common/logger')
 const { onBootstrap } = require('./core/Init')
 const { repairAndCheck, runRobot } = require('./core/RobotManage')
 const { setToken } = require('./service/Http')
+const { mainPreload, createMainWindow } = require('./service/Helper')
+const { broadcastAll } = require('./service/Global')
 
 //不提示安全信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
