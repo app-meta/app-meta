@@ -5,7 +5,7 @@
  * H.data.init(aid, pid)
  */
 // import { stringify }  from 'qs'
-import { withPost } from "../common"
+import { withPost, setContextPath } from "../common"
 import { saveToFile } from "./io"
 
 const KEY   = "app.launch"
@@ -13,7 +13,6 @@ const KEY   = "app.launch"
 let aid     = ""
 let pid     = ""
 let debug   = false
-let prefix  = ""
 
 const log = (msg, ...ps)=>console.debug(`%c[数据接口] ${msg}`, "background:#8c0776;padding:3px;color:white", ...ps)
 
@@ -27,7 +26,7 @@ const send = (model, action="", json=true)=>{
     if(!aid) throw Error("DATA 模块尚未初始化，请先调用 init 方法")
 
     if(debug && action.startsWith("data/"))  log(`${action}`, model)
-    return withPost(action, model, json, prefix)
+    return withPost(action, model, json)
     // return fetch(
     //     `${prefix}/${action}`,
     //     {
@@ -47,11 +46,12 @@ export const init = (ps={})=>{
     if(!!aid) throw Error("DATA 模块已经初始化，无需重复调用 init 方法...")
     debug = ps.debug === true
     let initFromUrl = false
+    let prefix  = ""
 
     if(typeof(ps.aid) === 'string' && ps.aid && ps.aid.trim().length > 0){
         aid = ps.aid
         pid = ps.pid || ""
-        prefix  = ps.prefix || window.SERVER
+        prefix  = ps.prefix
     }
     // 尝试从 url 中读取相关信息
     else {
@@ -66,6 +66,8 @@ export const init = (ps={})=>{
     }
 
     if(!aid) throw Error(`参数 aid 不能为空`)
+
+    setContextPath(prefix||window.SERVER)
 
     debug &&  log(`环境初始化 AID=${aid} PID=${pid} PREFIX=${prefix}`)
 
@@ -299,26 +301,26 @@ export const listPage = ()=> send({form:{EQ_aid:aid, EQ_active:true}}, "page/lis
  */
 export const listAttach = (id=pid)=> send({id}, "page/document-list")
 
-const buildServiceUrl = (path, specialAid)=> `service/${specialAid || aid}/${path.startsWith("/")?path.substr(1):path}`
+// const buildServiceUrl = (path, specialAid)=> `service/${specialAid || aid}/${path.startsWith("/")?path.substr(1):path}`
 
-/**
- * 调用后端服务（必须返回 JSON 格式的对象或者字符串）
- *
- * @param {*} path              服务地址
- * @param {*} data              Object 类型的参数
- * @param {*} useJson           是否使用 JSON 格式提交（默认 true）
- * @param {*} specialAid        在某些情况下，需要调用跨应用的服务，传递此参数将覆盖默认的 aid
- * @param {*} responseHandler   fetch 方法的响应处理，默认是转换为 JSON 格式
- *                              如果后端返回文件流，则可以参考 _exportData 进行 blob 处理
- */
-export const service = (path, data, useJson=true, specialAid, responseHandler)=> withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, responseHandler)
+// /**
+//  * 调用后端服务（必须返回 JSON 格式的对象或者字符串）
+//  *
+//  * @param {*} path              服务地址
+//  * @param {*} data              Object 类型的参数
+//  * @param {*} useJson           是否使用 JSON 格式提交（默认 true）
+//  * @param {*} specialAid        在某些情况下，需要调用跨应用的服务，传递此参数将覆盖默认的 aid
+//  * @param {*} responseHandler   fetch 方法的响应处理，默认是转换为 JSON 格式
+//  *                              如果后端返回文件流，则可以参考 _exportData 进行 blob 处理
+//  */
+// export const service = (path, data, useJson=true, specialAid, responseHandler)=> withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, responseHandler)
 
-/**
- * 处理纯文本的远程返回内容
- * withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, response=> response.text())
- * @param {*} path
- * @param {*} data
- * @param {*} useJson
- * @param {*} specialAid
- */
-export const serviceForText = (path, data, useJson=true, specialAid) => service(path, data, useJson, specialAid, res=>res.text())
+// /**
+//  * 处理纯文本的远程返回内容
+//  * withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, response=> response.text())
+//  * @param {*} path
+//  * @param {*} data
+//  * @param {*} useJson
+//  * @param {*} specialAid
+//  */
+// export const serviceForText = (path, data, useJson=true, specialAid) => service(path, data, useJson, specialAid, res=>res.text())

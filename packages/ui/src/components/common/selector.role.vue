@@ -16,5 +16,5 @@
     let shadow = ref(props.value)
     let options = ref([])
 
-    onMounted(() => RESULT("/account/roles", {}, d=> options.value = d.data.map(v=>({label:v.name, value:v.id}))))
+    onMounted(() => H.app.roles().then(d=> options.value = d.data.map(v=>({label:v.name, value:v.id}))))
 </script>

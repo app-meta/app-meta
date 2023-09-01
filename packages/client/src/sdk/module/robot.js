@@ -19,7 +19,7 @@ module.exports ={
 
         if(data.template!='robot')  throw Error(`#${id} ⌈${name}⌋ 不是一个有效的机器人（TEMPLATE = ${data.template}）`)
         if(data.active != true)     throw Error(`网页机器人 #${id} ⌈${name}⌋ 未启用，请联系创建者`)
-        if(!content)                throw Error(`网页机器人 #${id} ⌈${name}⌋ 未初始化`)
+        if(!content)                throw Error(`网页机器人 #${id} ⌈${name}⌋ 未初始化或未授权`)
 
         runRobot(
             repairAndCheck({

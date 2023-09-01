@@ -89,7 +89,7 @@
                             <n-button @click="toImport" size="small" secondary type="primary" class="fr">从文件中导入</n-button>
                         </n-space>
                     <div class="mt-2">
-                        <CodeEditor v-model:value="bean.code" height="calc(100vh - 310px)" :tabSize="4" />
+                        <CodeEditor v-model:value="bean.code" height="calc(100vh - 315px)" :tabSize="4" />
                     </div>
                 </div>
             </n-form-item>

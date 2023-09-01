@@ -17,7 +17,7 @@ export const loadItems = (sourceId, db="")=> new Promise((ok)=> RESULT("/dbm/ite
  * @param {*} type
  */
 export const detectForm = (type, value)=>{
-    if(type == 'text')  return 'textarea'
+    if(type == 'text' || type=='json')  return 'textarea'
     if(type == 'tinyint(1)') return 'switch'
 
     if(typeof(value) == 'number')   return 'number'

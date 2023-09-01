@@ -79,3 +79,18 @@ export const runRobot = (id, params={})=> {
 
     return typeof(callClient)==='function'? callClient('runRobot', id, params) : META.runRobot(id, params)
 }
+
+/**
+ * 获取用户清单
+ * @param {String} id 若不为空则返回模糊匹配的结果
+ */
+export const users = (id)=> withPost(`/account/users`,{key:id})
+/**
+ * 获取部门清单
+ */
+export const departments = ()=>withPost(`/account/departs`)
+
+/**
+ * 获取角色列表
+ */
+export const roles = ()=> withPost(`/account/roles`)

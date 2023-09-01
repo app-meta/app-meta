@@ -10,11 +10,11 @@
         value: {type:[String, Number]},
         disabled:{type:Boolean, default:false},
         multiple:{type:Boolean, default:false},
-        placeholder:{type:String, default:"选择部门"}
+        placeholder:{type:String, default:"选择人员"}
     })
 
     let shadow = ref(props.value)
     let options = ref([])
 
-    onMounted(() => H.app.departments().then(d=> options.value = d.data.map(v=>({label:v.name, value:v.id}))))
+    onMounted(() => H.app.users().then(d=> options.value = d.data.map(v=>({label:`${v.name}(${v.id})`, value:v.id}))))
 </script>

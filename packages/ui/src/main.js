@@ -10,6 +10,7 @@ import { defaultRoute, loadCommonData } from "@S/Auth"
 
 window.__META__ = _VERSION_                                     //应用版本号
 window.isClient = !!window.META                                 //是否为客户端运行（exe）
+window.isPC     = true                                          //标识当前资源环境为 PC 网页环境（区别于移动端）
 window.CHANNEL  = window.isClient?"client":"browser"            //渠道信息
 
 let blankRoutes = [

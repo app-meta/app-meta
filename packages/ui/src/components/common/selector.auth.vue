@@ -77,7 +77,7 @@
         split   :{type:String, default:","},
         link    :{type:String, default:""},
         all     :{type:String, default:"**"},
-        url     :{type:String, default:"/account/list"},
+        url     :{type:String, default:"/account/all"},
         dataObj :{type:Object},
         tooltip :{type:Boolean, default: true}
     })

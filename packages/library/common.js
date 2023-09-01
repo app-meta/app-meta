@@ -1,3 +1,5 @@
+let contextPath
+
 // 简单的参数拼接，不支持数组
 const stringify = params=> Object.keys(params).map(v=>`${v}=${params[v]}`).join("&")
 
@@ -14,12 +16,21 @@ const handleResponse = response=> response.json().then(json=>{
 })
 
 /**
+ * 配置后端服务总地址
+ * @param {String} prefix
+ * @returns
+ */
+export const setContextPath = prefix=> contextPath = prefix
+
+/**
  * 以 POST 形式与后端进行交互
  * @param {*} model
  * @param {*} action
  * @returns
  */
-export const withPost = (action="", data, json=true, contextPath=window.SERVER, handler=handleResponse)=>{
+export const withPost = (action="", data, json=true, handler=handleResponse)=>{
+    contextPath ??= window.SERVER
+
     return fetch(
         `${contextPath}${action[0]=='/'?"":"/"}${action}`,
         {
