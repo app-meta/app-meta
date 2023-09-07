@@ -1,7 +1,6 @@
 const { join } = require('path')
 const { app, protocol, BrowserWindow, Menu, shell }= require('electron')
 
-const API = require('./sdk')
 const R = require('./Runtime')
 const C = require('./Config')
 const logger = require('./common/logger')
@@ -10,6 +9,8 @@ const { repairAndCheck, runRobot } = require('./core/RobotManage')
 const { setToken } = require('./service/Http')
 const { mainPreload, createMainWindow } = require('./service/Helper')
 const { broadcastAll } = require('./service/Global')
+
+const API = require('./sdk')
 
 //不提示安全信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'

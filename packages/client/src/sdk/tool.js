@@ -1,6 +1,7 @@
 const { BrowserWindow, ipcMain } = require("electron")
 
 const logger = require("../common/logger")
+const { verbose } = require("../Runtime")
 
 /**
  * 通过事件获取对应的 windowID
@@ -49,7 +50,14 @@ exports.register = function(items, group){
  */
 exports.registerInvoke = (items, group)=> {
     for(let k in items){
-        ipcMain.handle(k, items[k])
-        logger.debug(`注册 <${group}> 处理器 ${k}`)
+        ipcMain.handle(k, async (...args)=>{
+            try{
+                return Promise.resolve(items[k](...args))
+            }catch(e){
+                logger.error(`调用 ${group}/${k} 处理器出错`, e)
+                throw e
+            }
+        })
+        verbose && logger.info(`注册 <${group}> 处理器 ${k}`)
     }
 }

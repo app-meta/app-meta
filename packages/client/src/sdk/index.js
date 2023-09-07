@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-03-14 09:00:22
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-06-16 17:31:28
+ * @Last Modified time: 2023-09-06 08:55:32
  *
  *
  */
@@ -64,7 +64,7 @@ let listeners = {
      */
     "export-html": (e, args) => {
         args = args || {}
-        logger.log("导出到 HTML, task ID=", Task.getId())
+        logger.info("导出到 HTML, task ID=", Task.getId())
 
         let {web, title} = webContent(e)
         const filename = U.getAttachPath(getWindowId(e), `${args.filename || title}.html`)
@@ -72,7 +72,7 @@ let listeners = {
         if (args.content) {
             fs.writeFile(filename, args.content, (error) => {
                 if (error) throw error
-                logger.log('Write HTML successfully:', filename)
+                logger.info('Write HTML successfully:', filename)
             })
         }
         //如果没有传递 content，则默认把整个网页内容都保存出来
@@ -92,13 +92,14 @@ let listeners = {
         logger[level](msg)
     },
 
-    'copyText': (e, text)=> clipboard.writeText(text),
-
     "test": (e, args, win)=>{
         console.log("接收到测试事件：", e.sender.id, e.sender.isMain, e.sender.flashFrame)
         console.log("参数：", args)
         console.log("当前窗口", e.target, win)
     }
+}
+
+let invokeListeners = {
 }
 
 module.exports = (mainWindow)=>{

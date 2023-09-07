@@ -1,5 +1,6 @@
+const { verbose } = require("../Runtime")
 const logger = require("../common/logger")
-const { progress, onData, onCSVData, onNotify, onCache, onLog } = require("../core/RobotManage")
+const { progress, onData, onCSVData, onNotify, onCache, onLog, onDownload, onSaveToFile } = require("../core/RobotManage")
 const { getWindowId } = require("./tool")
 
 module.exports = {
@@ -49,7 +50,9 @@ module.exports = {
         onLog(getWindowId(e), msg)
     },
 
-    // 'download': (e, url, filename)=>{
-    //     onDownload(getWindowId(e), url, filename)
-    // }
+    'download': (e, url, filename)=>{
+        onDownload(getWindowId(e), url, filename)
+    },
+
+    'saveToFile' : (e, content, filename, binary)=> onSaveToFile(getWindowId(e), content, filename, binary)
 }

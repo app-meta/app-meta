@@ -15,7 +15,10 @@ const data = {
      * @param {String|Object} textOrObj
      * @returns
      */
-    setBlock: (uuid, textOrObj)=> ipcRenderer.invoke("data.setBlock", uuid, typeof(textOrObj)==='string'? textOrObj: JSON.stringify(textOrObj))
+    setBlock: (uuid, textOrObj)=> {
+        log(`SET-BLOCK ID=${uuid}`)
+        return ipcRenderer.invoke("data.setBlock", uuid, typeof(textOrObj)==='string'? textOrObj: JSON.stringify(textOrObj))
+    }
 }
 
 contextBridge.exposeInMainWorld('META', {
@@ -150,6 +153,18 @@ contextBridge.exposeInMainWorld('META', {
     },
 
     post : (url, data, ps)=> ipcRenderer.invoke('post', url, data, ps),
+
+    writeClipboard  : text=> ipcRenderer.invoke('common.toClipboard', text),
+    readClipboard   : ()=> ipcRenderer.invoke('common.fromClipboard'),
+
+    /**
+     * 写入文件到机器人工作目录
+     * @param {String} content
+     * @param {String} filename
+     * @param {Boolean} binary  默认 false，若为 true 则 content 应该传递 BASE64 编码的二进制数据
+     * @returns
+     */
+    saveToFile      : (content, filename, binary=false)=> ipcRenderer.send('saveToFile', content, filename, binary),
 
     //=====================================================================================================
     /**

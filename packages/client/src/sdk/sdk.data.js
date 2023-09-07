@@ -2,6 +2,9 @@ const { getRobotInfo } = require("../core/RobotManage")
 const { callServer, withPost } = require("../service/Http")
 const { getWindowId } = require("./tool")
 
+const { verbose } = require("../Runtime")
+const logger = require("../common/logger")
+
 const _buildMatchModel = (modelOrId, pid)=>{
     let model = { }
     if(typeof(modelOrId) !== 'object')
@@ -22,10 +25,21 @@ const RESULT = async (action, body)=> {
     return data
 }
 
+/**
+ *
+ * @param {IpcRendererEvent} e
+ * @param {Function} handler
+ * @returns
+ */
 const withRobot = (e, handler)=>{
-    let { aid, pid } = getRobotInfo(getWindowId(e))
+    let winId = getWindowId(e)
+    verbose && logger.info(`获取机器人窗口[PID=${e.processId} FID=${e.frameId} WEB=${e.sender.id}]的编号=${winId}`)
+
+    let { aid, pid } = getRobotInfo(winId)
+    verbose && logger.info(`获取机器人窗口#${winId}的任务信息 aid=${aid} pid=${pid}`)
+
     if(!aid)    throw Error(`当前网页机器人未关联任何应用（aid 未配置），无法使用该功能`)
-    return handler(aid, pid)
+    return handler(aid, pid, winId)
 }
 
 /**
@@ -74,12 +88,18 @@ module.exports = {
 
     /**
      *
-     * @param {*} e
+     * @param {IpcRendererEvent} e
      * @param {String} uuid
      * @param {String|Object} text
      * @returns
      */
-    'data.setBlock': (e,uuid, text)=> withRobot(e, aid=> RESULT("/data/block/set", {aid, uuid, text: typeof(text)==='string'? text: JSON.stringify(text)})),
+    'data.setBlock': (e, uuid, text)=> {
+        verbose && logger.info(`[RPA] WEBCONTENT#${e.sender.id} 调用 data.setBlock 方法`, uuid, text)
+        withRobot(e, (aid, pid, windowId)=> {
+            verbose && logger.info(`[RPA] 获取到任务信息 aid=${aid}，即将发送数据到远程服务器...`)
+            RESULT("/data/block/set", {aid, uuid, text: typeof(text)==='string'? text: JSON.stringify(text)})
+        })
+    },
 
     /**
      * 暂不支持非 JSON 参数的提交

@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-02-04 22:58:23
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-05-04 14:52:19
+ * @Last Modified time: 2023-09-05 12:37:54
  */
 const { existsSync, readFileSync } = require('fs')
 
@@ -53,7 +53,9 @@ let C = {
         timeout: 3 * 60,                    //默认超时，单位秒
         delay: 2,                           //脚本延迟执行，默认2（单位 秒）
         closeDelay: 3,                      //任务完成后，等待多少秒自动关闭窗口，默认 3
-    }
+    },
+
+    verbose: false,                      //强制开启开发环境模式
 }
 
 /**
@@ -66,6 +68,11 @@ let jsonStr = existsSync(file) ? readFileSync(file, "UTF-8").trim() : ""
 if (!!jsonStr && jsonStr.startsWith("{") && jsonStr.endsWith("}")) {
     console.debug(`读取 config.json 并覆盖默认的配置项....`)
     Object.assign(C, JSON.parse(jsonStr))
+}
+
+if(C.verbose === true){
+    console.debug(`开启详细日志模式...`)
+    R.verbose = true
 }
 
 module.exports = C

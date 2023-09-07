@@ -38,12 +38,12 @@ const saveStringToFile = (content, file) => {
  * @param  {...any} ps
  */
 const broadcast = (channel, ignoreWindowId, ...ps)=>{
-    R.isDev && logger.debug(`[GLOBAL] 广播事件 ${channel}`, ps)
+    R.verbose && logger.info(`[GLOBAL] 广播事件 ${channel}`, ps)
     for(let win of BrowserWindow.getAllWindows()){
         if(win.id == ignoreWindowId)    continue
 
         win.webContents.send(channel, ...ps)
-        R.isDev && logger.debug(`[GLOBAL] 广播事件 ${channel} 到窗口 #${win.id}`)
+        R.verbose && logger.info(`[GLOBAL] 广播事件 ${channel} 到窗口 #${win.id}`)
     }
 }
 
@@ -74,7 +74,7 @@ module.exports ={
     sendNotice (msg, title, type = "info") {
         withMainWindow( web=> {
             web.send('notice', msg, title, type)
-            R.isDev && logger.debug(`[GLOBAL] 发送 NOTICE·${type} 到主窗口：title=${title} msg=${msg}`)
+            R.verbose && logger.info(`[GLOBAL] 发送 NOTICE·${type} 到主窗口：title=${title} msg=${msg}`)
         })
     },
 
@@ -98,11 +98,11 @@ module.exports ={
      */
     saveStringToFileWithSelect(content, filename) {
         let result = dialog.showSaveDialogSync({ title: "保存到", message: "保存到", defaultPath: filename })
-        R.isDev && logger.debug(`[GLOBAL] 保存数据，选择的文件为：`, result)
+        R.verbose && logger.info(`[GLOBAL] 保存数据，选择的文件为：`, result)
 
         if (result)
             saveStringToFile(content, result)
         else
-            R.isDev && logger.debug(`[GLOBAL] 用户取消了保存...`)
+            R.verbose && logger.info(`[GLOBAL] 用户取消了保存...`)
     }
 }

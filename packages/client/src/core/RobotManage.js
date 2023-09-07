@@ -20,11 +20,19 @@ const getWorkerByUUID = uuid=>workers.find(w=>w.uuid == uuid)
 const filterWithWindowId    = (w, id)=>w.getWindowId()==id
 const filterWithUUID        = (w, id)=>w.uuid == id
 
+/**
+ *
+ * @param {String|Number} windowIdOrUuid
+ * @param {Function<ScriptRobot>} todo
+ * @returns
+ */
 const withWorker = (windowIdOrUuid, todo)=> {
+    R.verbose && logger.info(`获取机器人信息 windowIdOrUuid=${windowIdOrUuid}，当前机器人队列 ${workers.map(w=>`${w.getWindowId()}/${w.uuid}`)}`)
+
     let filter = isNaN(windowIdOrUuid)? filterWithUUID: filterWithWindowId
     let worker = workers.find(w=>filter(w, windowIdOrUuid))
     if(!worker){
-        if(R.isDev) logger.debug(`找不到 ID=${windowIdOrUuid} 的 Robot，跳过...`)
+        if(R.verbose) logger.info(`找不到 ID=${windowIdOrUuid} 的机器人窗口，跳过...`)
         return
     }
 
@@ -149,11 +157,37 @@ module.exports = {
 
     onLog :(windowId, msg, level="INFO")=> withWorker(windowId, worker=> worker.log(`${level} ${msg}`)),
 
+    /**
+     * 发起下载操作，自动保存到 FS 中（不弹窗）
+     * @param {String|Number} windowId
+     * @param {String} url
+     * @param {String} filename
+     */
+    onDownload: (windowId, url, filename)=>{
+        withWorker(windowId, worker=>{
+            R.verbose && logger.info(`窗口#${windowId} 申请下载 ${url} 到 ${filename}`)
+            worker.onDownload(url, filename)
+        })
+    },
+
+    /**
+     *
+     * @param {String|Number} windowId
+     * @param {String} content
+     * @param {String} filename
+     * @returns
+     */
+    onSaveToFile: (windowId, content, filename, binary)=> withWorker(windowId, worker=>{
+        R.verbose && logger.info(`窗口#${windowId} 写文件 ${filename}`)
+        worker.saveToFile(content, filename, binary)
+    }),
+
     getRobotInfo : windowId=> {
         let detail = {}
         withWorker(windowId, worker=> {
             detail = worker.summary()
         })
+        R.verbose && logger.info(`从 WindowID=${windowId} 获取到机器人详情`, detail)
         return detail
     }
 }

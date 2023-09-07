@@ -14,6 +14,7 @@ const logger = require("../common/logger")
 const C = require("../Config")
 const R = require("../Runtime")
 const U = require("../common/util")
+const { writeFileSync } = require("fs")
 
 const preload   = join(__dirname, '../preload/api-robot.js')
 
@@ -117,6 +118,7 @@ module.exports = class {
 
             this.window.on('close', ()=> this.onComplete())
             this.window.on('closed', ()=> this.log("任务窗口已关闭..."))
+            this.window.onE
         }
 
         let web = this.window.webContents
@@ -140,12 +142,12 @@ module.exports = class {
              * 监听文件下载
              */
             web.session.on('will-download', (event, item, contents)=>{
-                let specialName = this.#downloadNames[md5(item.getURLChain()[0])]
+                let specialName = this.#downloadNames[U.md5(item.getURLChain()[0])]
                 /*
                 如果给定的路径文件绝对路径则直接使用
                 否则使用“任务目录”为根目录
                 */
-                let targetFile = specialName ? (/^[a-zA-Z]:/.test(specialName)? specialName:U.getWorkerPath(this.getTaskId(), specialName)) : U.getWorkerPath(this.getUUID(), item.getFilename())
+                let targetFile = specialName ? (/^[a-zA-Z]:/.test(specialName)? specialName:U.getWorkerPath(this.getId(), specialName)) : U.getWorkerPath(this.getUUID(), item.getFilename())
                 this.log(`开始下载文件 ${item.getFilename()} 到 ${targetFile}`)
 
                 item.setSavePath(targetFile)
@@ -154,7 +156,8 @@ module.exports = class {
                     this.log(`文件下载${isComplete?"成功":"失败"}...`)
 
                     //调用方法，告之文件下载完成，传递两个参数： state，文件名（如下载失败，此值为 nlll)
-                    this.#execJavaScript(`${this.bean.downloadFunc||"_onDownloadDone"}("${state}", "${isComplete?targetFile.replace(/\\/g,'/'):null}")`)
+                    let doneFunc = this.bean.downloadFunc||"_onDownloadDone"
+                    this.#execJavaScript(`${doneFunc} && ${doneFunc}("${state}", "${isComplete?targetFile.replace(/\\/g,'/'):null}")`)
                 })
             })
             /**
@@ -227,7 +230,7 @@ module.exports = class {
     }
 
     onCache (key, data){
-        if(R.isDev) this.log(`缓存数据 ${key}=${JSON.stringify(data)}`)
+        if(R.verbose) this.log(`缓存数据 ${key}=${JSON.stringify(data)}`)
 
         this.caches[key] = data
     }
@@ -251,8 +254,26 @@ module.exports = class {
     isTimeout   = ()=> ((Date.now() - this.startOn)/1000000) - (this.bean.timeout??C.rpa.timeout) >= .0
 
     onDownload (url, filename){
-        this.#downloadNames[md5(url)] = filename
+        this.#downloadNames[U.md5(url)] = filename
         this.window.webContents.downloadURL(url)
+    }
+
+    /**
+     * 写入到文件
+     * @param {String} content
+     * @param {String} filename
+     * @param {Boolean} binary
+     */
+    saveToFile (content, filename, binary=false){
+        R.verbose && logger.info(`写入内容到文件 ${filename}（binary=${binary}）`)
+        //写入二进制，.toString('binary')
+        writeFileSync(
+            this.#dataFile(filename),
+            binary?
+                Buffer.from(content, 'base64')
+                :
+                content
+        )
     }
 
     // ===============================================================================================================
@@ -267,7 +288,10 @@ module.exports = class {
             // .then(result=>{
             //     this.log(`执行${category}脚本成功：${result}`)
             // })
-            .catch(e=>this.log(`执行${category}脚本失败：${e.message}`))
+            .catch(e=>{
+                this.log(`执行脚本失败：${e.message}`)
+                R.verbose && logger.error(`机器人 #${this.getUUID()} 执行脚本出错`, e)
+            })
     }
 
     /**

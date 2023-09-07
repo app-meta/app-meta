@@ -3,6 +3,7 @@ const { BrowserWindow } = require("electron")
 const C = require("../Config")
 const R = require("../Runtime")
 const logger = require("../common/logger")
+const { getToken } = require("./Http")
 
 const urlPrefix = process.env.WEBPACK_DEV_SERVER_URL? process.env.WEBPACK_DEV_SERVER_URL:"app://./"
 const preload   = join(__dirname, '../preload/api-main.js')
@@ -51,7 +52,21 @@ exports.createMainWindow = (url, autoShow=true, initCode)=>{
         win.loadURL(url)
 
     if(initCode){
-        win.webContents.executeJavaScript(initCode).catch(e => logger.error("执行初始化脚本出错：", e))
+        R.verbose && logger.info(`创建新窗口 ${url} 并执行初始化代码`, initCode)
+
+        // 对平台后台的访问均自动注入请求头
+        // win.webContents.session.webRequest.onBeforeSendHeaders(
+        //     {urls: [C.serverHost]},
+        //     (details, callback)=>{
+        //         details.requestHeaders["MUA"] = getToken()
+        //         callback({ requestHeaders: details.requestHeaders })
+        //     }
+        // )
+        win.webContents.once('dom-ready', ()=>{
+            win.webContents.executeJavaScript(initCode)
+                .then(result=> R.verbose && logger.info(`初始化脚本执行完成，返回值：${result}`))
+                .catch(e => logger.error("执行初始化脚本出错：", e))
+        })
     }
 
     // 开发模式下，自动打开 F12

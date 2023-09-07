@@ -2,10 +2,12 @@
  * @Author: 集成显卡
  * @Date: 2022-02-07 15:12:36
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-02-21 15:22:08
+ * @Last Modified time: 2023-09-07 16:28:07
  */
 const { existsSync, statSync, readFileSync, mkdirSync, writeFileSync } = require("fs")
 const { resolve } = require('path')
+
+const md5 = require('blueimp-md5')
 
 const C = require("../Config")
 const R = require("../Runtime")
@@ -13,6 +15,8 @@ const D = require("./date")
 const logger = require("./logger")
 
 module.exports ={
+    md5,
+
     /**
      * 同步方式读取稳定
      * @param {*} file

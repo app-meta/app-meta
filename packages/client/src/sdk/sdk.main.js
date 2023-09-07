@@ -11,6 +11,8 @@ const Global = require("../service/Global")
 const { REMOTE, REMOTE_UPLOAD, getToken } = require("../service/Http")
 const { createMainWindow } = require("../service/Helper")
 
+const STYLE = "background:magenta;color:white;padding:5px;"
+
 /**
  * VITE 下按照下方代码动态导入
  * https://vitejs.cn/guide/features.html#glob-import
@@ -56,12 +58,19 @@ let handlers = {
 
     /**
      * 打开本地前端窗口
-     * @param {*} url
-     * @param {*} withToken
+     * @param {String} url
+     * @param {String} tokenName
      */
-    'open-local-url': (url, withToken=true)=>{
-        logger.debug(`打开本地地址（token=${withToken}） ${url}`)
-        createMainWindow(url, true, withToken?`localStorage.setItem("MUA", "${getToken()}")`:undefined)
+    'open-local-url': (url, tokenName="")=>{
+        logger.debug(`打开本地地址（tokenName=${tokenName}） ${url}`)
+        createMainWindow(
+            url,
+            true,
+            tokenName?
+                `localStorage.setItem("${tokenName}", "${getToken()}"); console.debug("%c请求头${tokenName}注入完成 ^.^", "${STYLE}");`
+                :
+                undefined
+        )
     }
 }
 
@@ -89,7 +98,7 @@ module.exports =async ()=>{
     /**
      * 不使用 webpack、vite 等构建工具时，手动加入各个模块
      */
-    let moduleNames = ["app","robot","fs"]
+    let moduleNames = ["app","robot","fs","common"]
     for(let name of moduleNames){
         handleRegister(require(`./module/${name}`), name)
     }

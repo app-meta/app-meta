@@ -34,6 +34,7 @@
     import AppNavigation from "@C/Navigation.vue"
     import Back from "@CC/Back.vue"
     import SearchBar from "./widget/search.vue"
+    import LocalDev from "./widget/local.vue"
 
     import { hasAnyRole, isAdminOr } from "@S/Auth"
 
@@ -124,16 +125,17 @@
 
     const otherMenuClick = name=> {
         if(name == 'dev-h5'){
-            M.prompt(`访问本地前端项目`,{message:"在客户端中打开本地开发中的前端项目，此功能用于小程序开发测试", value:'http://localhost:'}).then(url=>{
-                if(!url)   return M.warn(`请输入地址`)
+            // M.prompt(`访问本地前端项目`,{message:"在客户端中打开本地开发中的前端项目，此功能用于小程序开发测试", value:'http://localhost:'}).then(url=>{
+            //     if(!url)   return M.warn(`请输入地址`)
 
-                if(!window.isClient) {
-                    H.openUrl(url)
-                    M.ok.warn(`打开本地前端项目`, `检测到非客户端环境，部分功能将受限制`)
-                }
-                else
-                    API("open-local-url", url)
-            })
+            //     if(!window.isClient) {
+            //         H.openUrl(url)
+            //         M.ok.warn(`打开本地前端项目`, `检测到非客户端环境，部分功能将受限制`)
+            //     }
+            //     else
+            //         API("open-local-url", url)
+            // })
+            M.dialog({title:`访问本地前端项目`, showIcon:false, content:()=> h(LocalDev), style:{width:"640px"}})
         }
         else
             E.emit('jumpTo', {name})

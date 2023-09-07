@@ -12,6 +12,8 @@ if(basename(appPath) === 'src')
 const dataPath = resolve(appPath, "data")
 // const secretKey = md5(getMAC())
 
+const isDev = process.env.NODE_ENV !== undefined //process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
+
 module.exports ={
     appId,
     appName,
@@ -22,7 +24,8 @@ module.exports ={
     isMac       : process.platform === 'darwin',
     isLinux     : process.platform === 'linux',
     mode        : process.env.NODE_ENV,
-    isDev       : process.env.NODE_ENV !== undefined, //process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
+    isDev,
+    verbose     : isDev,                            //是否显示详细的日志
     mainWindowID: -1,
     dataDir     : sub =>{
         return resolve(dataPath, sub)
