@@ -1,9 +1,11 @@
+const { readFileSync } = require("fs")
 const { verbose } = require("../Runtime")
 const logger = require("../common/logger")
+const { isAbsoluteWindowsPath, exist, needFile } = require("../common/util")
 const { progress, onData, onCSVData, onNotify, onCache, onLog, onDownload, onSaveToFile } = require("../core/RobotManage")
 const { getWindowId } = require("./tool")
 
-module.exports = {
+exports.RobotHandlers = {
     /**
      * 任务进度
      * args 中有三个参数：
@@ -16,9 +18,11 @@ module.exports = {
 
         if(p<0) onNotify(winId, null, `[异常]${info}`)
     },
+
     'data': (e, data, saveToFs)=>{
         onData(getWindowId(e), data, saveToFs)
     },
+
     'cache': (e, key, data)=> onCache(getWindowId(e), key, data),
 
     'csv': (e, data, name, split)=>{
@@ -55,4 +59,21 @@ module.exports = {
     },
 
     'saveToFile' : (e, content, filename, binary)=> onSaveToFile(getWindowId(e), content, filename, binary)
+}
+
+exports.RobotInvokeHandlers = {
+    /**
+     *
+     * @param {Electron.IpcMainInvokeEvent} e
+     * @param {String} path
+     * @param {String} encoding
+     */
+    'readFile': (e, path, encoding)=>{
+        if(!isAbsoluteWindowsPath(path)){
+            //从RPA机器人中获取数据目录
+
+        }
+        needFile(path)
+        return readFileSync(path, {encoding})
+    }
 }

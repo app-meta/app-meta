@@ -164,7 +164,9 @@ contextBridge.exposeInMainWorld('META', {
      * @param {Boolean} binary  默认 false，若为 true 则 content 应该传递 BASE64 编码的二进制数据
      * @returns
      */
-    saveToFile      : (content, filename, binary=false)=> ipcRenderer.send('saveToFile', content, filename, binary),
+    saveFile        : (content, filename, binary=false)=> ipcRenderer.send('saveToFile', content, filename, binary),
+
+    readFile        : (path, encoding="utf-8")=> ipcRenderer.invoke('readFile', path, encoding),
 
     //=====================================================================================================
     /**

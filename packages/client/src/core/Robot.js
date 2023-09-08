@@ -147,7 +147,7 @@ module.exports = class {
                 如果给定的路径文件绝对路径则直接使用
                 否则使用“任务目录”为根目录
                 */
-                let targetFile = specialName ? (/^[a-zA-Z]:/.test(specialName)? specialName:U.getWorkerPath(this.getId(), specialName)) : U.getWorkerPath(this.getUUID(), item.getFilename())
+                let targetFile = specialName ? (U.isAbsoluteWindowsPath(specialName)? specialName:U.getWorkerPath(this.getId(), specialName)) : U.getWorkerPath(this.getUUID(), item.getFilename())
                 this.log(`开始下载文件 ${item.getFilename()} 到 ${targetFile}`)
 
                 item.setSavePath(targetFile)

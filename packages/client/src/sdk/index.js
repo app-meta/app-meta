@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-03-14 09:00:22
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-09-06 08:55:32
+ * @Last Modified time: 2023-09-08 09:54:06
  *
  *
  */
@@ -14,7 +14,7 @@ const { notice } = require("../service/notice")
 const U  = require("../common/util")
 
 const MainSDK = require("./sdk.main")
-const RobotSDK = require("./sdk.robot")
+const { RobotHandlers, RobotInvokeHandlers } = require("./sdk.robot")
 const DataSDK = require("./sdk.data")
 
 const { getWindowId, register, webContent, registerInvoke } = require('./tool')
@@ -104,7 +104,8 @@ let invokeListeners = {
 
 module.exports = (mainWindow)=>{
     register(listeners, "COMMON")
-    register(RobotSDK, "ROBOT")
+    register(RobotHandlers, "ROBOT")
+    registerInvoke(RobotInvokeHandlers, "ROBOT")
     registerInvoke(DataSDK, "DATA")
 
     MainSDK()

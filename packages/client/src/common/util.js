@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-02-07 15:12:36
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-09-07 16:28:07
+ * @Last Modified time: 2023-09-08 09:59:25
  */
 const { existsSync, statSync, readFileSync, mkdirSync, writeFileSync } = require("fs")
 const { resolve } = require('path')
@@ -43,6 +43,15 @@ module.exports ={
 
     isFile (file){
         return statSync(file).isFile()
+    },
+
+    /**
+     * 判断是否为 windows 平台下的绝对路径，以 字母: 开头
+     * @param {String} filePath
+     * @returns
+     */
+    isAbsoluteWindowsPath (filePath){
+        return /^[a-zA-Z]:/.test(filePath)
     },
 
     /**
