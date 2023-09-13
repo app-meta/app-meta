@@ -38,7 +38,7 @@
                 <CodeEditor placeholder="请输入SQL代码，按 CTRL+ENTER / CTRL+SHIFT+ENTER（多行） 执行（注意查询添加 LIMIT 以提高性能）" :keyBinds="[{key:'Ctrl-Enter'}]"
                     @keyup="handleKeyUp" v-model:value="model.sql" ref="editor" language="sql" style="height: 190px;" />
 
-                <TableView class="mt-3" ref="sqlResultTable" style="height: calc(100vh - 360px)"/>
+                <TableView class="mt-3" ref="sqlResultTable" style="height: calc(100vh - 370px)"/>
             </n-tab-pane>
             <n-tab-pane v-for="item in panels" display-directive="show:lazy" :key="item.name" :name="item.name" :closable="true">
                 <template #tab>

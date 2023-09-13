@@ -13,6 +13,7 @@ const KEY   = "app.launch"
 let aid     = ""
 let pid     = ""
 let debug   = false
+let prefix  = ""
 
 const log = (msg, ...ps)=>console.debug(`%c[数据接口] ${msg}`, "background:#8c0776;padding:3px;color:white", ...ps)
 
@@ -46,7 +47,6 @@ export const init = (ps={})=>{
     if(!!aid) throw Error("DATA 模块已经初始化，无需重复调用 init 方法...")
     debug = ps.debug === true
     let initFromUrl = false
-    let prefix  = ""
 
     if(typeof(ps.aid) === 'string' && ps.aid && ps.aid.trim().length > 0){
         aid = ps.aid
@@ -67,7 +67,8 @@ export const init = (ps={})=>{
 
     if(!aid) throw Error(`参数 aid 不能为空`)
 
-    setContextPath(prefix||window.SERVER)
+    if(!prefix && window.SERVER) prefix = window.SERVER
+    setContextPath(prefix)
 
     debug &&  log(`环境初始化 AID=${aid} PID=${pid} PREFIX=${prefix}`)
 
@@ -242,7 +243,7 @@ const _exportData = (modelOrId, headers, filename="", format="xlsx")=> new Promi
     // .catch(e=> reject(e.message))
 
     withPost(
-        `/data/export`, model, true, prefix,
+        `/data/export`, model, true,
         async res=>{
             if(res.headers.get("content-type") == 'application/json'){
                 let json = await res.json()

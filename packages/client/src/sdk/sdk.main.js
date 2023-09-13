@@ -7,9 +7,10 @@ const { loadScript } = require("../common/tool")
 const U = require("../common/util")
 const C = require("../Config")
 const R = require("../Runtime")
-const Global = require("../service/Global")
+const { sendEvent, withMainWindow } = require("../service/Global")
 const { REMOTE, REMOTE_UPLOAD, getToken } = require("../service/Http")
-const { createMainWindow } = require("../service/Helper")
+const { createMainWindow, buildRemoteUrl } = require("../service/Helper")
+const { notice } = require("../service/notice")
 
 const STYLE = "background:magenta;color:white;padding:5px;"
 
@@ -54,7 +55,7 @@ let handlers = {
     'remote-api': async (suffix, data, ps={})=> await (ps._FILE_===true? REMOTE_UPLOAD : REMOTE)(`${C.serverHost}${C.serverContext}${suffix}`, data, ps),
 
     //模拟发送事件
-    'event' : (channel, ps)=> Global.sendEvent(channel,ps),
+    'event' : (channel, ps)=> sendEvent(channel,ps),
 
     /**
      * 打开本地前端窗口
@@ -71,6 +72,20 @@ let handlers = {
                 :
                 undefined
         )
+    },
+
+    /**
+     * 下载客户端程序包
+     * @param {String} url
+     */
+    'download-client': (url="/attach/client/meta-client.7z")=>{
+        R.verbose && logger.info(`下载最新客户端 ${url}`)
+        withMainWindow(/** @param {import("electron").WebContents} web */ web=>{
+            web.downloadURL(buildRemoteUrl(url))
+            web.session.once('will-download', (e, item)=>{
+                item.once('done', (e, state)=> notice(state, `客户端程序包下载已${state=='completed'?"完成":"取消"}`))
+            })
+        })
     }
 }
 

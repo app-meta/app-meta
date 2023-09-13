@@ -8,7 +8,7 @@ const { onBootstrap } = require('./core/Init')
 const { repairAndCheck, runRobot } = require('./core/RobotManage')
 const { setToken } = require('./service/Http')
 const { mainPreload, createMainWindow } = require('./service/Helper')
-const { broadcastAll } = require('./service/Global')
+// const { broadcastAll } = require('./service/Global')
 
 const API = require('./sdk')
 
@@ -103,7 +103,7 @@ async function createWindow() {
         logger.error(`加载页面 ${url} 失败: ${errorCode} ${errorMsg }`)
         mainWindow.loadFile(join(__dirname, `../index.html`), {query:{code:errorCode, msg:`${url} 加载失败`}})
 
-        setTimeout(()=> broadcastAll("robot.done", '1', {status:100, message:"已完成"}), 10000)
+        // setTimeout(()=> broadcastAll("robot.done", '1', {status:100, message:"已完成"}), 10000)
     })
 
     onBootstrap(mainWindow)

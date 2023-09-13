@@ -17,6 +17,13 @@ exports.buildUrl = (suffix="", page="index.html")=>{
     return `${urlPrefix}${page}${suffix}`
 }
 
+/**
+ *
+ * @param {String} suffix - 以 / 开头的后端资源
+ * @returns String
+ */
+exports.buildRemoteUrl = suffix=> `${C.serverHost}${C.serverContext}${suffix}`
+
 exports.mainPreload = preload
 
 /**

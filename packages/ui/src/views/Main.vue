@@ -27,7 +27,7 @@
     import { RouterLink } from "vue-router"
     import {
         Home, Cog, Cogs, Wrench, Database, ShieldAlt, Parking,GlobeAsia, Icons, ChartPie, UserShield, AppStore, InfoCircle, Html5, Bullhorn,
-        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit
+        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit, Download
     } from "@vicons/fa"
 
     import Banner from "@CC/Banner.vue"
@@ -120,25 +120,32 @@
         if(isAdminOr("DEVELOPER")) items.push({ label:"访问本地前端项目", key:"dev-h5", icon:()=> UI.buildIcon(Html5) })
 
         items.push({ type:"divider"})
+        items.push({ label:"下载客户端程序", key:"download-client", icon:()=> UI.buildIcon(Download) })
+        items.push({ type:"divider"})
         return items
     }
 
-    const otherMenuClick = name=> {
-        if(name == 'dev-h5'){
-            // M.prompt(`访问本地前端项目`,{message:"在客户端中打开本地开发中的前端项目，此功能用于小程序开发测试", value:'http://localhost:'}).then(url=>{
-            //     if(!url)   return M.warn(`请输入地址`)
+    const otherMenuHandlers = {
+        'dev-h5'            : ()=> M.dialog({title:`访问本地前端项目`, showIcon:false, content:()=> h(LocalDev), style:{width:"640px"}}),
+        'download-client'   : ()=> M.confirm(
+            `下载平台客户端程序包`,
+            UI.html(`客户端<b class='primary'>（原生环境）</b>支持执行 <b class='primary'>RPA机器人</b>，在交互上提供更好的用户体验，程序包解压后即可使用<br><br>确定下载吗？`),
+            ()=> {
+                let url = "/attach/client/meta-client.7z"
+                if(window.isClient)
+                    API("download-client", url)
+                else
+                    H.openUrl(`${window.SERVER}${url}`, {type:""})
+            }
+        )
+    }
 
-            //     if(!window.isClient) {
-            //         H.openUrl(url)
-            //         M.ok.warn(`打开本地前端项目`, `检测到非客户端环境，部分功能将受限制`)
-            //     }
-            //     else
-            //         API("open-local-url", url)
-            // })
-            M.dialog({title:`访问本地前端项目`, showIcon:false, content:()=> h(LocalDev), style:{width:"640px"}})
-        }
+    const otherMenuClick = name=> {
+        let handler = otherMenuHandlers[name]
+        if(handler)
+            handler()
         else
-            E.emit('jumpTo', {name})
+            E.emit('jumpTo', { name })
     }
 
     E.on("main.padding", (v=12)=> padding.value=v)

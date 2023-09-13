@@ -48,6 +48,8 @@ const broadcast = (channel, ignoreWindowId, ...ps)=>{
 }
 
 module.exports ={
+    withMainWindow,
+
     init (){
         globalShortcut.register('CommandOrControl+F12', () => {
             withMainWindow(web=> web.openDevTools())

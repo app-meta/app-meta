@@ -42,9 +42,9 @@ module.exports ={
     /**
      * 发起系统通知，详见：https://www.electronjs.org/docs/latest/api/notification
      *
-     * @param {*} title 通知标题，如果是 Object 对象，则视为 Notification 的参数
-     * @param {*} body
-     * @param {*} icon  图标（默认为 logo.png）
+     * @param {String} title - 通知标题，如果是 Object 对象，则视为 Notification 的参数
+     * @param {String} body - 通知内容
+     * @param {String} icon - 图标（默认为 logo.png）
      * @returns
      */
     notice (title, body, icon=logoIcon){

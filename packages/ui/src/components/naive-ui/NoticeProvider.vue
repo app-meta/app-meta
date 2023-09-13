@@ -114,6 +114,7 @@
                 type: 'error',
                 style:{ width:"640px" },
                 title,
+                maskClosable: false,
                 content: UI.html(msg)
             })
         },

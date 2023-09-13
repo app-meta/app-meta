@@ -225,7 +225,10 @@
         else if(!!config.exportName){
             let name = H.io.render(config.exportName, {date: H.date.compact(), time:H.date.compactTime()});
 
-            (config.exportType=='xlsx'?H.data.exportToExcel:H.data.exportToCSV)(model, headers, `${name}.${config.exportType}`).catch(e=> M.showError(`服务器返回错误信息：${e}`))
+            (config.exportType=='xlsx'?H.data.exportToExcel:H.data.exportToCSV)(model, headers, `${name}.${config.exportType}`).catch(e=> {
+                console.error(`执行数据导出时出错`, e)
+                M.showError(`服务器返回错误信息：${e}`)
+            })
         }
         else
             M.showError(`未定义<b class="error">自定义脚本</b>、<b class="error">导出文件名</b>（二者至少设置一项）`)

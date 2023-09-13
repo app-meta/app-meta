@@ -69,10 +69,20 @@ exports.RobotInvokeHandlers = {
      * @param {String} encoding
      */
     'readFile': (e, path, encoding)=>{
+        path = path.replace(/\\/g, "/")
         if(!isAbsoluteWindowsPath(path)){
+            if(path.startsWith("$APP/"))
+                path = path.replace(/^\$APP/, dataPath)
             //从RPA机器人中获取数据目录
+            else if(path.startsWith("$ROBOT/")){
+                let { aid, pid } = getRobotInfo(getWindowId(e))
+                if(!aid)    throw `未找到关联机器人的AID`
 
+                path = path.replace(/^\$ROBOT/, dataDir(`${aid}-${pid}`))
+            }
         }
+        verbose && logger.info(`按[ENCODING=${encoding}]读取文件 ${path}`)
+
         needFile(path)
         return readFileSync(path, {encoding})
     }

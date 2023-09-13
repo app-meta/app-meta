@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-08-23 13:04:59
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-08-17 10:21:38
+ * @Last Modified time: 2023-09-13 16:26:08
  *
  *
  * 注意：
@@ -343,7 +343,14 @@ window.API = (channel, ...ps)=>{
         })
         .catch(e=>{
             M.loadingBar.error()
-            _onFail(e, channel)
+            let msg = e.message
+
+            M.notice.create({
+                type:"error",
+                content: msg.substring(msg.indexOf(":")+1).trim(),
+                title:"调用客户端接口异常",
+                description: channel
+            })
         })
 }
 

@@ -9,9 +9,10 @@ import { appName, optionOfId, optionOfKey, optionOfName } from '../core/base.js'
 import { buildTableRows, callServer, isFile, printOK, printObj, printObjects, printTable, sleep, startLoading, stopLoading } from '../core/util.js'
 import chalk from 'chalk'
 
-const N = "平台后端"
-const UI = "ui"
-const JAR = "jar"
+const N         = "平台后端"
+const UI        = "ui"
+const JAR       = "jar"
+const CLIENT    = "client"
 
 const restart = async (times=6)=>{
     let answer = await confirm({
@@ -43,20 +44,25 @@ const restart = async (times=6)=>{
 
 /**
  *
- * @param {*} type
- * @param {*} ps
+ * @param {String} type
+ * @param {Object} ps
+ * @param {String} ps.file - 待上传文件路径
  * @param {*} cmd
  */
-const update = async (type, ps, cmd)=>{
+const update = async (type, ps)=>{
     if(!isFile(ps.file))    throw `${ps.file} 不是一个有效的文件`
-    if(type == JAR && extname(ps.file).toLowerCase() != `.${JAR}`)
+
+    let ext = extname(ps.file).toLowerCase()
+    if(type == JAR && ext != `.${JAR}`)
         throw `请选择 JAR 文件`
-    else if(type == UI && extname(ps.file).toLowerCase() != `.zip`)
+    else if(type == UI && ext != `.zip`)
         throw `请选择 ZIP 文件`
+    else if(type == CLIENT && !['.zip', '.7z'].includes(ext))
+        throw `更新客户端程序包仅限 7z 或者 zip 格式`
 
     let name = basename(ps.file)
 
-    const answer = await confirm({ message: `确定上传 ${name} 到${N}吗？`, default: false })
+    const answer = await confirm({ message: `确定上传 ${name} 到${N}（类型=${type}）吗？`, default: false })
     if(answer != true)  return
 
     startLoading((type == UI ? `UI 文件更新中`:`JAR 上传并自动重启刷新（大概需要 30 秒，若出现链接中断请稍后通过 ${chalk.magenta(`${appName} info`)} 检测）`)+"，请耐心等待...")
@@ -64,9 +70,12 @@ const update = async (type, ps, cmd)=>{
     let body = new FormData()
     body.append('file', createReadStream(ps.file))
 
-    let res = await callServer(type==UI?"/app/version/upload": "/system/update-jar", body, 2)
+    let res = await callServer(
+        type==UI?"/app/version/upload": `/system/update-${type.toLowerCase()}`,
+        body,
+        2
+    )
 
-    await sleep(1500)
     stopLoading(`${type} 更新完成`)
     if(res.data)
         console.info(`${res.data}`.replace(/<br>/g, "\n"))
@@ -89,7 +98,8 @@ export default (app=new Command())=> {
         .action(restart)
 
     sys.command("update")
-        .addArgument(new Argument('[type]', "更新类型").default("ui").choices([UI, JAR]))
+        .description("更新后端资源，通过 -t/--type 设置类别（ui=前端资源，jar=后端程序包，client=客户端程序全量/增量包）")
+        .addArgument(new Argument('[type]', "更新类型").default("ui").choices([UI, JAR, CLIENT]))
         .requiredOption('-f, --file [string]', "文件路径")
         .action(update)
 
