@@ -21,7 +21,6 @@
             width:50, align:"center", title:"操作",
             render(row, rowIndex) {
                 return [
-                    // UI.iconBtn(Eye, ()=> toView(row), {title:"浏览页面"}),
                     h(
                         NPopconfirm,
                         {

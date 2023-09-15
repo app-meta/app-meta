@@ -12,6 +12,21 @@ import * as service from './module/service'
 
 import { openUrl, withPost as post } from "./common"
 
+/**
+ * 初始化操作
+ * 1、对应用页面（#/app/xxx/xxx）添加 onresize 事件处理器，用于保存窗口大小
+ */
+(()=>{
+    if(location.hash.startsWith("#/app")){
+        window.onresize = util.debounce(
+            ()=>{
+                console.debug(`窗口大小变更:`, window.outerWidth, window.outerHeight)
+            },
+            1000
+        )
+    }
+})()
+
 export {
     date,
     store,

@@ -1,6 +1,10 @@
 import { withPost, openUrl } from "../common"
 import { compress } from "./io"
 
+const openAppOrPage = (url, ps={})=>{
+    openUrl(url, ps)
+}
+
 /**
  * 运行应用，默认以新窗口打开（不判断应用预设的属性，如窗口大小）
  * @param {*} id
@@ -21,7 +25,12 @@ export const runPage=(aid, pid, blank=false, params)=>{
         url += `/${pid}`
     if(params)
         url += `?params=${encodeURIComponent(compress(params))}`
-    blank? H.openUrl(url): location.href = url
+    if(blank===true){
+        //此处读取本地的窗口大小
+        openAppOrPage(url)
+    }
+    else
+        location.href = url
 }
 
 
@@ -59,7 +68,7 @@ export const loadAndRun = (appOrId)=> new Promise((ok, fail)=>{
                 let width = property.winMax ? window.screen.availWidth : property.winWidth
                 let height = property.winMax ? window.screen.availHeight : property.winHeight
 
-                openUrl(`#/app/${app.id}`, { title:app.name, width, height, center: !property.winMax })
+                openAppOrPage(`#/app/${app.id}`, { title:app.name, width, height, center: !property.winMax })
                 ok(app)
             })
             .catch(fail)

@@ -146,7 +146,15 @@
         }
     })
 
+    const onResize = e=>{
+        console.debug(`窗口大小变更:`, window.outerWidth, window.outerHeight)
+    }
+
     loadParamsFromQuery()
     console.debug(params)
-    onMounted( refresh )
+    onMounted(()=>{
+        refresh()
+
+        window.onresize = H.util.debounce(onResize, 1000)
+    })
 </script>

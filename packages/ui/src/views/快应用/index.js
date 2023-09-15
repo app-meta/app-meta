@@ -1,4 +1,4 @@
-import { ref, onMounted,onUnmounted, reactive } from 'vue'
+import { ref, onMounted,onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { Table, ChartPie, Wpforms, Html5, ListAltRegular, Database, Tools, ExclamationTriangle, Server, Robot, FileWordRegular as DOC, Vuejs } from "@vicons/fa"
 
@@ -49,8 +49,9 @@ export function pageManage(router){
     let toView = row=>{
         if(row.template == 'robot')
             return M.confirm(`运行机器人`, `确定执行网页机器人⌈${row.name}⌋吗？`, ()=> H.app.runRobot(row.id))
-        let r = router.resolve({name:`app-view`, params:{aid:row.aid, pid: row.id}})
-        H.openUrl(r.href, {title: row.name, center:true })
+        // let r = router.resolve({name:`app-view`, params:{aid:row.aid, pid: row.id}})
+        // H.openUrl(r.href, {title: row.name, center:true })
+        H.app.runPage(row.aid, row.id, true)
     }
 
     let toEdit = row=>{
@@ -137,9 +138,3 @@ export const modifyPage = (row, key, value, tip="操作成功")=> new Promise(ok
     row[key] = value
     ok()
 }))
-
-
-export const toView = id=>{
-    const router = useRouter()
-    console.debug(router)
-}
