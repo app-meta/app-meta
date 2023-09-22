@@ -1,9 +1,42 @@
 import { withPost, openUrl } from "../common"
+import { get } from "./db"
 import { compress } from "./io"
 
-const openAppOrPage = (url, ps={})=>{
-    openUrl(url, ps)
-}
+
+/**
+ * 准备打开该页面的窗口信息
+ * @param {String} aid
+ * @param {String} pid
+ * @param {Object} params
+ * @param {Boolean} pure - 是否使用纯净模式，此时不显示底部的信息
+ * @returns
+ */
+export const prepare = (aid, pid, params, pure=false)=> new Promise((ok)=>{
+    let url = `${location.origin}${location.pathname}#/app${pure?'-pure':''}/${aid}`
+    if(pid)
+        url += `/${pid}`
+    if(params)
+        url += `?params=${encodeURIComponent(compress(params))}`
+
+    let option = {}
+    get('window', `${window.User.id}-${aid}-${pid||""}`).then(v=>{
+        if(!!v){
+            console.debug("检测到", aid, pid, v)
+            delete v.id
+            Object.assign(option, v)
+        }
+
+        ok({url, option})
+    })
+})
+
+/**
+ * @param {String} aid
+ * @param {String} pid
+ * @param {Object} ps
+ * @param {String} params
+ */
+const openAppOrPage = (aid, pid, ps={}, params)=> prepare(aid, pid, params).then(({ url, option })=> openUrl(url, Object.assign(ps, option)))
 
 /**
  * 运行应用，默认以新窗口打开（不判断应用预设的属性，如窗口大小）
@@ -20,14 +53,9 @@ export const run=(id)=> runPage(id, null, true)
  * @param {*} params    参数（通过 URL 传递）
  */
 export const runPage=(aid, pid, blank=false, params)=>{
-    let url = `${location.origin}${location.pathname}#/app/${aid}`
-    if(pid)
-        url += `/${pid}`
-    if(params)
-        url += `?params=${encodeURIComponent(compress(params))}`
     if(blank===true){
         //此处读取本地的窗口大小
-        openAppOrPage(url)
+        openAppOrPage(aid, pid, {}, params)
     }
     else
         location.href = url
@@ -68,7 +96,7 @@ export const loadAndRun = (appOrId)=> new Promise((ok, fail)=>{
                 let width = property.winMax ? window.screen.availWidth : property.winWidth
                 let height = property.winMax ? window.screen.availHeight : property.winHeight
 
-                openAppOrPage(`#/app/${app.id}`, { title:app.name, width, height, center: !property.winMax })
+                openAppOrPage(app.id, undefined, { title:app.name, width, height, center: !property.winMax })
                 ok(app)
             })
             .catch(fail)

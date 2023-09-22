@@ -1,7 +1,6 @@
 <template>
     <n-spin :show="loading">
-        <n-card size="small">
-            <template #header> <n-tag :bordered="false">应用市场</n-tag> </template>
+        <n-card size="small" title="应用市场">
             <template #header-extra>
                 <n-tabs type="line" size="small" :on-update:value="onTopChange">
                     <n-tab name="newest">最新发布</n-tab>

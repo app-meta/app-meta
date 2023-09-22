@@ -38,6 +38,8 @@ const send = (model, action="", json=true)=>{
     // ).then(handleResponse)
 }
 
+export const inited = ()=> !!aid
+
 /**
  * 若 ps 未传递 aid 参数，则尝试从 url 中获取（通常是小程序的场景）
  * @param {*} _debug

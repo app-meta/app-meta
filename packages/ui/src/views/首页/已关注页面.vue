@@ -4,7 +4,7 @@
         <template #header>
             <n-tooltip>
                 <template #trigger>
-                    <n-tag @click="refreshCache" :bordered="false" class="cursor-pointer">我的快捷功能</n-tag>
+                    <span @click="refreshCache" :bordered="false" class="cursor-pointer">我的快捷功能</span>
                 </template>
                 这里显示你关注的功能页面（看不到已经关注的功能页面时请使用此按钮进行强制刷新）
             </n-tooltip>

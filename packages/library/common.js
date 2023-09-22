@@ -1,3 +1,7 @@
+import dayjs from "dayjs"
+
+const globalName = "meta"
+
 let contextPath
 
 // 简单的参数拼接，不支持数组
@@ -14,6 +18,8 @@ const handleResponse = response=> response.json().then(json=>{
     else
         return Promise.reject(json)
 })
+
+export { globalName }
 
 /**
  * 配置后端服务总地址
@@ -61,6 +67,8 @@ export const openUrl = (target, ps={})=>{
             width:1320,
             height:720,
             type:"_blank",
+            x: 0,
+            y: 0,
             center: false         //是否居中
         },
         ps
@@ -74,6 +82,9 @@ export const openUrl = (target, ps={})=>{
             let left = (window.screen.availWidth - ps.width)/2
             options+=`,top=${top},left=${left}`
         }
+        else if(ps.x>0 || ps.y>0){
+            options+=`,top${ps.y},left=${ps.x}`
+        }
     }
 
     let newWin = window.open(target, ps.type, options)
@@ -83,4 +94,19 @@ export const openUrl = (target, ps={})=>{
         }
     }
     return newWin
+}
+
+const COLORS = {"INFO":"#2080f0", "DEBUG":"#8c0776", "ERROR":"#d03050"}
+/**
+ *
+ * @param {String} level
+ * @param  {...any} ps
+ * @returns
+ */
+const log = (level, ...ps)=> console.debug(`%c${dayjs(new Date).format("HH:mm:ss")} ${level}`, `color:${COLORS[level]};font-weight:500;`, ...ps)
+
+export const logger = {
+    info    : (...ps)=> log("INFO", ...ps),
+    debug   : (...ps)=> log("DEBUG", ...ps),
+    error   : (...ps)=> log("ERROR", ...ps)
 }

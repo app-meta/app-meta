@@ -3,6 +3,8 @@
     import { ref, h } from 'vue'
     import { useMessage, useNotification, useDialog,NButton, NText, NCard, NSpace, NInput, NInputNumber, useLoadingBar, NTable, NTr, NTd, NTh, NTabs, NTabPane } from "naive-ui"
 
+    import IFrame from "../common/iframe.vue"
+
     const notification  = useNotification()
     const message       = useMessage()
     const dialog        = useDialog()
@@ -46,6 +48,13 @@
      */
     window.M = window.M || {
         loadingBar,
+        alert (msg){
+            return dialog.info({
+                showIcon:false,
+                content: UI.html(msg),
+                positiveText: "朕知道了"
+            })
+        },
         ok (content){
             showMsg(content, "success")
         },
@@ -212,6 +221,35 @@
         },
         closeDialog (){
             dialog.destroyAll()
+        },
+
+        /**
+         * 以对话框的形式打开一个功能页面
+         *
+         * @param {String} aid - 应用ID
+         * @param {String} pid - 页面ID
+         * @param {Object} params - 参数
+         */
+        openPage (aid, pid, params={}){
+            H.app.prepare(aid, pid, params).then(({url, option})=>{
+                console.debug(url, option)
+                let style = {}
+                let height = Math.min(!!option.height ? option.height : parseInt(window.innerHeight*0.8), window.innerHeight) - 80
+                if(!!option.width)  style.width = `${Math.min(option.width, window.innerWidth)}px`
+
+                style.height = `${height}px`
+                style.padding = '10px 0px'
+
+                console.debug(height)
+                dialog.create({
+                    type:"success",
+                    showIcon: false,
+                    class:'app-view-dialog',
+                    style,
+                    maskClosable: false,
+                    content: ()=>h(IFrame, {url})
+                })
+            })
         },
 
 

@@ -33,10 +33,14 @@
 
 <script setup>
     import { ref, watch,onMounted, h, reactive, nextTick } from 'vue'
-    import { useRoute, useRouter } from 'vue-router'
 
-    const route = useRoute()
-    let { aid, pid }   = route.params
+    const props = defineProps({
+        aid: {type:String, default:""},
+        pid: {type:String, default:""},
+        params: {type:Object, default:()=>{}},      //页面参数传递
+    })
+
+    const { aid, pid } = props
 
     import DocumentRender from "./文档页/Render.vue"
     import FormRender from './表单页/Render.vue'
@@ -61,8 +65,6 @@
      */
     let state   = ref(-1)
     let data    = undefined
-    // 增加页面参数传递
-    let params  = {}
 
     let viewer  = ()=> {
         let tpl = bean.page.template
@@ -77,12 +79,7 @@
             tpl=='sfc'?         SFCRender:
             null
         if(com == null) throw Error(`应用⌈${bean.page.name}⌋未定义对应的渲染器，请联系管理员`)
-        return h(com, {data, aid, page: bean.page, params})
-    }
-
-    const loadParamsFromQuery = ()=>{
-        let p = route.query.params
-        window.pageParams = params = p? JSON.parse(H.io.unCompress(decodeURIComponent(p))) : {}
+        return h(com, {data, aid, page: bean.page, params: props.params})
     }
 
     const defaultHome = ()=> h(DefaultHome, {app: bean.app})
@@ -90,6 +87,7 @@
     const refresh = ()=>RESULT("/page/main", {pid, aid},  d=>{
         let { page, app } = d.data
         if(!app || !app.id || (!!pid && !page)) return state.value = 2
+        console.debug("页面更新", aid, pid, props.params)
 
         bean.app    = app
 
@@ -114,7 +112,6 @@
                 if(dd.success != true){
                     return state.value = 4
                 }
-                loadParamsFromQuery()
 
                 //运行小程序
                 if(template === 'h5')
@@ -132,20 +129,7 @@
         }
     )
 
-    watch(route, ()=>{
-        if(route.name == "app-view"){
-            let { params } = route
-            if(params.aid != aid || params.pid != pid){
-                aid = params.aid
-                pid = params.pid
-
-                H.data.reset()
-                state.value = -1
-                nextTick(refresh)
-            }
-        }
-    })
-
-    loadParamsFromQuery()
     onMounted( refresh )
+
+    defineExpose({ refresh })
 </script>

@@ -97,7 +97,7 @@ export function pageEditor(defaultVal, translator, padding=true){
 
         if(!H.data.getAppId()){
             // 初始化 DATA 模块，此处不传递 pid 参数，需要在 CURD 时进行手动 pid 限定
-            H.data.init({aid, pid:"", prefix: window.SERVER, debug: process.env.NODE_ENV !== "production"})
+            !H.data.inited() && H.data.init({aid, pid:"", prefix: window.SERVER, debug: process.env.NODE_ENV !== "production"})
         }
     })
     onUnmounted(()=>{
