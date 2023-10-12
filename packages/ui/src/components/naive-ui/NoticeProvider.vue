@@ -10,7 +10,10 @@
     const dialog        = useDialog()
     const loadingBar    = useLoadingBar()
 
-    let showNotice = (title, content, type="info", meta, duration=5000)=> notification[type]({title, content,meta, duration})
+    let showNotice = (title, content, type="info", meta, duration=5000)=> {
+        console.debug(duration, type, meta)
+        notification[type]({title, content,meta, duration})
+    }
     let showMsg = (content, type="info")=> message[type](content)
 
     /**
@@ -31,7 +34,7 @@
             // ))
             ()=> [
                 h('thead', h(NTr,{}, ()=>data[0].map(cell=> h(NTh, ()=>cell)))),
-                h('tbody', data.slice(1).map(row=> h(
+                h('tbody', data.slice(1).map((row, rowIndex)=> h(
                     NTr,
                     { onClick: handlerClick?()=>onRowClick(row, rowIndex): undefined },
                     ()=>row.map(cell=> h(NTd, ()=>cell))
@@ -89,7 +92,7 @@
                 showNotice(title, content, "success", meta, 5000)
             },
             error (content, title="操作失败", meta){
-                showNotice(title, content, "error", meta, undefined)
+                showNotice(title, content, "error", meta, null)
             },
             warn (content, title="警告", meta){
                 showNotice(title, content, "warning", meta, 6000)

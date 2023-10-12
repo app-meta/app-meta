@@ -35,7 +35,7 @@
             <n-form-item>
                 <template #label>
                     <span class="text-lg">脚本代码</span>
-                    <n-text class="ml-3" depth="3">仅支持标准 JavaScript 代码噢，参数：data=文件内容，filename=文件名（小提示：测试阶段可以将读取到的文件内容复制到全局变量以便调试）</n-text>
+                    <n-text class="ml-3" depth="3">仅支持标准 JavaScript 代码，参数：data=文件内容，filename=文件名（小提示：测试阶段可以将读取到的文件内容复制到全局变量以便调试）</n-text>
                 </template>
                 <div class="w-full">
                     <CodeEditor v-model:value="bean.code" height="calc(100vh - 510px)" :tabSize="2" />

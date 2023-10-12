@@ -30,8 +30,8 @@
     },
     "devDependencies": {
         "@types/node": "^18.14.0",
-        "electron": "23.1.0",
-        "electron-builder": "^24.4.0",
+        "electron": "27.0.0",
+        "electron-builder": "^24.6.4",
         "env-cmd": "^10.1.0",
         "nodemon": "^2.0.20"
     },

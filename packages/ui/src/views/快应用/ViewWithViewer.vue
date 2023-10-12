@@ -30,7 +30,6 @@
                 pid.value = params.pid
 
                 H.data.reset()
-                state.value = -1
 
                 loadParamsFromQuery()
                 nextTick(viewer.value.refresh)

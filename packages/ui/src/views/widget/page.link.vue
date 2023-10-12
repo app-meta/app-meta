@@ -10,7 +10,7 @@
 
     const emits = defineEmits(["change"])
     const props = defineProps({
-        id:     { type: String },
+        id:     { type: [String, Number] },
         linked: { type:Boolean, default: false },           //是否已经关联
         auto:   { type: Boolean, default: false },          //是否自动检测关联状态
         color:  { type:String, default:"default" }

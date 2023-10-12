@@ -66,7 +66,7 @@
         RESULT("/page/list-authable", {form:{EQ_aid:props.app.id}}, d=> {
             d.data.forEach(b=>b.tpl = templates.find(v=>v.id==b.template))
             pages = d.data
-            console.debug(d.data)
+
             pageLoaded.value = true
         })
     })

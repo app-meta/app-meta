@@ -5,6 +5,8 @@ import Main from "@V/Main.vue"
 
 import Tag from "@C/custom/tag.vue"
 
+import BasicEditorView from "@V/快应用/Editor.vue"
+
 import "@S/FastApp"
 import { defaultRoute, loadCommonData } from "@S/Auth"
 
@@ -73,27 +75,36 @@ let router = BuildRouter(
             { path: '/system/terminal', name: 'sys-terminal', meta:{title:"后端服务管理"}, component: () => import('@V/系统管理/后端服务/Index.vue') },
             { path: '/system/member', name: 'sys-member', meta:{title:"会员终端管理"}, component: () => import('@V/系统管理/会员终端/Index.vue') },
         ],
+        customRoutes: [
+            // 快应用页面编辑，路由容器为 BasicEditor.vue （方便添加统一操作）
+            {
+                path: '',
+                component: BasicEditorView,
+                children:  [
+                    //快应用页面编辑
+                    { path: '/app/:aid/form/:id', name: 'app-page-form', meta:{title:"表单维护·应用页面"}, component: () => import('@V/快应用/表单页/Editor.vue') },
+                    { path: '/app/:aid/markdown/:id', name: 'app-page-markdown', meta:{title:"文档维护·应用页面"}, component: () => import('@V/快应用/文档页/Editor.vue') },
+                    { path: '/app/:aid/table/:id', name: 'app-page-table', meta:{title:"表格维护·应用页面"  }, component: () => import('@V/快应用/数据表格/Editor.vue') },
+                    { path: '/app/:aid/wenjuan/:id', name: 'app-page-wenjuan', meta:{title:"问卷维护·应用页面"  }, component: () => import('@V/快应用/问卷/Index.vue') },
+                    { path: '/app/:aid/data/:id', name: 'app-page-data', meta:{title:"数据分发维护·应用页面"  }, component: () => import('@V/快应用/数据分发/Editor.vue') },
+                    { path: '/app/:aid/import/:id', name: 'app-page-import', meta:{title:"数据维护·应用页面"  }, component: () => import('@V/快应用/数据维护/Editor.vue') },
+                    { path: '/app/:aid/chart/:id', name: 'app-page-chart', meta:{title:"统计图表维护·应用页面"  }, component: () => import('@V/快应用/统计图表/Editor.vue') },
+                    { path: '/app/:aid/robot/:id', name: 'app-page-robot', meta:{title:"网页机器人·应用页面"  }, component: () => import('@V/快应用/网页机器人/Editor.vue') },
+                    { path: '/app/:aid/sfc/:id', name: 'app-page-sfc', meta:{title:"SFC维护·应用页面"  }, component: () => import('@V/快应用/SFC/Editor.vue') },
+                    { path: '/app/:aid/h5/:id', name: 'app-page-h5', meta:{title:"小程序维护·应用页面"  }, component: () => import('@V/快应用/小程序/Editor.vue') },
+                    { path: '/app/:aid/server/:id', name: 'app-page-server', meta:{title:"后端服务维护·应用页面"  }, component: () => import('@V/快应用/后端服务/Index.vue') },
+                ]
+            }
+        ],
         windowRoutes: [
-            //快应用页面编辑
-            { path: '/app/:aid/form/:id', name: 'app-page-form', meta:{title:"表单维护·应用页面"}, component: () => import('@V/快应用/表单页/Editor.vue') },
-            { path: '/app/:aid/markdown/:id', name: 'app-page-markdown', meta:{title:"文档维护·应用页面"}, component: () => import('@V/快应用/文档页/Editor.vue') },
-            { path: '/app/:aid/table/:id', name: 'app-page-table', meta:{title:"表格维护·应用页面"  }, component: () => import('@V/快应用/数据表格/Editor.vue') },
-            { path: '/app/:aid/wenjuan/:id', name: 'app-page-wenjuan', meta:{title:"问卷维护·应用页面"  }, component: () => import('@V/快应用/问卷/Index.vue') },
-            { path: '/app/:aid/data/:id', name: 'app-page-data', meta:{title:"数据分发维护·应用页面"  }, component: () => import('@V/快应用/数据分发/Editor.vue') },
-            { path: '/app/:aid/import/:id', name: 'app-page-import', meta:{title:"数据维护·应用页面"  }, component: () => import('@V/快应用/数据维护/Editor.vue') },
-            { path: '/app/:aid/chart/:id', name: 'app-page-chart', meta:{title:"统计图表维护·应用页面"  }, component: () => import('@V/快应用/统计图表/Editor.vue') },
-            { path: '/app/:aid/robot/:id', name: 'app-page-robot', meta:{title:"网页机器人·应用页面"  }, component: () => import('@V/快应用/网页机器人/Editor.vue') },
-            { path: '/app/:aid/sfc/:id', name: 'app-page-sfc', meta:{title:"SFC维护·应用页面"  }, component: () => import('@V/快应用/SFC/Editor.vue') },
-            { path: '/app/:aid/h5/:id', name: 'app-page-h5', meta:{title:"小程序维护·应用页面"  }, component: () => import('@V/快应用/小程序/Editor.vue') },
-            { path: '/app/:aid/server/:id', name: 'app-page-server', meta:{title:"后端服务维护·应用页面"  }, component: () => import('@V/快应用/后端服务/Index.vue') },
-
             /**
              * 运行应用/页面
              *
              * 由于 /app/:aid/ 无法正常匹配到 name=app-view 的路由（:pid 不能传空），所以新增 name=app-view-index 的路由
              */
             //指定了具体页面ID
-            { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/View.vue') },
+            // { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/View.vue') },
+            { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/ViewWithViewer.vue') },
             //未指定页面ID，在 View 视图中自定计算
             { path: '/app/:aid', name: 'app-view-index', component: () => import('@V/快应用/View.vue') },
 

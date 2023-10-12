@@ -20,7 +20,7 @@ const IGNORES = [ LOGIN, 'login-cas', "app-form-designer", "logout" ]
  * @returns  router 对象，可以在此基础上添加钩子（如 beforeEach）
  */
 export default function ( mainComponent, ps) {
-    ps = Object.assign({mainRoutes:[], blankRoutes:[], windowRoutes:[], homePage: "/home"}, ps||{})
+    ps = Object.assign({mainRoutes:[], blankRoutes:[], windowRoutes:[], homePage: "/home", customRoutes:[]}, ps||{})
 
     let appRouter = {
         path: "",
@@ -48,6 +48,7 @@ export default function ( mainComponent, ps) {
         ...ps.blankRoutes,
         appRouter,
         windowRouter,
+        ...ps.customRoutes,
         { path: '/login', name: 'login', component:()=> import('@V/登录/Login.vue') },
         {
             path: "/:pathMatch(.*)",
