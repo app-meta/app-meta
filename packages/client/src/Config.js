@@ -2,11 +2,19 @@
  * @Author: 集成显卡
  * @Date: 2022-02-04 22:58:23
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-09-05 12:37:54
+ * @Last Modified time: 2023-10-17 11:18:07
  */
 const { existsSync, readFileSync } = require('fs')
 
 const R = require("./Runtime")
+
+
+/**
+ * @typedef {Object} WorkerConfig
+ * @property {Boolean} enable - 是否启用
+ * @property {Number} port - 服务端口，默认 9900
+ * @property {String} secretKey - 密钥
+ */
 
 let C = {
     displayName: R.appName,
@@ -53,6 +61,15 @@ let C = {
         timeout: 3 * 60,                    //默认超时，单位秒
         delay: 2,                           //脚本延迟执行，默认2（单位 秒）
         closeDelay: 3,                      //任务完成后，等待多少秒自动关闭窗口，默认 3
+    },
+
+    /**
+     * @type {WorkerConfig}
+     */
+    worker: {
+        enable: false,
+        port: 9900,
+        secretKey: ""
     },
 
     verbose: false,                      //强制开启开发环境模式

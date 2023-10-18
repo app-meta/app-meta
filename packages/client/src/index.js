@@ -1,5 +1,5 @@
 const { join } = require('path')
-const { app, protocol, BrowserWindow, Menu, shell }= require('electron')
+const { app, protocol, BrowserWindow, Menu, shell, dialog }= require('electron')
 
 const R = require('./Runtime')
 const C = require('./Config')
@@ -8,9 +8,13 @@ const { onBootstrap } = require('./core/Init')
 const { repairAndCheck, runRobot } = require('./core/RobotManage')
 const { setToken } = require('./service/Http')
 const { mainPreload, createMainWindow } = require('./service/Helper')
+const { launchWorker } = require('./worker')
 // const { broadcastAll } = require('./service/Global')
 
 const API = require('./sdk')
+
+
+const htmlFile = (name='index') => join(__dirname, `../www/${name}.html`)
 
 //不提示安全信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -57,11 +61,24 @@ async function createWindow() {
     }
 
     if(!target){    // || target.indexOf("http://localhost") === 0
-        logger.info(`检测到远程地址 ${target} 不规范，即将打开本地 ${join(__dirname, "../index.html")}`)
-        mainWindow.loadFile(join(__dirname, "../index.html"))
+        let indexHtml = htmlFile()
+        logger.info(`检测到远程地址 ${target} 不规范，即将打开本地 ${indexHtml}`)
+        mainWindow.loadFile(indexHtml)
     }
     else{
-        mainWindow.loadURL(target)
+        //判断是否启用工作者模式
+        if(C.worker.enable === true){
+            mainWindow.loadFile(htmlFile('worker'))
+
+            if(!C.worker.secretKey){
+                dialog.showErrorBox(`参数缺失`, `密钥缺失，无法启动[工作者模式]，请添加参数后重试！`)
+                app.exit(-1)
+            }
+            launchWorker()
+        }
+        else{
+            mainWindow.loadURL(target)
+        }
     }
 
     mainWindow.once('ready-to-show', ()=>{

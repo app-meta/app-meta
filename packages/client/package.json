@@ -18,9 +18,11 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "dependencies": {
+        "@app-meta/basic": "1.0.0",
         "axios": "^1.4.0",
         "blueimp-md5": "^2.19.0",
         "dayjs": "^1.11.7",
+        "fastify": "^4.13.0",
         "form-data": "^4.0.0",
         "iconv-jschardet": "^2.0.32",
         "minimist": "^1.2.8",
@@ -53,7 +55,7 @@
         ],
         "files": [
             "src/**/*",
-            "index.html"
+            "www/**/*"
         ],
         "win": {
             "icon": "../ui/public/icons.png",

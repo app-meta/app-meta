@@ -8,6 +8,7 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "dependencies": {
-        "crypto-js": "^4.1.1"
+        "crypto-js": "^4.1.1",
+        "node-rsa": "^1.1.1"
     }
 }

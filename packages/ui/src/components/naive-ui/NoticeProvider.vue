@@ -51,8 +51,9 @@
      */
     window.M = window.M || {
         loadingBar,
-        alert (msg){
+        alert (msg, title){
             return dialog.info({
+                title,
                 showIcon:false,
                 content: UI.html(msg),
                 positiveText: "朕知道了"
