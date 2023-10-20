@@ -70,11 +70,15 @@ async function createWindow() {
         if(C.worker.enable === true){
             mainWindow.loadFile(htmlFile('worker'))
 
-            if(!C.worker.secretKey){
-                dialog.showErrorBox(`参数缺失`, `密钥缺失，无法启动[工作者模式]，请添加参数后重试！`)
+            if(!(C.worker.tokenKey && C.worker.dataKey)){
+                dialog.showErrorBox(`参数缺失`, `TOKEN或数据交互的密钥缺失，无法启动[工作者模式]，请添加参数后重试！`)
                 app.exit(-1)
             }
-            launchWorker()
+            launchWorker().catch(e=>{
+                R.verbose && logger.info(`工作者启动失败`, e)
+                dialog.showErrorBox(`工作者启动失败`, typeof(e)==='string'? e:e.message)
+                app.exit(-1)
+            })
         }
         else{
             mainWindow.loadURL(target)

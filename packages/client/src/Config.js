@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-02-04 22:58:23
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-10-17 11:18:07
+ * @Last Modified time: 2023-10-19 10:59:23
  */
 const { existsSync, readFileSync } = require('fs')
 
@@ -13,7 +13,9 @@ const R = require("./Runtime")
  * @typedef {Object} WorkerConfig
  * @property {Boolean} enable - 是否启用
  * @property {Number} port - 服务端口，默认 9900
- * @property {String} secretKey - 密钥
+ * @property {String} uid - 自动登录的用户ID
+ * @property {String} tokenKey - 创建token时密钥
+ * @property {String} dataKey - 数据交互时密钥
  */
 
 let C = {
@@ -68,8 +70,10 @@ let C = {
      */
     worker: {
         enable: false,
+        uid:"",
         port: 9900,
-        secretKey: ""
+        tokenKey: "",
+        dataKey: ""
     },
 
     verbose: false,                      //强制开启开发环境模式

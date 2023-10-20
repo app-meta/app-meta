@@ -1,8 +1,8 @@
 const { isDev, verbose } = require("../Runtime")
 const logger = require("../common/logger")
 
-const { rsa } = require('@app-meta/basic')
 const { runRobot, repairAndCheck } = require("../core/RobotManage")
+const { decrypt } = require("../service/rsa")
 
 /**
  * @typedef {Object} WorkerTask
@@ -65,7 +65,7 @@ const handlers = {
  * @param {Number} param.port - 服务端口，默认9900
  * @param {String} param.secretKey - 密钥
  */
-exports.launch = ({port = 9900, secretKey=""}={})=>{
+exports.launch = ({port = 9900, tokenKey="", dataKey=""}={})=>{
     if(!secretKey) throw `启动工作者模式的密钥不能为空`
 
     logger.info(`${prefix} 尝试启动工作者模式（端口=${port}）`)
@@ -86,7 +86,7 @@ exports.launch = ({port = 9900, secretKey=""}={})=>{
         handler: (req, res)=> {
             if(!req.body) throw Error(`指令不能为空`)
 
-            let jsonStr = rsa.decrypt(req.body, secretKey)
+            let jsonStr = decrypt(req.body, secretKey)
             if(/^\{.*\}$/.test(jsonStr)){
                 /**
                  * @type {WorkerTask}
