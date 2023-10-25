@@ -14,7 +14,7 @@ const logger = require("../common/logger")
 const FormData = require("form-data")
 const { createReadStream } = require("fs")
 const C = require("../Config")
-const { isDev } = require("../Runtime")
+const { isDev, verbose } = require("../Runtime")
 const { aes } = require("@app-meta/basic")
 const { buildRemoteUrl } = require("./Helper")
 
@@ -134,13 +134,14 @@ exports.loadTokenFromServer = (secretKey, uid)=>new Promise((ok, fail)=>{
     axios.get(buildRemoteUrl(`/outreach/create-token`), { params:{ text }, responseType:'text' })
         .then(res=>{
             if(res.status === 200){
+                /** @type {String} */
                 let token = res.data
                 if(token.startsWith("{")){
                     let json = JSON.parse(token)
                     throw Error(`无法获取 TOKEN：${json.message}`)
                 }
-
-                setToken(token)
+                verbose && logger.info(`成功获取到 TOKEN ${token.substring(0, 10)}...`)
+                this.setToken(token)
                 ok(token)
             }
             else{

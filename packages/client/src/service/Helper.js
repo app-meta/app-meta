@@ -3,7 +3,6 @@ const { BrowserWindow } = require("electron")
 const C = require("../Config")
 const R = require("../Runtime")
 const logger = require("../common/logger")
-const { getToken } = require("./Http")
 
 const urlPrefix = process.env.WEBPACK_DEV_SERVER_URL? process.env.WEBPACK_DEV_SERVER_URL:"app://./"
 const preload   = join(__dirname, '../preload/api-main.js')
@@ -22,7 +21,7 @@ exports.buildUrl = (suffix="", page="index.html")=>{
  * @param {String} suffix - 以 / 开头的后端资源
  * @returns String
  */
-exports.buildRemoteUrl = suffix=> `${C.serverHost}${C.serverContext}${suffix}`
+exports.buildRemoteUrl = suffix => `${C.serverHost}${C.serverContext}${suffix}`
 
 exports.mainPreload = preload
 

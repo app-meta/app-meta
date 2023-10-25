@@ -22,9 +22,12 @@
     <n-drawer v-model:show="showEdit" :width="640" :mask-closable="false" :close-on-esc="false">
         <n-drawer-content :title="(isNew?'新建':'编辑')+`会员终端`" :native-scrollbar="false" :closable="true">
             <n-form :show-feedback="false" :label-width="80" label-placement="top">
-                <n-space vertical>
+                <n-space vertical size="large">
                     <n-form-item label="IP地址">
                         <n-input v-model:value="bean.id" :disabled="!isNew" />
+                    </n-form-item>
+                    <n-form-item label="终端代号/识别编码">
+                        <n-input v-model:value="bean.uuid" :allow-input="uuidFilter" placeholder="数字/字母/下划线，建议唯一" />
                     </n-form-item>
                     <n-form-item label="终端名称">
                         <n-input v-model:value="bean.name" />
@@ -145,6 +148,8 @@
             refresh()
         })
     }
+
+    const uuidFilter = value => !value || /^\w+$/.test(value)
 
     const createRsaKey = ()=> {
         if(bean.value.pubKey || bean.value.priKey)

@@ -21,7 +21,7 @@ exports.launchWorker = ()=> new Promise((ok, fail)=>{
     loadTokenFromServer(worker.tokenKey, worker.uid)
         .then(()=>{
             launch(worker)
-            //开启定时器，每隔12小时更新一次token
+            //开启定时器，每隔12小时更新一次token, corn="0 0 */12 * * ?"
             refreshTokenJob = schedule.scheduleJob("0 0 */12 * * ?", ()=>{
                 loadTokenFromServer(worker.tokenKey, worker.uid)
                     .then(()=> verbose && logger.info(`TOKEN 刷新成功 ^.^`))
