@@ -106,7 +106,7 @@ let router = BuildRouter(
             // { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/View.vue') },
             { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/ViewWithViewer.vue') },
             //未指定页面ID，在 View 视图中自定计算
-            { path: '/app/:aid', name: 'app-view-index', component: () => import('@V/快应用/View.vue') },
+            { path: '/app/:aid', name: 'app-view-index', component: () => import('@V/快应用/ViewWithViewer.vue') },
 
             /**数据库在线管理 */
             { path: '/dbm/view/:id', name: 'dbm-view', meta:{}, component: () => import('@V/dbm/管理面板.vue') },

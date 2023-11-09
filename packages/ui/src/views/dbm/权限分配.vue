@@ -35,7 +35,7 @@
     <n-modal v-model:show="edit.show" :style="{width:'640px'}" preset="card" title="编辑数据源">
         <n-form :show-feedback="false" label-placement="left" label-width="60">
             <n-space vertical>
-                <n-form-item label="用户"> <n-input v-model:value="bean.uid" placeholder="用户ID（用户与数据源为唯一主键）" /> </n-form-item>
+                <n-form-item label="用户"> <n-input v-model:value="bean.uid" placeholder="单个用户ID（用户与数据源为唯一主键）" /> </n-form-item>
                 <n-form-item label="数据源">
                     <n-select :options="sources" v-model:value="bean.sourceId" @update:value="onSelect"></n-select>
                 </n-form-item>

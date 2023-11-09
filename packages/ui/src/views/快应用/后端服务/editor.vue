@@ -72,7 +72,7 @@
         </n-form>
 
         <div class="text-center mt-4">
-            <n-button type="primary" size="large" @click="toSave">保存</n-button>
+            <n-button type="primary" size="large" @click="toSave">保存配置信息</n-button>
         </div>
     </n-card>
 

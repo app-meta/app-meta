@@ -2,7 +2,7 @@
     <n-space>
         <n-input v-model:value="form.LIKE_id_name" placeholder="应用编号/名称" clearable />
         <n-input v-model:value="form.LIKE_author" placeholder="作者" style="width: 100px;" clearable />
-        <n-button secondary circle type="success" @click="refresh">
+        <n-button secondary circle type="primary" @click="refresh">
             <template #icon><n-icon :component="Search" /> </template>
         </n-button>
     </n-space>
