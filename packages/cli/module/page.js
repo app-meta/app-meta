@@ -1,6 +1,7 @@
 import { createReadStream, existsSync, readFileSync, statSync, mkdirSync } from 'fs'
 
 import FormData from 'form-data'
+import confirm from '@inquirer/confirm'
 
 import { Command, Argument } from 'commander'
 import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfId, optionOfOutput, optionOfPid, optionOfUid, optionOfValue } from '../core/base.js'
@@ -153,6 +154,12 @@ const listOrDownload = async ps=>{
 
         await callServer("/page/terminal/file", {id: ps.aid, key: ps.path, value:"download"}, 0, true, {}, output)
     }
+    else if(ps.remove===true){
+        let answer = await confirm({ message: `确定要删除远程文件 ${ps.path} 吗？`, default: true })
+        if(answer != true)  return
+
+        await callServer("/page/terminal/file", {id: ps.aid, key: ps.path, value:"delete"})
+    }
     else{
         let toRow = f=> [f.type==0?chalk.magenta('目录'):chalk.blue('文件'), f.name, f.type==0?"-":`${f.size} B`, f.time]
         let res = await callServer("/page/terminal/file", {id: ps.aid, key: ps.path})
@@ -209,6 +216,7 @@ export default (app=new Command())=> {
         .option(...optionOfAid)
         .option(...optionOfOutput)
         .option('-d, --download', "下载文件")
+        .option('-r, --remove', "删除文件")
         .option('-p, --path [string]', "文件/目录路径，默认为根目录")
         .action(listOrDownload)
 

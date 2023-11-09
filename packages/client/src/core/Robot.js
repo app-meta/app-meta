@@ -49,12 +49,17 @@ module.exports = class {
 
     #downloadNames = {}                     //下载文件名称映射
 
+    /** @type {RobotContext} */
+    context     = {}
+
     /**
-     * @param {*} page      页面对象
-     * @param {*} bean      机器人对象
-     * @param {*} params    运行时参数
+     * @param {Object} page      页面对象
+     * @param {Object} bean      机器人对象
+     * @param {Object} params    运行时参数
+     * @param {RobotContext} context
      */
-    constructor({ page, bean, params={} }){
+    constructor({ page, bean, params={} }, context){
+        this.context    = context
         this.bean       = bean
         this.params     = params
 
@@ -64,7 +69,7 @@ module.exports = class {
         this.pid        = page.id
         this.name       = page.name || bean.name || this.id
         this.uuid       = `${this.id}-${this.timestamp}`
-        logger.info(`初始化网页脚本机器人 ${this.name}, 参数：${U.toJSON(params)}`)
+        logger.info(`初始化网页脚本机器人 ${this.name}, 参数：${U.toJSON(params)} 环境：${U.toJSON(this.context)}`)
 
         this.window     = null
         this.complete   = false
@@ -112,7 +117,9 @@ module.exports = class {
             })
 
             this.window.on('ready-to-show', ()=>{
-                this.window.show()
+                if(this.context.hideWindow !== true)
+                    this.window.show()
+
                 if(R.isDev) this.window.webContents.openDevTools()
             })
 

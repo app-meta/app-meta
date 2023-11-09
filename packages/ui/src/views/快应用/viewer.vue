@@ -40,7 +40,7 @@
         params: {type:Object, default:()=>{}},      //页面参数传递
     })
 
-    const { aid, pid } = props
+    let { aid, pid } = props
 
     import DocumentRender from "./文档页/Render.vue"
     import FormRender from './表单页/Render.vue'

@@ -33,6 +33,46 @@ setTimeout(
     1000
 )
 
+/**
+* 将 img 元素对象转换为 Base64 格式
+* @param {HTMLImageElement|String} img - 图片元素（如通过 document.querySelector 获取）或者选择器
+* @param {Object} ps - 额外参数
+* @param {Number} ps.scale - 缩放，默认 1
+* @param {Boolean} ps.withGray - 是否进行灰度处理，默认 true
+* @param {String} ps.format - 图片格式，默认 image/jpeg
+* @param {Boolean} ps.natural - 是否使用图片元素的原始尺寸，默认 true
+* @returns {String}
+*/
+function imgToBase64(img, ps={}) {
+    if(typeof(img)==='string')  img = document.querySelector(img)
+    if(Object.prototype.toString.call(img) != '[object HTMLImageElement]')
+        throw Error(`参数 img 必须是一个有效的 HTMLImageElement 对象或选择器`)
+
+    ps = Object.assign({scale:1.0, withGray:true, format: "image/jpeg", natural:true}, ps)
+    let canvas = document.createElement("canvas")
+    let ctx = canvas.getContext("2d")
+    let width = ps.natural? img.naturalWidth : img.width
+    let height = ps.natural? img.naturalHeight : img.height
+
+    canvas.width = width * ps.scale
+    canvas.height = height * ps.scale
+    ctx.drawImage(img, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
+
+    //灰度处理，一定程度上使得图片内字符更加清晰
+    if (ps.withGray) {
+        let imgD = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        let len = canvas.width * canvas.height * 4
+        for (let i = 0; i < len; i += 4) {
+            let gray = Math.floor((imgD.data[i] + imgD.data[i + 1] + imgD.data[i + 2]) / 3)
+            imgD.data[i] = imgD.data[i + 1] = imgD.data[i + 2] = gray > 100 ? gray : 0
+        }
+
+        ctx.putImageData(imgD, 0, 0)
+    }
+
+    return canvas.toDataURL(ps.format)
+}
+
 export {
     date,
     store,
@@ -145,4 +185,4 @@ export const hasText = v=>{
     return false
 }
 
-export { openUrl, post }
+export { openUrl, post, imgToBase64 }

@@ -21,6 +21,7 @@ let detectTheme = v =>{
 export const useUISetting = defineStore('ui', {
     state: () => ({
         theme: detectTheme(),           // light，dark，auto（自动）
+        color: H.store.get('ui.color'),
         darkNav: H.store.get("ui.darkNav") !== "false"
     }),
     getters: {
@@ -39,6 +40,10 @@ export const useUISetting = defineStore('ui', {
         updateDarkNav (v){
             this.darkNav = v
             H.store.set("ui.darkNav", v)
+        },
+        updateColor(color) {
+            this.color = color
+            H.store.set('ui.color', color)
         }
     }
 })

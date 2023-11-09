@@ -35,7 +35,10 @@
                 SQL 语句
                 <n-text depth="3" class="ml-2 text-sm">支持使用 {{tupe}}，届时将替换成对应的参数值</n-text>
             </template>
-            <n-input type="textarea" :rows="3" v-model:value="bean.cmd" />
+            <!-- <n-input type="textarea" :rows="3" v-model:value="bean.cmd" /> -->
+            <div class="w-full">
+                <CodeEditor v-model:value="bean.cmd" ref="editor" language="sql" style="height: 80px;" />
+            </div>
         </n-form-item>
 
         <n-form-item label="接口参数">
@@ -88,6 +91,7 @@
 
     import AuthSelector from "@CC/selector.auth.vue"
     import MDEditor from "@C/markdown/md.editor.vue"
+    import CodeEditor from "@C/editor.code.vue"
 
     const tupe = `{{ 变量名 }}`
 

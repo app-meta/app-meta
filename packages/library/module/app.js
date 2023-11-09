@@ -117,6 +117,36 @@ export const runRobot = (id, params={})=> {
     return typeof(callClient)==='function'? callClient('runRobot', id, params) : META.runRobot(id, params)
 }
 
+//=================================== START 远程工作者 START ===================================
+/**
+ * 调用远程工作者，执行指定的机器人
+ * @param {String} worker - 工作者ID（通常是ip地址）或编号
+ * @param {String|Number} robotId - 机器人ID
+ * @param {Object} params - 运行时参数
+ */
+export const runRobotRemote = (worker, robotId, params={})=>{
+    if(!worker)     throw Error(`工作者ID/编号不能为空`)
+    if(!robotId)    throw Error(`ROBOT编号不能为空`)
+    return withPost(`/worker/run-robot`, {worker, robotId, params})
+}
+
+/**
+ * 检查工作者状态
+ * @param {String} worker - 工作者ID（通常是ip地址）或编号
+ * @returns
+ */
+export const workerStatus = worker => withPost(`/worker/status`, {worker})
+
+/**
+ * 轮询检查远程 ROBOT 是否有结果
+ * @param {String} taskId - 远程任务ID，通常来自 runRobotRemote 方法
+ * @returns
+ */
+export const workerResult = taskId => withPost(`/worker/fetch/${taskId}`)
+
+//=================================== ↑↑↑↑↑ 远程工作者 ↑↑↑↑↑ ===================================
+
+//=================================== START 组织管理 START ===================================
 /**
  * 获取用户清单
  * @param {String} id 若不为空则返回模糊匹配的结果
@@ -131,3 +161,4 @@ export const departments = ()=>withPost(`/account/departs`)
  * 获取角色列表
  */
 export const roles = ()=> withPost(`/account/roles`)
+//=================================== ↑↑↑↑↑ 组织管理 ↑↑↑↑↑ ===================================

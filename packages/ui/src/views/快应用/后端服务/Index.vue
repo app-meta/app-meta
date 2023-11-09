@@ -1,16 +1,18 @@
 <!---->
 <template>
-    <n-tabs type="line">
-        <n-tab-pane name="edit" display-directive="show:lazy" tab="服务配置">
-            <Editor v-if="inited" :bean="bean" :updater="updater" :creater="newQ" />
-        </n-tab-pane>
-        <n-tab-pane name="deploy" :disabled="!canDeploy" display-directive="show:lazy" tab="上传与部署">
-            <Deploy :aid="aid" :pid="id"/>
-        </n-tab-pane>
-        <n-tab-pane name="dashboard" display-directive="show:lazy" tab="服务访问记录">
-            <Dashboard :aid="aid" />
-        </n-tab-pane>
-    </n-tabs>
+    <div class="px-3">
+        <n-tabs type="line">
+            <n-tab-pane name="edit" display-directive="show:lazy" tab="服务配置">
+                <Editor v-if="inited" :bean="bean" :updater="updater" :creater="newQ" />
+            </n-tab-pane>
+            <n-tab-pane name="deploy" :disabled="!canDeploy" display-directive="show:lazy" tab="上传与部署">
+                <Deploy :aid="aid" :pid="id"/>
+            </n-tab-pane>
+            <n-tab-pane name="dashboard" display-directive="show:lazy" tab="服务访问记录">
+                <Dashboard :aid="aid" />
+            </n-tab-pane>
+        </n-tabs>
+    </div>
 </template>
 
 <script setup>

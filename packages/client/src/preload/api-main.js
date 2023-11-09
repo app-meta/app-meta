@@ -121,7 +121,7 @@ contextBridge.exposeInMainWorld('META', {
     },
 
     // 启动指定的机器人
-    runRobot: (id, params={}) => ipcRenderer.invoke('robot.run', id, params),
+    runRobot: (id, params={}, config) => ipcRenderer.invoke('robot.run', id, params, config),
 
     // 将指定文本复制到粘贴板中
     copyText: text=> ipcRenderer.send('common.toClipboard', text),

@@ -14,7 +14,9 @@ const logger = require("../common/logger")
 const FormData = require("form-data")
 const { createReadStream } = require("fs")
 const C = require("../Config")
-const { isDev } = require("../Runtime")
+const { isDev, verbose } = require("../Runtime")
+const { aes } = require("@app-meta/basic")
+const { buildRemoteUrl } = require("./Helper")
 
 let MUA = ""
 const method = "POST"
@@ -36,6 +38,13 @@ const UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 //     .catch(e=> {throw Error(e.message)})
 // }
 
+/**
+ *
+ * @param {String} url
+ * @param {Object} data
+ * @param {Object} options
+ * @returns
+ */
 exports.REMOTE = async (url, data, options={}) => new Promise(ok=>{
     axios({
         url,
@@ -112,6 +121,36 @@ exports.callServer = async (action, json, options={})=>{
 
     throw Error(`调用接口 ${action} 出错：${data?.message}`)
 }
+
+/**
+ * 从远程服务器获取 TOKEN，需要先配置会员终端
+ * @param {String} secretKey - 密钥
+ * @param {String} uid - 用户ID
+ * @returns {Promise}
+ */
+exports.loadTokenFromServer = (secretKey, uid)=>new Promise((ok, fail)=>{
+    let text = Buffer.from(aes.encrypt(`${uid}-${Date.now()}`, secretKey)).toString('base64')
+
+    axios.get(buildRemoteUrl(`/outreach/create-token`), { params:{ text }, responseType:'text' })
+        .then(res=>{
+            if(res.status === 200){
+                /** @type {String} */
+                let token = res.data
+                if(token.startsWith("{")){
+                    let json = JSON.parse(token)
+                    throw Error(`无法获取 TOKEN：${json.message}`)
+                }
+                verbose && logger.info(`成功获取到 TOKEN ${token.substring(0, 10)}...`)
+                this.setToken(token)
+                ok(token)
+            }
+            else{
+                verbose && logger.info(`无法获取 TOKEN，CODE=${res.status}`)
+                fail(`无法获取授权TOKEN`)
+            }
+        })
+        .catch(e=>fail(e.message))
+})
 
 exports.setToken = token => {
     MUA = token

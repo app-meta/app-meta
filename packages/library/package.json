@@ -9,6 +9,9 @@
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
+    "browser": {
+        "crypto": false
+    },
     "dependencies": {
         "@app-meta/basic": "1.0.0",
         "blueimp-md5": "^2.19.0",

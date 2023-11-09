@@ -6,11 +6,14 @@ const { callServer } = require("../../service/Http")
 module.exports ={
     /**
      * 启动指定的机器人
-     * @param {*} idOrObj
-     * @returns
+     * @param {Number|String|Object} idOrObj - 机器人ID或者对象
+     * @param {Object} params - 运行时参数
+     * @param {RobotContext} config
      */
-    "run": async (id, params={}) => {
-        logger.debug(`尝试启动机器人 #${id}`)
+    run: async (id, params={}, config) => {
+        config = Object.assign({link:undefined, hideWindow: false, reportLaunch:true}, config)
+        logger.debug(`尝试启动机器人 #${id} 环境=${JSON.stringify(config)}`)
+
         let { data } = await callServer("/page/detail", {id})
         if(data == null)    throw `无法获取机器人 #${id} 的信息（可能未启用或已被移除，请联系管理员）`
 
@@ -26,7 +29,8 @@ module.exports ={
                 page: { id, aid , name },
                 bean: JSON.parse(content),
                 params
-            })
+            }),
+            config
         )
     }
 }

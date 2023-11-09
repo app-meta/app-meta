@@ -21,6 +21,7 @@
                 </n-space>
 
                 <n-button secondary block @click="copyId">复制编号 ID 到粘贴板</n-button>
+                <n-button secondary block @click="shortUrl">生成短链接（便于分享）</n-button>
             </n-space>
         </n-popover>
     </n-element>
@@ -48,6 +49,11 @@
         H.copyTo(id)
         M.ok(`⌈${id}⌋ 已复制到粘贴板`)
     }
+
+    const shortUrl = ()=> RESULT("/s/create", {text:`/${location.hash}`}, d=>{
+        H.copyTo(`${location.origin}${window.SERVER}/s/${d.data}`)
+        M.ok(`短链接已复制到粘贴板：${d.data}`)
+    })
 
     const onLinkChange = v=> RESULT(
         v?'/page/link/add':`/page/link/remove/${props.page.id}`,

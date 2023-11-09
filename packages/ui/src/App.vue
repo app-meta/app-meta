@@ -42,6 +42,8 @@
     import AppNavigation from '@C/Navigation.vue'
     import AppProvider from "@CN/Application.vue"
 
+    import { getPrimaryColor } from "@/theme/colors"
+
     import { useUISetting } from "@/store/uiSetting"
     const uiSetting = useUISetting()
 
@@ -66,8 +68,7 @@
      * @type import('naive-ui').GlobalThemeOverrides
      */
     let customVars  = {
-        common: {
-        }
+        common: getPrimaryColor(uiSetting.color)
     }
 
     let jumpTo = (pathOrObj)=> {

@@ -18,7 +18,10 @@ function initKeyboard() {
         }
     })
 
-    globalShortcut.register('CommandOrControl+R', ()=> {
+    /**
+     * 注册全局的刷新快捷键 CTRL+SHIFT+R
+     */
+    globalShortcut.register('CommandOrControl+Shift+R', ()=> {
         let curWin = BrowserWindow.getFocusedWindow()
         curWin && curWin.reload()
     })

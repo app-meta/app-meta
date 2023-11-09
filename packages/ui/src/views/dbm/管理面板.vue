@@ -9,7 +9,7 @@
                 <n-text class="text-3xl">{{bean.name}}</n-text>
                 <n-select @update:value="onSelectDb" style="width:200px" filterable placeholder="请选择数据库" v-model:value="model.db" :options="dbOptions"></n-select>
                 <n-select @update:value="onSelectTable" style="width:200px" filterable :placeholder="tableTip" v-model:value="model.table" :options="tableOptions"></n-select>
-                <n-popover placement="bottom" trigger="click" @update:show="onDetail">
+                <n-popover placement="bottom" trigger="click" @update:show="onDetail" style="width:560px; max-height: 620px" scrollable>
                     <template #trigger><n-button :disabled="!model.table" secondary title="选择表后可以查看其结构">显示表结构</n-button></template>
                     <n-spin v-if="loading"></n-spin>
                     <template v-else>

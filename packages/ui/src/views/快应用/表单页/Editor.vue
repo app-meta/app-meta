@@ -1,7 +1,7 @@
 <!--表单类型的页面编辑-->
 <template>
-    <Designer :renders="RenderFuncs" :loading="loading" review :components="Components" contextMenu :form="bean" debug @save="toSave"
-        class="window-h-full" />
+    <Designer :renders="RenderFuncs" :loading="loading" review :components="Components" contextMenu :form="bean" debug enableCtrlS
+        @save="toSave" class="window-h-full" />
 </template>
 
 <script setup>

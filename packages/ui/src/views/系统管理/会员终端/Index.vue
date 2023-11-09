@@ -21,36 +21,56 @@
 
     <n-drawer v-model:show="showEdit" :width="640" :mask-closable="false" :close-on-esc="false">
         <n-drawer-content :title="(isNew?'新建':'编辑')+`会员终端`" :native-scrollbar="false" :closable="true">
-            <n-form :show-feedback="true" :label-width="80" label-placement="top">
-                <n-form-item label="IP地址">
-                    <n-input v-model:value="bean.id" :disabled="!isNew" />
-                </n-form-item>
-                <n-form-item label="终端名称">
-                    <n-input v-model:value="bean.name" />
-                </n-form-item>
-                <n-form-item label="允许登录的用户ID">
-                    <n-input v-model:value="bean.ids" placeholder="多个用英文逗号隔开" />
-                </n-form-item>
-                <n-form-item label="AES 密钥">
-                    <n-input v-model:value="bean.secret">
-                        <template #suffix>
-                            <n-space>
-                                <n-button size="small" type="info" secondary @click="copyKey">复制</n-button>
-                                <n-button size="small" type="primary" secondary @click="createKey">随机生成</n-button>
-                            </n-space>
-                        </template>
-                    </n-input>
-                </n-form-item>
-                <n-form-item label="TOKEN 有限期">
-                    <n-radio-group v-model:value="bean.expire">
-                        <n-space>
-                            <n-radio v-for="item in expires" :value="item" :label="item+' 分钟'" />
+            <n-form :show-feedback="false" :label-width="80" label-placement="top">
+                <n-space vertical size="large">
+                    <n-form-item label="IP地址">
+                        <n-input v-model:value="bean.id" :disabled="!isNew" />
+                    </n-form-item>
+                    <n-form-item label="终端代号/识别编码">
+                        <n-input v-model:value="bean.uuid" :allow-input="uuidFilter" placeholder="数字/字母/下划线，建议唯一" />
+                    </n-form-item>
+                    <n-form-item label="终端名称">
+                        <n-input v-model:value="bean.name" />
+                    </n-form-item>
+                    <n-form-item label="终端类型">
+                        <n-radio-group v-model:value="bean.category">
+                            <n-radio-button v-for="c in categories" :value="c.value"> {{ c.name }} </n-radio-button>
+                        </n-radio-group>
+                    </n-form-item>
+                    <n-form-item label="允许登录的用户ID">
+                        <n-input v-model:value="bean.ids" placeholder="多个用英文逗号隔开" />
+                    </n-form-item>
+                    <n-form-item label="AES 密钥">
+                        <n-input v-model:value="bean.secret">
+                            <template #suffix>
+                                <n-space>
+                                    <n-button size="tiny" type="info" secondary @click="copyKey">复制</n-button>
+                                    <n-button size="tiny" type="primary" secondary @click="createKey">随机生成</n-button>
+                                </n-space>
+                            </template>
+                        </n-input>
+                    </n-form-item>
+                    <n-form-item label="RSA 密钥">
+                        <n-space vertical size="small" class="w-full">
+                            <n-input v-model:value="bean.pubKey" size="small" type="textarea" placeholder="公钥/Public Key" rows="2">
+                                <template #suffix>
+                                    <n-button size="tiny" type="primary" secondary @click="createRsaKey">随机生成</n-button>
+                                </template>
+                            </n-input>
+                            <n-input v-model:value="bean.priKey" size="small" type="textarea" placeholder="私钥/Private Key" />
                         </n-space>
-                    </n-radio-group>
-                </n-form-item>
-                <n-form-item label="备注信息">
-                    <n-input v-model:value="bean.summary" type="textarea" />
-                </n-form-item>
+                    </n-form-item>
+                    <n-form-item label="TOKEN 有限期">
+                        <n-radio-group v-model:value="bean.expire">
+                            <n-space>
+                                <n-radio v-for="item in expires" :value="item.value" :label="item.label" />
+                            </n-space>
+                        </n-radio-group>
+                    </n-form-item>
+                    <n-form-item label="备注信息">
+                        <n-input v-model:value="bean.summary" type="textarea" rows="2" />
+                    </n-form-item>
+                </n-space>
             </n-form>
             <template #footer>
                 <n-button type="primary" @click="toSave">保存终端信息</n-button>
@@ -64,7 +84,8 @@
     import { NTooltip, NTag, NSpace, NPopconfirm } from 'naive-ui'
     import { Plus, SyncAlt, Search, Trash, Edit } from '@vicons/fa'
 
-    const expires = [3, 10, 30, 60]
+    const expires = [{label:"3分钟",value:3},{label:"10分钟",value:10},{label:"30分钟",value:30},{label:"2小时",value:120},{label:"24小时",value:1440}]
+    const categories = [{name:"命令行/CLI",value:"cli"}, {name:"工作者/WORKER", value:"worker"}, {name:"其他", value:"other"}]
 
     let form = reactive({LIKE_id:""})
     let loading = ref(false)
@@ -127,6 +148,20 @@
             refresh()
         })
     }
+
+    const uuidFilter = value => !value || /^\w+$/.test(value)
+
+    const createRsaKey = ()=> {
+        if(bean.value.pubKey || bean.value.priKey)
+            M.confirm(`随机生成密钥`, `此操作后将覆盖旧的密钥，确定吗？`, _createRsaKeyDo)
+        else
+            _createRsaKeyDo()
+    }
+    const _createRsaKeyDo = ()=> POST("/outreach/create-rsa-key",{}, d=> {
+        bean.value.pubKey = d.data.pubKey
+        bean.value.priKey = d.data.priKey
+    })
+
     const createKey = ()=> GET("/outreach/create-aes-key",{}, d=> bean.value.secret=d)
     const copyKey = ()=> {
         H.copyTo(bean.value.secret)

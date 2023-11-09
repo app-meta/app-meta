@@ -11,7 +11,6 @@
     const loadingBar    = useLoadingBar()
 
     let showNotice = (title, content, type="info", meta, duration=5000)=> {
-        console.debug(duration, type, meta)
         notification[type]({title, content,meta, duration})
     }
     let showMsg = (content, type="info")=> message[type](content)
@@ -51,8 +50,9 @@
      */
     window.M = window.M || {
         loadingBar,
-        alert (msg){
+        alert (msg, title){
             return dialog.info({
+                title,
                 showIcon:false,
                 content: UI.html(msg),
                 positiveText: "朕知道了"
@@ -140,6 +140,7 @@
          * @params ps   详见 https://www.naiveui.com/zh-CN/light/components/dialog#useDialog-API
          *              如果想要确认交互，请传递 {positiveText:"确认", onPositiveClick:()=>console.debug("点击了确认按钮")}
          *              buttons: [
+         *                  { action:"excel" }
          *                  { text:"内容", theme:"类型，默认为primary", action: 字符串 或者回调函数 ()=>{} }
          *              ]
          */
@@ -235,7 +236,7 @@
          */
         openPage (aid, pid, params={}){
             H.app.prepare(aid, pid, params).then(({url, option})=>{
-                console.debug(url, option)
+                // console.debug(url, option)
                 let style = {}
                 let height = Math.min(!!option.height ? option.height : parseInt(window.innerHeight*0.8), window.innerHeight) - 80
                 if(!!option.width)  style.width = `${Math.min(option.width, window.innerWidth)}px`
@@ -243,7 +244,6 @@
                 style.height = `${height}px`
                 style.padding = '10px 0px'
 
-                console.debug(height)
                 dialog.create({
                     type:"success",
                     showIcon: false,
