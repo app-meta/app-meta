@@ -18,6 +18,7 @@
                 <template #trigger>
                     <n-button :color="colorValue" size="tiny">{{color}}</n-button>
                 </template>
+                <n-text depth="3">请选择配色（需刷新页面才能生效）</n-text>
                 <n-grid :x-gap="6" :y-gap="6" :cols="4">
                     <n-gi v-for="(c, name) in colors">
                         <n-button @click="changeColor(name)" block :color="c[0]" size="small">
@@ -43,7 +44,7 @@
 
     let theme = ref(uiSetting.theme)
     let darkNav = ref(uiSetting.darkNav)
-    let color = ref(uiSetting.color)
+    let color = ref(uiSetting.color||"默认")
 
     let colorValue = computed(()=> getPrimaryColor(color.value).primaryColor )
 
