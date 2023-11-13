@@ -4,7 +4,8 @@
     "description": "命令行工具",
     "main": "index.js",
     "scripts": {
-        "build": "webpack",
+        "build": "rspack build",
+        "build:webpack": "webpack",
         "offline": "node offline.js",
         "package": "webpack && node offline.js"
     },
