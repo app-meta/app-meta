@@ -169,7 +169,7 @@
                     let firstH = document.querySelector("#H0")
                     firstH && firstH.scrollIntoView()
                     //更新 hash
-                    location.hash = `#/app/SJCQ-BDB/${newPage.key}`
+                    location.hash = `#/app/${newPage.aid}/${newPage.key}`
                     M.ok(`切换文档 ⌈${newPage.name}⌋`)
 
                     documentListRef.value.refresh(newPage.key)

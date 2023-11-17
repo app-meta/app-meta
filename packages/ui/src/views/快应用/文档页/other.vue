@@ -7,6 +7,8 @@
     import { ref, onMounted, h } from 'vue'
     import { NEllipsis } from 'naive-ui'
 
+    import Title from "@V/widget/page.title.vue"
+
     const emits = defineEmits(["change"])
     const props = defineProps({page:{type:Object}})
     let menus   = ref([])
@@ -15,9 +17,10 @@
     onMounted(() => {
         RESULT("/page/list", {form:{EQ_aid:props.page.aid, EQ_template:"markdown"}}, d=> {
             menus.value = d.data.map(p=>({
-                name:p.name,
-                label:()=>h(NEllipsis, {tooltip:{placement:"right"}}, ()=>p.name),
-                key:p.id
+                name    : p.name,
+                label   : ()=>h(NEllipsis, {tooltip:{placement:"right"}}, ()=>h(Title, {text: p.name})),
+                key     : p.id,
+                aid     : p.aid
             }))
         })
     })

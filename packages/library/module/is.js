@@ -85,6 +85,13 @@ export function isArray(val) {
 }
 
 /**
+ * @description: 判断对象是否为空（null、空数组、空字符串）
+ */
+export function isEmpty(val){
+    return val == null || (typeof(val)=='string' && val.trim().length==0) || (Array.isArray(val) && val.length==0)
+}
+
+/**
  * @description: 是否客户端
  */
 export const isClient = () => {
