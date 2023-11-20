@@ -1,5 +1,5 @@
 <template>
-    <Designer :renders="RenderFuncs" :components="Components" :form="form" debug show-footer style="height: 100%;" />
+    <Designer :renders="RenderFuncs" :components="Components" :form="form" debug show-footer style="height: 100%;"></Designer>
 </template>
 
 <script setup>

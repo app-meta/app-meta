@@ -9,6 +9,7 @@
         "serve:mock": "pnpm -F ui run serve:mock",
         "build": "pnpm -F library run build && pnpm -F ui run build",
         "build:gzip": "pnpm -F library run build && pnpm -F ui run build:gzip",
+        "build:cli": "pnpm -F cli build",
         "build:library": "pnpm -F library build",
         "ui:package": "pnpm build",
         "client:package": "pnpm -F client package:dist",
@@ -27,7 +28,7 @@
     ],
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
-    "dependencies": {
-        "client": "^1.0.0"
+    "devDependencies": {
+        "@rspack/cli": "^0.3.11"
     }
 }

@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "build": "webpack"
+        "build": "rspack build",
+        "build:webpack":"webpack"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",
