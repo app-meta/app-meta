@@ -29,6 +29,6 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "@rspack/cli": "^0.3.11"
+        "@rspack/cli": "^0.3.14"
     }
 }

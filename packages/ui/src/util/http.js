@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-08-23 13:04:59
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-09-13 16:26:08
+ * @Last Modified time: 2023-11-23 17:11:12
  *
  *
  * 注意：
@@ -298,8 +298,8 @@ window.DOWNLOAD=(url, data, ps={})=>{
                 //默认保存到文件中
                 H.io.saveToFile(blob, fileName)
 
-                if(onOk)
-                    onOk({fileName, contentType, headers, length})
+                if(ps.onOk)
+                    ps.onOk({fileName, contentType, headers, length})
                 else
                     M.notice.ok(fileName, "文件下载成功")
             }

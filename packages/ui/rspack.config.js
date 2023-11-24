@@ -1,10 +1,13 @@
 const path = require('path')
-const { HtmlRspackPlugin, DefinePlugin } = require("@rspack/core")
+const { HtmlRspackPlugin, DefinePlugin, CopyRspackPlugin } = require("@rspack/core")
 const { VueLoaderPlugin } = require("vue-loader")
 
 const isProduction = process.env.NODE_ENV === 'production'
 
 const pkg = require("./package.json")
+
+const BACKEND_CONTEXT   = "/app-meta"      //后端服务地址前缀
+const BACKEND_HOST      =  "http://localhost:10086"
 
 let resolve = dir=>path.join(__dirname, dir)
 
@@ -13,47 +16,15 @@ let VERSION = (()=>{
     return `${now.getUTCFullYear() - 2000}.${now.getUTCMonth() + 1}.${now.getUTCDate()}`
 })()
 
-let devServer = {
-    // host:"0.0.0.0",
-    port: 3000,
-    hot: true, // 热更新
-    client: {
-        overlay: {
-            warnings: false,
-            errors: true
-        }
-    },
-    proxy: (() => {
-         //url 前缀 与 映射地址，如："/booking" : "http://localhost:8080"
-        let targets = {
-            /** 针对附件的映射 */
-            // "/attach" : "http://localhost:10086/app-meta"
-        }
-        targets[process.env.VUE_APP_CONTEXT] = process.env.VUE_APP_HOST
-
-        let proxy = {}
-        // console.group(`代理设置（ENV=${process.env.NODE_ENV}）：`)
-        Object.keys(targets).forEach(k => {
-            proxy[k] = {
-                target: targets[k],
-                changeOrigin: false,
-                secure: false
-                //ws: true,//websocket支持
-            }
-            console.debug(`\t${k} >> ${targets[k]}`)
-        })
-        console.groupEnd()
-        return proxy
-    })()
-}
-
 /** @type {import('@rspack/cli').Configuration} */
 const config = {
 	context: __dirname,
 	devtool: false,
 	entry: "./src/main.js",
     devServer:{
-        port: 3000
+        port: 3000,
+        client: { progress: false },
+        proxy: { [BACKEND_CONTEXT]: BACKEND_HOST }
     },
     resolve:{
         extensions: ['.js', '.vue', '.json', ".css"],
@@ -76,14 +47,32 @@ const config = {
         }
     },
     output:{
-        publicPath: isProduction? "/app-meta":"/",
+        //在生成产物前，删除输出目录下的所有文件
+        clean: true,
+        publicPath: isProduction? `${BACKEND_CONTEXT}/` : "/",
+        filename: "static/js/[name].js",
         //默认生成的 js 文件名示例 src_Home_vue.js，这里修改为内容hash
-        chunkFilename: "[contenthash].js",
+        chunkFilename: "static/js/[contenthash].js",
+        assetModuleFilename: "static/asset/[hash][ext][query]",
     },
 	plugins: [
         new VueLoaderPlugin(),
-        new HtmlRspackPlugin({template:"./public/index.html"}),
+        new HtmlRspackPlugin({
+            template:"./index.html",
+            title: pkg.appName,
+            templateParameters: {
+                //配置模板参数，通过 <%= 变量名 %> 使用，此处模拟 vue-cli 中的前缀目录
+                "BASE_URL": isProduction ? BACKEND_CONTEXT : ""
+            },
+            minify: false
+        }),
+        //如果需要拷贝静态资源，请使用下方配置
+        new CopyRspackPlugin({patterns:[{from:"public", to:""}]}),
         new DefinePlugin({
+            //关闭 vue3 的警告信息
+            "__VUE_OPTIONS_API__": true,
+            "__VUE_PROD_DEVTOOLS__": false,
+            "process.env.VUE_APP_CONTEXT": JSON.stringify(BACKEND_CONTEXT),
             "_APPNAME_": JSON.stringify(pkg.appName),
             "_VERSION_": JSON.stringify(isProduction? VERSION : process.env.NODE_ENV),
             "_CONTEXT_": JSON.stringify(process.env.VUE_APP_CONTEXT||""),

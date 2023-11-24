@@ -164,7 +164,7 @@ export const initApp = (routerPath, config={}, userInfo={}, enables={})=> new Pr
     // 显示横幅
     if(enables.banner) {
         console.debug(
-            `%c欢迎使用  · ${_APPNAME_}（UI） · ${process.env.NODE_ENV != 'production'? ("环境变量="+JSON.stringify(process.env)) : ""}`,
+            `%c欢迎使用  · ${_APPNAME_}（UI） · ${process.env.NODE_ENV}`,
             "background:green;color:white;padding:5px; font-size:14px;font-family:微软雅黑"
         )
     }

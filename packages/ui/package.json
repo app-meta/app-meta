@@ -6,11 +6,8 @@
     "main": "index.js",
     "scripts": {
         "serve": "rspack serve",
-        "serve:webpack": "vue-cli-service serve",
-        "serve:mock": "vue-cli-service serve --mode test",
-        "build": "vue-cli-service build --modern && node zip.js",
-        "build:gzip": "vue-cli-service build --modern --gzip=true && node zip.js",
-        "build:debug": "vue-cli-service build --report --modern && node zip.js",
+        "serve:mock": "rspack serve --mode test",
+        "build": "rspack build && node zip.js",
         "zip-only": "node scripts/sign-and-zip.js"
     },
     "keywords": [],

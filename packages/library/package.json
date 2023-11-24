@@ -5,7 +5,6 @@
     "main": "index.js",
     "scripts": {
         "build": "rspack build",
-        "build:webpack":"webpack"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",
@@ -21,8 +20,5 @@
         "pako": "^2.1.0",
         "papaparse": "^5.4.0",
         "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
-    },
-    "devDependencies": {
-        "webpack-cli": "^5.1.1"
     }
 }

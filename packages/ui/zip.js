@@ -36,7 +36,7 @@ let md5AppJSFile = (regx=/index\./)=>{
 }
 
 //如果需要签名全部 js 文件，请使用： md5AppJSFile(/./)
-md5AppJSFile(/(index\.)|(chunk-vendors)/)
+md5AppJSFile(/(index\.)|(chunk-vendors)|(main\.)/)
 
 const outputFile = fs.createWriteStream(zipFile)
 

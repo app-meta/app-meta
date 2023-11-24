@@ -3,7 +3,7 @@
  */
 
 import { globalName, logger } from "../common"
-import { compact, date } from "./date"
+import { compact } from "./date"
 
 /**
  * @type IDBDatabase

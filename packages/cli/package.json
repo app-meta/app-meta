@@ -5,9 +5,8 @@
     "main": "index.js",
     "scripts": {
         "build": "rspack build",
-        "build:webpack": "webpack",
         "offline": "node offline.js",
-        "package": "webpack && node offline.js"
+        "package": "rspack build && node offline.js"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",
