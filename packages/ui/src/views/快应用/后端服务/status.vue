@@ -9,7 +9,7 @@
                                 <i v-if="bean.status=='online'" class="fa fa-check-circle success"></i>
                                 <i v-else class="fa fa-stop warning"></i>
                             </template>
-                            {{terminalStatus[bean.status]}}/{{bean.status}}</n-text>
+                            {{terminalStatus[bean.status]||bean.status}}</n-text>
                         <n-button-group size="small">
                             <n-button type="error" @click="restart" :loading="loading" tertiary title="执行重启操作（如果未运行则尝试启动）">重启</n-button>
                             <n-button type="error" @click="stop" :loading="loading" tertiary title="停止服务">停止</n-button>

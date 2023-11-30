@@ -15,10 +15,7 @@ const JAR       = "jar"
 const CLIENT    = "client"
 
 const restart = async (times=6)=>{
-    let answer = await confirm({
-        message: "确定要自重启后台服务吗？",
-        default: false
-    })
+    let answer = await confirm({ message: "确定要自重启后台服务吗？" })
     if(answer != true)  return
 
     startLoading({text:`${N}自重启中...`, color:'red'})
@@ -62,7 +59,7 @@ const update = async (type, ps)=>{
 
     let name = basename(ps.file)
 
-    const answer = await confirm({ message: `确定上传 ${name} 到${N}（类型=${type}）吗？`, default: false })
+    const answer = await confirm({ message: `确定上传 ${name} 到${N}（类型=${type}）吗？` })
     if(answer != true)  return
 
     startLoading((type == UI ? `UI 文件更新中`:`JAR 上传并自动重启刷新（大概需要 30 秒，若出现链接中断请稍后通过 ${chalk.magenta(`${appName} info`)} 检测）`)+"，请耐心等待...")
@@ -120,7 +117,7 @@ export default (app=new Command())=> {
         .option(...optionOfKey)
         .option(...optionOfId)
         .action(async ps=>{
-            const answer = await confirm({ message: `确定清空 ${ps.key} 的缓存（ID=${ps.id||'不限'}）吗？`, default: false })
+            const answer = await confirm({ message: `确定清空 ${ps.key} 的缓存（ID=${ps.id||'不限'}）吗？` })
             if(answer != true)  return
 
             await callServer('/system/cache/clean', ps)

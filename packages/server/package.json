@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
-        "demo": "node fastify.js"
+        "demo": "node fastify.js",
+        "demo-server": "node demo-server.js"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",

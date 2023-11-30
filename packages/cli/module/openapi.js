@@ -67,7 +67,7 @@ export default (app=new Command())=> {
         .action(async id=>{
             if(isNaN(id))   throw `${id} 不是一个有效的接口编号`
 
-            const answer = await confirm({ message: `确定删除接口 #${id} 吗？`, default: false })
+            const answer = await confirm({ message: `确定删除接口 #${id} 吗？` })
             if(answer != true)  return
 
             await callServer("/system/api/delete", {id})

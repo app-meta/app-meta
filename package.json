@@ -19,7 +19,8 @@
         "client:watch": "pnpm -F client watch",
         "client:watch-win": "pnpm -F client watch:win",
         "cli:package": "pnpm -F cli package",
-        "server": "pnpm -F server start"
+        "server": "pnpm -F server start",
+        "server:demo": "pnpm -F server demo-server"
     },
     "keywords": [
         "VUE3",

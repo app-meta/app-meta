@@ -83,7 +83,8 @@ const config = {
 		rules: [
 			{ test: /\.vue$/, loader: "vue-loader", options: { experimentalInlineMatchResource: true }},
             { test: /\.less$/, loader: 'less-loader', type: 'css'},
-            { test: /\.(txt|md|svg)/, type: "asset/resource" }
+            { test: /\.(txt|svg)/, type: "asset/resource" },
+            { test: /\.md/, type: 'asset/source' }
 		]
 	}
 };

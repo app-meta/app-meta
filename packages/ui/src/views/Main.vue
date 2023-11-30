@@ -27,14 +27,16 @@
     import { RouterLink } from "vue-router"
     import {
         Home, Cog, Cogs, Wrench, Database, ShieldAlt, Parking,GlobeAsia, Icons, ChartPie, UserShield, AppStore, InfoCircle, Html5, Bullhorn,
-        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit, Download
+        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit, Download, Link
     } from "@vicons/fa"
 
     import Banner from "@CC/Banner.vue"
     import AppNavigation from "@C/Navigation.vue"
     import Back from "@CC/Back.vue"
     import SearchBar from "./widget/search.vue"
-    import LocalDev from "./widget/local.vue"
+
+    import LocalDev from "./widget/dev.local.vue"
+    import ServiceMapping from "./widget/dev.service-mapping.vue"
 
     import { hasAnyRole, isAdminOr } from "@S/Auth"
 
@@ -108,25 +110,30 @@
         let items = [
             // 也可以设置子菜单
             // {
-            //     label: '个人中心', key:"mine", icon:()=>UI.buildIcon(UserCircle),
+            //     label: '个人中心', key:"mine", icon:UI.buildIcon2(UserCircle),
             //     children:[
-            //         { label: '我的关注', key:"mine-link", icon:()=>UI.buildIcon(Star) }
+            //         { label: '我的关注', key:"mine-link", icon:UI.buildIcon2(Star) }
             //     ]
             // },
-            { label: '我的应用', key:"app-mine", icon:()=>UI.buildIcon(AppStore) },
-            { label: '我的关注', key:"mine-link", icon:()=>UI.buildIcon(Star) },
-            { label: '我维护的功能页', key:"mine-edit", icon:()=>UI.buildIcon(Edit) },
+            { label: '我的应用', key:"app-mine", icon: UI.buildIcon2(AppStore) },
+            { label: '我的关注', key:"mine-link", icon: UI.buildIcon2(Star) },
+            { label: '我维护的功能页', key:"mine-edit", icon: UI.buildIcon2(Edit) },
         ]
-        if(isAdminOr("DEVELOPER")) items.push({ label:"访问本地前端项目", key:"dev-h5", icon:()=> UI.buildIcon(Html5) })
+        if(isAdminOr("DEVELOPER")){
+            items.push({ type:"divider"})
+            items.push({ label:"访问本地前端项目", key:"dev-h5", icon: UI.buildIcon2(Html5) })
+            items.push({ label:"配置 SERVICE 映射", key:"dev-mapping", icon: UI.buildIcon2(Link)})
+        }
 
         items.push({ type:"divider"})
-        items.push({ label:"下载客户端程序", key:"download-client", icon:()=> UI.buildIcon(Download) })
+        items.push({ label:"下载客户端程序", key:"download-client", icon: UI.buildIcon2(Download) })
         items.push({ type:"divider"})
         return items
     }
 
     const otherMenuHandlers = {
         'dev-h5'            : ()=> M.dialog({title:`访问本地前端项目`, showIcon:false, content:()=> h(LocalDev), style:{width:"640px"}}),
+        'dev-mapping'       : ()=> M.dialog({title:`配置 SERVICE 映射`, showIcon:false, content:()=> h(ServiceMapping), style:{width:"580px"}}),
         'download-client'   : ()=> M.confirm(
             `下载平台客户端程序包`,
             UI.html(`客户端<b class='primary'>（原生环境）</b>支持执行 <b class='primary'>RPA机器人</b>，在交互上提供更好的用户体验，程序包解压后即可使用<br><br>确定下载吗？`),

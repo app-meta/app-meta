@@ -73,7 +73,8 @@ export const printObj = (title, obj={}, nameLen=15)=>{
     console.groupEnd()
 }
 
-export const printOK = (msg="")=> console.log(`${chalk.bgGreen("ok ^.^")} ${msg}`)
+export const printOK = (msg="")=> console.log(`${chalk.bgGreen(" OK ")} ${msg}`)
+export const printFail = msg=> console.log(`${chalk.red(msg)}`)
 
 export const printDebug = (msg, ...ps)=> console.log(`[DEBUG] ${msg}`, ...ps)
 
@@ -355,3 +356,4 @@ export const readFirstLine = (path, options={})=>{
             .on('error', err => reject(err))
     })
 }
+

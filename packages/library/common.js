@@ -8,6 +8,12 @@ let contextPath
 const stringify = params=> Object.keys(params).map(v=>`${v}=${params[v]}`).join("&")
 
 /**
+ * 构建最终访问的地址，如果 action 是一个绝对地址，则直接使用
+ * @param {String} action
+ */
+const buildUrl = action=> /^https?:\/\//.test(action) ? action : `${contextPath}${action[0]=='/'?"":"/"}${action}`
+
+/**
  * 处理 Fetch，如果返回值不符合规范，则报错（可通过 .catch 获取）
  * @param {*} response
  * @returns
@@ -30,28 +36,31 @@ export const setContextPath = prefix=> contextPath = prefix
 
 /**
  * 以 POST 形式与后端进行交互
- * @param {*} model
- * @param {*} action
+ * @param {String} action               后端地址
+ * @param {Object} data                 参数
+ * @param {Boolean} json                是否使用 JSON 格式提交
+ * @param {Object} extraHeaders         额外的请求头，注意：以下请求头会被覆盖 CHANNEL、MUA、Content-Type
+ * @param {Function} handler            处理函数，默认转换为 JSON 对象
  * @returns
  */
-export const withPost = (action="", data, json=true, handler=handleResponse)=>{
+export const withPost = (action="", data, json=true, extraHeaders={}, handler=handleResponse)=>{
     contextPath ??= window.SERVER
 
     return fetch(
-        `${contextPath}${action[0]=='/'?"":"/"}${action}`,
+        buildUrl(action),
         {
             method: "POST",
-            headers:{ CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA"), 'Content-Type': json?'application/json':'application/x-www-form-urlencoded'},
+            headers:{ ...extraHeaders, CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA"), 'Content-Type': json?'application/json':'application/x-www-form-urlencoded'},
             body: data ? (json ? JSON.stringify(data) : stringify(data)):undefined
         }
     ).then(handler)
 }
 
-export const withGet = (action="", contextPath=window.SERVER, handler=handleResponse)=> fetch(
-        `${contextPath}${action[0]=='/'?"":"/"}${action}`,
+export const withGet = (action="", extraHeaders={}, handler=handleResponse)=> fetch(
+        buildUrl(action),
         {
             method:"GET",
-            headers:{ CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA")}
+            headers:{ ...extraHeaders, CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA")}
         }
     ).then(handler)
 

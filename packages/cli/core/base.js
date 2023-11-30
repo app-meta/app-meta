@@ -10,3 +10,11 @@ export const optionOfId     = ['-i, --id <string|number>', '对象主键（唯�
 export const optionOfName   = ['-n, --name <string>', '名称']
 export const optionOfKey    = ['-k, --key <string|number>', '关键值']
 export const optionOfOutput = ['-o, --output <string>', '数据输出位置']
+
+/**
+ *
+ * @param {Object} ps
+ */
+export const needAid = ps=> {
+    if(!ps.aid)   throw `请通过 -a,--aid 指定应用ID`
+}

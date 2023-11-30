@@ -155,7 +155,7 @@ const listOrDownload = async ps=>{
         await callServer("/page/terminal/file", {id: ps.aid, key: ps.path, value:"download"}, 0, true, {}, output)
     }
     else if(ps.remove===true){
-        let answer = await confirm({ message: `确定要删除远程文件 ${ps.path} 吗？`, default: true })
+        let answer = await confirm({ message: `确定要删除远程文件 ${ps.path} 吗？` })
         if(answer != true)  return
 
         await callServer("/page/terminal/file", {id: ps.aid, key: ps.path, value:"delete"})

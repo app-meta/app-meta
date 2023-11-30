@@ -245,7 +245,7 @@ const _exportData = (modelOrId, headers, filename="", format="xlsx")=> new Promi
     // .catch(e=> reject(e.message))
 
     withPost(
-        `/data/export`, model, true,
+        `/data/export`, model, true, {},
         async res=>{
             if(res.headers.get("content-type") == 'application/json'){
                 let json = await res.json()
@@ -304,26 +304,8 @@ export const listPage = ()=> send({form:{EQ_aid:aid, EQ_active:true}}, "page/lis
  */
 export const listAttach = (id=pid)=> send({id}, "page/document-list")
 
-// const buildServiceUrl = (path, specialAid)=> `service/${specialAid || aid}/${path.startsWith("/")?path.substr(1):path}`
-
-// /**
-//  * 调用后端服务（必须返回 JSON 格式的对象或者字符串）
-//  *
-//  * @param {*} path              服务地址
-//  * @param {*} data              Object 类型的参数
-//  * @param {*} useJson           是否使用 JSON 格式提交（默认 true）
-//  * @param {*} specialAid        在某些情况下，需要调用跨应用的服务，传递此参数将覆盖默认的 aid
-//  * @param {*} responseHandler   fetch 方法的响应处理，默认是转换为 JSON 格式
-//  *                              如果后端返回文件流，则可以参考 _exportData 进行 blob 处理
-//  */
-// export const service = (path, data, useJson=true, specialAid, responseHandler)=> withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, responseHandler)
-
-// /**
-//  * 处理纯文本的远程返回内容
-//  * withPost(buildServiceUrl(path, specialAid), data, useJson, prefix, response=> response.text())
-//  * @param {*} path
-//  * @param {*} data
-//  * @param {*} useJson
-//  * @param {*} specialAid
-//  */
-// export const serviceForText = (path, data, useJson=true, specialAid) => service(path, data, useJson, specialAid, res=>res.text())
+/**
+ * 获取当前用户在该应用下的角色
+ * @returns {Array<String>}
+ */
+export const mineRoles = ()=> send(null, `/app/role/mine/${aid}`)
