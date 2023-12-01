@@ -47,7 +47,7 @@ build|构建`ui`项目（用于部署上线）
 client:start|启动`client`项目（基于 Electron）
 client:watch|以热重载方式启动`client`（文件变动可自动重启进程）
 
-使用 webpack5 启动，约 45 秒；Rspack 启动，约 17 秒。
+使用 webpack5 启动，约 45 秒；Rspack(`0.3.14`) 启动，约 17 秒。
 
 ### 依赖
 > `.npmrc` 文件指定了 electron 下载镜像

@@ -4,6 +4,8 @@
  * @Last Modified by:   集成显卡
  *
  * https://docs.sheetjs.com/docs/api/utilities
+ *
+ * 本模块打包后，约450KB
  */
 
 import { read, utils, writeFile } from 'xlsx'

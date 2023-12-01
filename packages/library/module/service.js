@@ -28,7 +28,7 @@ const buildServiceUrl = (aid, path)=> {
     }
     console.debug(enableMapping, mapping, path)
     if(!!mapping[aid]){
-        return "http://localhost:10000/time" //`${mapping[aid]}${path}`
+        return `${mapping[aid]}${path}`
     }
 
     return `service/${aid}/${path.startsWith("/")?path.substring(1):path}`
