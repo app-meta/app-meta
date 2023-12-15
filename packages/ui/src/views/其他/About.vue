@@ -3,7 +3,7 @@
         <template #header><InfoCircle class="icon" /> 关于</template>
 
         基于
-        <a href="https://spring.io/projects/spring-boot" target="_blank"><n-tag type="primary" :bordered="false" class="cursor-pointer">Spring Boot 3</n-tag></a>、
+        <a href="https://spring.io/projects/spring-boot" target="_blank"><n-tag type="primary" :bordered="false" class="cursor-pointer">SpringBoot 3</n-tag></a>、
         <a href="https://www.mysql.com/" target="_blank"><n-tag type="primary" :bordered="false" class="cursor-pointer">MySQL</n-tag></a>、
         <a href="https://cn.vuejs.org/" target="_blank"><n-tag type="primary" :bordered="false" class="cursor-pointer">VUE3</n-tag></a>、
         <a href="https://www.naiveui.com" target="_blank"><n-tag type="primary" :bordered="false" class="cursor-pointer">Naive UI</n-tag></a>

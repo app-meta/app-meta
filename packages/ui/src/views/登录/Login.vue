@@ -25,7 +25,7 @@
                 </n-input>
             </div>
             <div class="mt-5 text-center">
-                <n-button type="primary" :loading="working" round size="large" @click="toLogin">登录进入</n-button>
+                <n-button type="primary" :loading="working" round size="large" @click="toLogin">进入平台</n-button>
 
                 <n-space class="mt-4" justify="center">
                     <n-button text title="访问 APP-META 源码" tag="a" target="_blank" href="https://github.com/0604hx/app-meta">

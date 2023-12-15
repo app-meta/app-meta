@@ -9,6 +9,7 @@ const pkg = require("./package.json")
 const BACKEND_CONTEXT   = "/app-meta"      //后端服务地址前缀
 const BACKEND_HOST      =  "http://localhost:10086"
 
+const timestamp = Date.now()
 let resolve = dir=>path.join(__dirname, dir)
 
 let VERSION = (()=>{
@@ -50,9 +51,10 @@ const config = {
         //在生成产物前，删除输出目录下的所有文件
         clean: true,
         publicPath: isProduction? `${BACKEND_CONTEXT}/` : "/",
-        filename: "static/js/[name].js",
+        filename: `static/js/[name].[contenthash].js`,
         //默认生成的 js 文件名示例 src_Home_vue.js，这里修改为内容hash
-        chunkFilename: "static/js/[contenthash].js",
+        //优化缓存策略：增加时间戳版本号
+        chunkFilename: `static/js/[contenthash].js?v=${timestamp}`,
         assetModuleFilename: "static/asset/[hash][ext][query]",
     },
 	plugins: [
