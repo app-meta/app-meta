@@ -122,7 +122,7 @@ async function createWindow() {
     })
     webContents.on('did-fail-load',  (e, errorCode, errorMsg, url)=> {
         logger.error(`加载页面 ${url} 失败: ${errorCode} ${errorMsg }`)
-        mainWindow.loadFile(join(__dirname, `../index.html`), {query:{code:errorCode, msg:`${url} 加载失败`}})
+        mainWindow.loadFile(htmlFile(), {query:{code:errorCode, msg:`${url} 加载失败`}})
 
         // setTimeout(()=> broadcastAll("robot.done", '1', {status:100, message:"已完成"}), 10000)
     })

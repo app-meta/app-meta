@@ -83,6 +83,23 @@ rspack版本|0.3.11
 
 详见：[PowerShell 中文乱码](https://www.cnblogs.com/lobtao/articles/14421673.html)
 
+### Rspack配置
+> 2023年12月起，构建工具迁移至[Rspack](https://www.rspack.dev/)
+
+1. 请问如何配置 chunk 文件的存放目录
+> 类似 vue-cli 的 assetsDir 配置项，如配置值位 `abc`， 达到的效果是将 js、css、img 等放置在 `dist/abc` 目录下
+
+```text
+chunkFilename 可以控制异步chunk位置，filename可以控制初始chunk位置
+
+png 等文件可以通过https://webpack.js.org/configuration/module/#rulegeneratorfilename配置
+```
+
+2. 引入 echarts
+
+为兼容 Rspack（截至0.4.2），需要全量引入 `import * as echarts from 'echarts'`，否则在生产环境下会报 echarts 未引入错误
+
+
 ### 补充说明
 
 1. 仅为个人学习项目

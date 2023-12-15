@@ -55,7 +55,10 @@ const roleLink = async ps=>{
         let res = await callServer(`/app/role/list`, { aid: ps.aid })
         if(res.data.length == 0)    return printFail(`应用<${ps.aid}>还未创建角色`)
 
-        let roles = await checkbox({message:`请选择需要分配的角色`, choices: res.data.map(r=>({value:r.uuid, name:`${r.name}：${r.summary||chalk.gray(`暂无描述`)}`}))})
+        let roles = await checkbox({
+            message:`请选择需要分配的角色`,
+            choices: res.data.map(r=>({value:r.uuid, name:`${r.uuid}/${r.name}：${r.summary||chalk.gray(`暂无描述`)}`}))
+        })
         link.role = roles.join(",")
     }
 
@@ -67,7 +70,7 @@ const roleLink = async ps=>{
 
 export default (root=new Command())=> {
     const app = root.command("app")
-        // .alias("a")
+        .alias("a")
         .description(`应用（${chalk.magenta("角色、权限")}等）管理`)
 
     const role = app.command("role")

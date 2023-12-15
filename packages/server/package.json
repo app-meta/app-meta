@@ -12,8 +12,8 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "dependencies": {
-        "@app-meta/basic": "1.0.0",
-        "fastify": "^4.13.0",
+        "@app-meta/basic": "workspace:1.0.0",
+        "fastify": "^4.24.3",
         "querystring": "^0.2.1"
     }
 }

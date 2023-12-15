@@ -1,5 +1,5 @@
 import { Command } from "commander"
-import chalk from "chalk"
+import chalk from "picocolors"
 
 import { appName, VERBOSE } from "./core/base.js"
 import { stopLoading } from "./core/util.js"

@@ -84,8 +84,22 @@ const config = {
 			{ test: /\.vue$/, loader: "vue-loader", options: { experimentalInlineMatchResource: true }},
             { test: /\.less$/, loader: 'less-loader', type: 'css'},
             { test: /\.(txt|svg)/, type: "asset/resource" },
-            { test: /\.md/, type: 'asset/source' }
+            { test: /\.md/, type: 'asset/source' },
+            {
+                test: /\.js$/, exclude: /node_modules/, loader: 'builtin:swc-loader',
+                options: {
+                    //兼容低版本浏览器
+                    env: { targets: "chrome >= 68" }
+                },
+                type: 'javascript/auto'
+            }
 		]
-	}
+	},
+    experiments:{
+        rspackFuture:{
+            // newResolver: false,
+            disableTransformByDefault: true
+        }
+    }
 };
 module.exports = config;

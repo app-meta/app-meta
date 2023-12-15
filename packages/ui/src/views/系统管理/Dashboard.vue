@@ -103,7 +103,12 @@
      */
     const drawTop = d => {
         let keys = topNameOnY ? H.util.reverse(Object.keys(d)) : Object.keys(d)
-        hotChart.value.update(keys, { type: "bar", name: "访问量", data: keys.map(key => d[key]) })
+        hotChart.value.update(keys, {
+            type: "bar",
+            name: "访问量",
+            data: keys.map(key => d[key]),
+            itemStyle:{ borderRadius:[8,8,0,0] },     //配置圆角
+        })
     }
 
     const drawPie = d => {

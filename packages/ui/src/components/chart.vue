@@ -53,27 +53,30 @@ pieChart.value.update(
      * 2021年9月6日 更新为 echarts-5.x  ，默认配色为：['#5470c6','#91cc75','#fac858','#ee6666','#73c0de','#3ba272','#fc8452','#9a60b4','#ea7ccc']
      */
     // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
-    const echarts = require('echarts/lib/echarts')
-    //引入图表类型
-    require("echarts/lib/chart/bar")                //引入柱状图
-    require("echarts/lib/chart/line")               //引入折线图
-    require("echarts/lib/chart/pie")                //引入饼图
-    require('echarts/lib/chart/radar')              //引入雷达图
-    require('echarts/lib/chart/gauge')              //引入仪表盘
-    require('echarts/lib/chart/tree')               //引入树图
-    require('echarts/lib/chart/graph')              //引入关系图
-    require('echarts/lib/chart/map')                //引入地图
+    // const echarts = require('echarts/lib/echarts')
+    // //引入图表类型
+    // require("echarts/lib/chart/bar")                //引入柱状图
+    // require("echarts/lib/chart/line")               //引入折线图
+    // require("echarts/lib/chart/pie")                //引入饼图
+    // require('echarts/lib/chart/radar')              //引入雷达图
+    // require('echarts/lib/chart/gauge')              //引入仪表盘
+    // require('echarts/lib/chart/tree')               //引入树图
+    // require('echarts/lib/chart/graph')              //引入关系图
+    // require('echarts/lib/chart/map')                //引入地图
 
-    //引入工具
-    require("echarts/lib/component/tooltip")
-    require("echarts/lib/component/title")
-    require("echarts/lib/component/toolbox")
-    require("echarts/lib/component/legend")
-    require("echarts/lib/component/markPoint")
-    require("echarts/lib/component/grid")
-    require("echarts/lib/component/polar")
-    require('echarts/lib/component/visualMap')
-    require('echarts/lib/component/geo')
+    // //引入工具
+    // require("echarts/lib/component/tooltip")
+    // require("echarts/lib/component/title")
+    // require("echarts/lib/component/toolbox")
+    // require("echarts/lib/component/legend")
+    // require("echarts/lib/component/markPoint")
+    // require("echarts/lib/component/grid")
+    // require("echarts/lib/component/polar")
+    // require('echarts/lib/component/visualMap')
+    // require('echarts/lib/component/geo')
+
+    //为兼容 Rspack，此处使用全量导入
+    import * as echarts from 'echarts'
 
     const props = defineProps({
         markLineAvg:{type: Boolean, default: false}, //是否显示平均值标记
