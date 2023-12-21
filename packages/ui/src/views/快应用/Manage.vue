@@ -18,6 +18,7 @@
     import Template from "../widget/page.template.vue"
     import AuthSelector from "@CC/selector.auth.vue"
     import DocumentManager from "./document-manage.vue"
+    import Count from "@VW/count.vue"
 
     let aid = useRoute().params.id
     const router = useRouter()
@@ -69,7 +70,7 @@
                 }
             )
         },
-        { title:"热度", key:"launch", width: 60 },
+        { title:"热度", key:"launch", width: 60, render:row=> h(Count, {value: row.launch}) },
         { title:"更新日期", key:"addOn", width: 180, render: row=> H.date.datetime(row.addOn) },
         {
             width:200, align,

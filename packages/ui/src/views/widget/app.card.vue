@@ -1,7 +1,7 @@
 <!--卡片形式显示应用信息-->
 <template>
     <n-card size="small" @click="toRun" :bordered="true" class="hover" :class="{'cursor-pointer': runable, 'icon-card':true}"
-        :header-style="{padding:'10px 5px 10px 10px'}" :segmented="{content: !marked}">
+        :header-style="{padding:'10px 5px 10px 10px'}" :segmented="{content: false}">
         <template #header>
             <div class="flex">
                 <Logo style="min-width:35px" size="medium" :text="bean.abbr" />

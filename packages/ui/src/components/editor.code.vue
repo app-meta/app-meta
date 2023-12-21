@@ -21,7 +21,7 @@
     import { ref,onMounted, watch } from 'vue'
 
     import { keymap} from "@codemirror/view"
-    import { Prec } from "@codemirror/state";
+    import { Prec, EditorState } from "@codemirror/state";
     import { Codemirror } from 'vue-codemirror'
     import { javascript } from '@codemirror/lang-javascript'
     import { html } from '@codemirror/lang-html'

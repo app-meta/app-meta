@@ -9,7 +9,6 @@ const pkg = require("./package.json")
 const BACKEND_CONTEXT   = "/app-meta"      //后端服务地址前缀
 const BACKEND_HOST      =  "http://localhost:10086"
 
-const timestamp = Date.now()
 let resolve = dir=>path.join(__dirname, dir)
 
 let VERSION = (()=>{
@@ -54,7 +53,7 @@ const config = {
         filename: `static/js/[name].[contenthash].js`,
         //默认生成的 js 文件名示例 src_Home_vue.js，这里修改为内容hash
         //优化缓存策略：增加时间戳版本号
-        chunkFilename: `static/js/[contenthash].js?v=${timestamp}`,
+        chunkFilename: `static/js/[contenthash].js`,   //?v=${timestamp}
         assetModuleFilename: "static/asset/[hash][ext][query]",
     },
 	plugins: [

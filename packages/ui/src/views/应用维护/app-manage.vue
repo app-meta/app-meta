@@ -23,6 +23,7 @@
     import Active from "@VW/app.active.vue"
     import Category from "@VW/app.category.vue"
     import Dashboard from "@VW/app.overview.vue"
+    import Count from "@VW/count.vue"
 
     const router = useRouter()
     const props = defineProps({
@@ -44,7 +45,7 @@
         { title:"类型", key:"category", width: 100, render:row=> h(Category, {category: row.category})},
         { title:"作者", width:120, key:"author"},
         { title:"公开显示", width:90, render:(row)=> h(Active, {id:row.id, value:row.active})},
-        { title:"热度/访问量", width:100, key:"launch" },
+        { title:"热度/访问量", width:100, key:"launch", render:row=> h(Count, {value: row.launch}) },
         { title:"简介", key:"summary",ellipsis:true },
         {
             width:160, align:"center",
