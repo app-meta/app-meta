@@ -24,7 +24,10 @@ const config = {
     devServer:{
         port: 3000,
         client: { progress: false },
-        proxy: { [BACKEND_CONTEXT]: BACKEND_HOST }
+        proxy: { [BACKEND_CONTEXT]: BACKEND_HOST },
+        client: {
+            overlay: false
+        }
     },
     resolve:{
         extensions: ['.js', '.vue', '.json', ".css"],
@@ -98,8 +101,8 @@ const config = {
 	},
     experiments:{
         rspackFuture:{
-            // newResolver: false,
-            disableTransformByDefault: true
+            disableTransformByDefault: true,
+            disableApplyEntryLazily: false
         }
     }
 };

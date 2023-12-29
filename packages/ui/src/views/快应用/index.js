@@ -1,6 +1,6 @@
 import { ref, onMounted,onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { Table, ChartPie, Wpforms, Html5, ListAltRegular, Database, Tools, ExclamationTriangle, Server, Robot, FileWordRegular as DOC, Vuejs } from "@vicons/fa"
+import { Table, ChartPie, Wpforms, Html5, ListAltRegular, Database, Tools, ExclamationTriangle, Server, Robot, FileWordRegular as DOC, Vuejs, Code } from "@vicons/fa"
 
 const INPUT     = "primary"
 const OUTPUT    = "info"
@@ -30,6 +30,10 @@ export const templates = [
     //SFC add on 2023-06-02
     { id:"sfc",text:"单文件组件", theme: MIX, icon: Vuejs, summary:"自定义Vue3页面（template+script+style），能够使用全局组件及接口"},
     { id:"h5",text:"H5小程序", theme: MIX, icon: Html5, summary:"自由灵活的 HTML5 页面（适用于具备开发能力的技术人员）"},
+    {
+        id:"faas", text:"FaaS函数", theme: MIX, icon:Code, onCreate:aid=>({name:"新建FaaS函数", search: false}),
+        summary:"为开发人员提供快速处理数据的后端服务(Serverless)，无需自行开发及部署，适用于场景简单、功能单一、数据规模小的场景"
+    },
     { id:"server",text:"后端服务", theme: MIX, icon: Server, summary:"部署在服务器的后端服务（目前仅支持 Node.js、Java 开发语言）", onCreate:aid=>({name:`ENDPOINT-SERVICE`, search:false})},
 ]
 export const findTemplate = tpl=> templates.find(v=>v.id==tpl) || {text:"未知", theme:"error", summary:`未知的模板类型⌈${tpl}⌋`, icon:ExclamationTriangle }

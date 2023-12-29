@@ -81,7 +81,7 @@
             ]),
             render(row, rowIndex) {
                 return [
-                    UI.iconBtn(Eye, ()=> toView(row), {title:"浏览页面", disabled:row.template=='server'}),
+                    UI.iconBtn(Eye, ()=> toView(row), {title:"浏览页面", disabled:row.template=='server'||row.template=='faas'}),
                     UI.iconBtn(Edit, ()=> toEdit(row), {title:"编辑页面"}),
                     // UI.iconBtn(ShieldAlt, ()=> toAuth(row), {title:"修改访问权限"}),
                     // UI.iconBtn(ShieldAlt, ()=> toAuth(row, "editAuth"), {title:"修改编辑/维护权限", type:"warning"}),
