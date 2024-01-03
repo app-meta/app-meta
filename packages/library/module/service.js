@@ -19,6 +19,10 @@ let mapping = {}
  * @returns
  */
 const buildServiceUrl = (aid, path)=> {
+    if(!aid && typeof(path)==='number'){
+        // 当 aid 为空，path 为数值，则视为调用 FaaS 函数
+        return `service/_f_a_a_s_/${path}`
+    }
     if(enableMapping == undefined){
         let m = localStorage.getItem('dev.service')
         if(m){
@@ -33,7 +37,6 @@ const buildServiceUrl = (aid, path)=> {
 
     return `service/${aid}/${path.startsWith("/")?path.substring(1):path}`
 }
-
 
 export const get = (aid, path, extraHeaders={}, responseHandler) => withGet(buildServiceUrl(aid, path), extraHeaders, responseHandler)
 

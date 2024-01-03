@@ -82,8 +82,35 @@
 
         <n-space justify="space-between">
             <n-space>
-                <n-button size="large" type="primary" @click="toHelp" secondary>帮助</n-button>
-                <n-button size="large" type="primary" @click="toCall" :loading="loading" secondary title="使用当前参数测试接口，原始返回值请打开 F12 查看">测试函数</n-button>
+                <n-button size="large" type="primary" @click="toHelp" secondary>使用帮助</n-button>
+                <n-button-group>
+                    <n-button size="large" type="primary" @click="toCall" :loading="running" secondary title="在测试环境下执行函数（原始返回值请打开 F12 查看）">测试函数</n-button>
+
+                    <n-popover trigger="manual" :show="showEnv" style="width: 540px" placement="top-start">
+                        <template #trigger>
+                            <n-button size="large" type="primary" secondary title="配置测试参数" @click="showEnv = !showEnv">
+                                <template #icon><n-icon :component="Cog" /></template>
+                            </n-button>
+                        </template>
+                        <template #header><n-text class="text-lg info">函数测试环境</n-text></template>
+
+                        <n-form :show-feedback="false" label-placement="top">
+                            <n-space vertical>
+                                <n-form-item label="绑定用户ID">
+                                    <n-input v-model:value="env.uid" placeholder="填写用户ID，留空则为当前登录用户" />
+                                </n-form-item>
+                                <n-form-item label="参数（JSON格式）">
+                                    <template #label>
+                                        参数（JSON格式）
+                                        <n-button size="mini" @click="buildFromParams" tertiary>按参数列表生成</n-button>
+                                    </template>
+                                    <n-input v-model:value="env.params" type="textarea" rows="8" size="small" placeholder="请填写JSON格式" />
+                                </n-form-item>
+                            </n-space>
+                        </n-form>
+                    </n-popover>
+                </n-button-group>
+                <n-button size="large" type="primary" @click="toLog" secondary title="查看生产环境的函数记录">调用日志</n-button>
             </n-space>
             <n-button size="large" @click="toSave" type="primary">保存函数信息</n-button>
         </n-space>
@@ -97,8 +124,8 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
-    import { Plus, Trash } from "@vicons/fa"
+    import { h, ref, onMounted, reactive } from 'vue'
+    import { Plus, Trash, Cog } from "@vicons/fa"
 
     import CodeEditor from "@C/editor.code.vue"
     import MDEditor from "@C/markdown/md.editor.vue"
@@ -106,22 +133,73 @@
 
     import { pageEditor } from "../"
     import About from "./说明.md"
+    import DevResult from "./dev-result.vue"
+    import LogList from "../widget/terminal-log.vue"
 
     import { createFaas, funcModes, resultTypes, paramsTypes } from "."
 
-    let { id, bean, inited, loading , updateContent } = pageEditor(createFaas, d=> JSON.parse(d), false)
+    let { id, aid, bean, inited, loading , updateContent } = pageEditor(createFaas, d=> JSON.parse(d), false)
 
     let sources = ref([])
     let mdEditor = ref()
     let help = ref(false)
+    let env = reactive({uid:"", params:"{}"})
+    let showEnv = ref(false)
+    let running = ref(false)
 
     const toSave    = ()=> {
         bean.value.summary = mdEditor.value.getMarkdown()
 
         updateContent(JSON.stringify(bean.value))
     }
-    const toCall    = ()=>{}
+    const buildFromParams = ()=> {
+        let ps = {}
+        bean.value.params.forEach(v=> {
+            ps[v.id] = v.value || ""
+            if(v.type == "number")  ps[v.id] = parseInt(ps[v.id])
+            if(v.type == "boolean") ps[v.id] = ps[v.id].toUpperCase() == "TRUE" || ps[v.id]=="1"
+        })
+        env.params = JSON.stringify(ps, null, 4)
+    }
+    const toCall    = ()=>{
+        RESULT(
+            "/page/faas/dev",
+            { func:_raw(bean), params: JSON.parse(env.params), uid: env.uid, id },
+            d => M.dialog({title:`测试结果#${id}`, showIcon:false, content:()=> h(DevResult, { data:d.data }), style:{width:"920px"}}),
+            { loading: running }
+        )
+        // let data = {
+        //     "appId": "demo",
+        //     "params": {
+        //         "aid": "demo",
+        //         "limit": 3
+        //     },
+        //     "user": {
+        //         "id": "admin",
+        //         "name": "测试管理员",
+        //         "ip": "127.0.0.1",
+        //         "depart": null,
+        //         "roles": [
+        //             "ADMIN"
+        //         ],
+        //         "appRoles": [
+        //             "admin",
+        //             "test"
+        //         ],
+        //         "appAuths": []
+        //     },
+        //     "devMode": true,
+        //     "logs": [
+        //         "开始进行函数#37的模拟运行：\n\t[参数] {aid=demo, limit=3}\n\t[用户] admin",
+        //         "[DEV-SQL] 执行语句 SELECT id,name,template FROM page where aid='demo' limit 3",
+        //         "\n函数执行完毕，耗时 0.019 秒"
+        //     ],
+        //     "result": {}
+        // }
+        // M.dialog({title:`测试结果`, showIcon:false, content:()=> h(DevResult, { data }), style:{width:"920px"}})
+    }
     const toHelp    = ()=> help.value = true
+    const toLog     = ()=> M.dialog({title:`函数调用记录`, content:()=>h(LogList, { aid, pid: id }), style:{width:"90%"}})
 
     onMounted(()=>{
         RESULT("/dbm/source/list",{}, d=> {

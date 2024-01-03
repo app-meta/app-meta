@@ -14,7 +14,7 @@
 
 <script setup>
     import { ref,h, computed } from 'vue'
-    import { NTooltip, NTag } from 'naive-ui'
+    import { NTooltip, NTag, NLog } from 'naive-ui'
     import { Search } from "@vicons/fa"
 
     import P from "@Pagination"
@@ -24,10 +24,15 @@
     const props = defineProps({
         height:{type:String, default:"400px"},
         query:{type:Boolean, default:false},
-        aid:{type:String}
+        aid:{type:String},
+        pid:{type:[String, Number]}
     })
+    const isFaas = !!props.pid
 
-    let { beans , form, pagination, refresh } = P(props.aid?`/page/terminal/trace-${props.aid}`:`/system/terminal/trace`)
+    let { beans , form, pagination, refresh } = P({
+        url: props.aid?`/page/terminal/trace-${props.aid}`:`/system/terminal/trace`,
+        form: props.pid? { pid: props.pid }: {}
+    })
 
     const columns = computed(()=>{
         let cs = [{ title:"序号", align:"center", width:60, render:(row, index)=>index+1 }]
@@ -37,20 +42,27 @@
             { title:"终端", key:"channel", width:45, render:row=> h(Channel, {channel:row.channel})},
             { title:"用户", key:"uid", width:100 },
             { title:"method", key:"method", width:100 },
-            {  title:"服务地址", key:"host" },
-            { title:"PATH", key:"url" },
+        ])
+
+        if(!isFaas)  {
+            cs.push({ title:"服务地址", key:"host" })
+            cs.push({ title:"PATH", key:"url" })
+        }
+
+        cs.push(...[
             { title:"耗时（ms）", key:"used", width:100 },
             {
-                title:"响应码", key:"code", width:100,
+                title: isFaas?"日志":"响应码", key:"code", width:100,
                 render: row=> row.code == 200?
                     h(NTag, {bordered:false, type:"success"}, ()=>row.code)
                     :
-                    h(NTooltip, {placement:"left-start"}, {
+                    h(NTooltip, {placement:"left-start", width:640}, {
                         default: ()=> [
-                            h(NTag, {bordered: false, type:"error", size:"small"}, ()=>"错误信息"),
-                            h('div',{class:"mt-2"}, row.summary)
+                            h(NTag, {bordered: false, type: isFaas?"info":"error", size:"small"}, ()=> isFaas?"运行日志":"错误信息"),
+                            // h('div',{class:"mt-2"}, row.summary)
+                            h(NLog, {log: row.summary, 'class':"mt-2"})
                         ],
-                        trigger: ()=> h(NTag, {bordered:false, type:"error"}, ()=>row.code),
+                        trigger: ()=> h(NTag, {bordered:false, type:isFaas?"info":"error"}, ()=> isFaas?"日志" : row.code),
                     })
             },
             { title:"访问日期", key:"addOn", width: 170, render: row=> H.date.datetime(row.addOn) }

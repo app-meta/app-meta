@@ -7,6 +7,10 @@
             <template #header><n-text class="text-lg">编辑小助手</n-text></template>
 
             <n-space vertical>
+                <n-space justify="space-between">
+                    <n-text>应用/功能ID</n-text>
+                    <n-text depth="3">{{aid}}/{{id}}</n-text>
+                </n-space>
                 <n-button secondary block disabled title="实验性功能，待完善">从本地恢复旧版本</n-button>
             </n-space>
         </n-popover>
@@ -15,13 +19,11 @@
 
 <script setup>
     import { ref, reactive } from 'vue'
+    import { useRoute } from 'vue-router'
     import { Bars } from '@vicons/fa'
 
-    const props = defineProps({page:Object})
+    let {id, aid}   = useRoute().params
 
-    let link    = reactive({checked: false, value: false })
-
-    const toDate = d=>H.date.datetime(d)
     const onShow = show=>{
     }
 </script>
