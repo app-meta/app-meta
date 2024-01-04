@@ -48,6 +48,9 @@
             cs.push({ title:"服务地址", key:"host" })
             cs.push({ title:"PATH", key:"url" })
         }
+        else {
+            cs.push({ title:"参数（修正后）", key:"url" })
+        }
 
         cs.push(...[
             { title:"耗时（ms）", key:"used", width:100 },

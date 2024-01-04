@@ -65,19 +65,24 @@
             </n-space>
         </n-form-item>
 
-        <n-form-item>
+        <n-form-item class="w-full">
             <template #label>
-                函数代码
-                <n-text depth="3" class="ml-2 text-sm">纯SQL时，支持使用 &#123&#123 变量名 &#125&#125，届时将替换成对应的参数值</n-text>
+                <n-space justify="space-between">
+                    <div>
+                        函数代码
+                        <n-text depth="3" class="ml-2 text-sm">纯SQL时，支持使用 &#123&#123 变量名 &#125&#125，届时将替换成对应的参数值</n-text>
+                    </div>
+                    <n-button size="tiny" type="primary" secondary @click="resetDemoCode">注入示例代码</n-button>
+                </n-space>
             </template>
             <!-- <n-input type="textarea" :rows="3" v-model:value="bean.cmd" /> -->
             <div class="w-full">
-                <CodeEditor v-model:value="bean.cmd" ref="editor" language="sql" style="height: 200px;" />
+                <CodeEditor v-model:value="bean.cmd" ref="editor" language="sql" style="height: 240px;" />
             </div>
         </n-form-item>
 
         <n-form-item label="函数说明">
-            <MDEditor ref="mdEditor" height="200px" :code="bean.summary" />
+            <MDEditor ref="mdEditor" height="160px" :code="bean.summary" />
         </n-form-item>
 
         <n-space justify="space-between">
@@ -99,10 +104,12 @@
                                 <n-form-item label="绑定用户ID">
                                     <n-input v-model:value="env.uid" placeholder="填写用户ID，留空则为当前登录用户" />
                                 </n-form-item>
-                                <n-form-item label="参数（JSON格式）">
+                                <n-form-item class="w-full">
                                     <template #label>
-                                        参数（JSON格式）
-                                        <n-button size="mini" @click="buildFromParams" tertiary>按参数列表生成</n-button>
+                                        <n-space justify="space-between">
+                                            参数（JSON格式）
+                                            <n-button size="tiny" type="primary" secondary @click="buildFromParams">按参数列表生成</n-button>
+                                        </n-space>
                                     </template>
                                     <n-input v-model:value="env.params" type="textarea" rows="8" size="small" placeholder="请填写JSON格式" />
                                 </n-form-item>
@@ -136,7 +143,7 @@
     import DevResult from "./dev-result.vue"
     import LogList from "../widget/terminal-log.vue"
 
-    import { createFaas, funcModes, resultTypes, paramsTypes } from "."
+    import { createFaas, funcModes, resultTypes, paramsTypes, demoJSCode } from "."
 
     let { id, aid, bean, inited, loading , updateContent } = pageEditor(createFaas, d=> JSON.parse(d), false)
 
@@ -160,6 +167,11 @@
             if(v.type == "boolean") ps[v.id] = ps[v.id].toUpperCase() == "TRUE" || ps[v.id]=="1"
         })
         env.params = JSON.stringify(ps, null, 4)
+    }
+    const resetDemoCode = ()=>{
+        if(!!bean.value.cmd)    return M.warn(`请先清空原代码`)
+
+        bean.value.cmd = demoJSCode.replace(/^\s+|\s+$/g,'')
     }
     const toCall    = ()=>{
         RESULT(

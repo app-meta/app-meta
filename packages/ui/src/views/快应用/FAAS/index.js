@@ -24,3 +24,15 @@ export const createFaas = ({
     cmd: "",
     resultType: "Object"
 })
+
+export const demoJSCode = `
+/**
+ * 1. 兼容 ECMAScript 2022 语法（为顺利执行，尽量使用简单严谨语法）
+ * 2. 全局变量：params（入参）、user（用户对象）、meta（平台服务）、appId（应用ID），详见帮助文档
+ * 3. 代码最后一行视为返回值
+ * 4. 如遇语法错误，请尝试在问题行前后增加分号
+ */
+let result = { time:Date.now(), name:"demo-js-FaaS" }
+// 返回结果
+result
+`
