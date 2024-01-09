@@ -78,7 +78,7 @@
     const props = defineProps(renderProps)
 
     const KEY               = "app.document.sider"
-    const siderWidth        = 320
+    const siderWidth        = 300
     const headerHeight      = 50
     const collapsedWidth    = 15
     const indent            = 25

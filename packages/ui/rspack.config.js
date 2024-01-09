@@ -76,6 +76,7 @@ const config = {
             //关闭 vue3 的警告信息
             "__VUE_OPTIONS_API__": true,
             "__VUE_PROD_DEVTOOLS__": false,
+            "__VUE_PROD_HYDRATION_MISMATCH_DETAILS__": false,
             "process.env.VUE_APP_CONTEXT": JSON.stringify(BACKEND_CONTEXT),
             "_APPNAME_": JSON.stringify(pkg.appName),
             "_VERSION_": JSON.stringify(isProduction? VERSION : process.env.NODE_ENV),
