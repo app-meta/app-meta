@@ -67,9 +67,9 @@
         if(isAdminOr("DBM", "DBM_ADMIN")){
             items.push(menuItem("dbm-source", "数据源维护", Database))
         }
-        if(isAdminOr("API_ADMIN")){
-            items.push(menuItem("api", "开放接口", Code))
-        }
+        // if(isAdminOr("API_ADMIN")){
+        //     items.push(menuItem("api", "开放接口", Code))
+        // }
 
         if(window.User && User.isAdmin){
             items.push({

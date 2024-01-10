@@ -83,7 +83,13 @@
     let toData = id=> router.push({name:"app-data", params:{id}})
     let toStart = row=> runApp(row)
 
-    const toDashboard = row=> M.dialog({title:`${row.name}/应用访问统计`,showIcon:false, style:{width: "1280px"}, content:()=> h(Dashboard, {aid: row.id})})
+    const toDashboard = row=> M.dialog({
+        title:`${row.name}/应用访问统计`,
+        showIcon:false,
+        transformOrigin:"center",
+        style:{width: "1280px"},
+        content:()=> h(Dashboard, {aid: row.id})
+    })
 
     onMounted(() => {
 

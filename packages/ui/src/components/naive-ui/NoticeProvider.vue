@@ -266,15 +266,19 @@
          * @param {Object}  ps  配置项
          */
         prompt (title="请输入", ps={}) {
-            ps = Object.assign({theme:'info', icon:false, type:'text'}, ps)
+            ps = Object.assign({theme:'info', icon:false, type:'text', enableEmpty: false }, ps)
             return new Promise((ok)=>{
                 let value = ps.value
                 let onOk = ()=> {
                     if(value != null && (ps.type=='number' || !!value ))
                         ok(value)
                     else{
-                        M.warn(`请输入内容`)
-                        return false
+                        if(ps.enableEmpty==true)
+                            ok("")
+                        else{
+                            M.warn(`请输入内容`)
+                            return false
+                        }
                     }
                 }
                 let instance = dialog.create({

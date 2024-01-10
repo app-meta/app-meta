@@ -4,7 +4,12 @@
 <template>
     <n-card size="small">
         <template #header>平台运行时</template>
-        <template #header-extra>操作系统版本：{{os.os}}</template>
+        <template #header-extra>
+            <n-space>
+                <div><Tag>操作系统</Tag> {{os.os}}</div>
+                <div><Tag>JDK</Tag> {{os.jdk}}</div>
+            </n-space>
+        </template>
         <n-grid :cols="5" :x-gap="gap" :y-gap="gap">
             <n-gi>
                 <n-alert :show-icon="false" :bordered="border" type="info" title="启动日期">

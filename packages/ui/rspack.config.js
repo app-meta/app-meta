@@ -22,6 +22,7 @@ const config = {
 	devtool: false,
 	entry: "./src/main.js",
     devServer:{
+        host:"localhost",
         port: 3000,
         client: { progress: false },
         proxy: { [BACKEND_CONTEXT]: BACKEND_HOST },
@@ -102,8 +103,8 @@ const config = {
 	},
     experiments:{
         rspackFuture:{
-            disableTransformByDefault: true,
-            disableApplyEntryLazily: false
+            // disableTransformByDefault: true,
+            disableApplyEntryLazily: true
         }
     }
 };

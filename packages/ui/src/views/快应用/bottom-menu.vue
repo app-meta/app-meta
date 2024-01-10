@@ -50,9 +50,11 @@
         M.ok(`⌈${id}⌋ 已复制到粘贴板`)
     }
 
-    const shortUrl = ()=> RESULT("/s/create", {text:`/${location.hash}`}, d=>{
-        H.copyTo(`${location.origin}${window.SERVER}/s/${d.data}`)
-        M.ok(`短链接已复制到粘贴板：${d.data}`)
+    const shortUrl = ()=> M.prompt("自定义短链接", { placeholder:"留空则由平台自动生成", enableEmpty:true }).then(id=> {
+        RESULT("/s/create", { key:`/${location.hash}`, id }, d=>{
+            H.copyTo(`${location.origin}${window.SERVER}/s/${d.data}`)
+            M.ok(`短链接已复制到粘贴板：${d.data}`)
+        })
     })
 
     const onLinkChange = v=> RESULT(
@@ -60,12 +62,3 @@
         v?{pid: props.page.id}:{}, d=>M.ok(`${v?"关注":"取消"}成功`)
     )
 </script>
-
-<!-- <style lang="less" scoped>
-    .menuDiv {
-        position:fixed;z-index: 999;bottom: 30px;right:2px;width: 44px;height:44px;
-        /* &:hover {
-            right: -5px;
-        } */
-    }
-</style> -->
