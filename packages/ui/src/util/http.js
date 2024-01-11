@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-08-23 13:04:59
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-11-23 17:11:12
+ * @Last Modified time: 2024-01-11 16:25:51
  *
  *
  * 注意：
@@ -161,7 +161,7 @@ window.RESULT=(url,data,onOk, ps={})=>{
 
             if(res.success === true) onOk && onOk(res)
             else{
-                if(res.message==="NOT LOGIN"){
+                if(res.message==="LOGIN REQUIRED"){
                     if(window._NOT_LOGIN_ != true){
                         window._NOT_LOGIN_ = true
                         M.warn('请先登录再使用该功能')

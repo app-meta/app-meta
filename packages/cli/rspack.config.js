@@ -1,4 +1,7 @@
-import { BannerPlugin, DefinePlugin } from "@rspack/core"
+// import { BannerPlugin, DefinePlugin } from "@rspack/core"
+import * as rspack from "@rspack/core"
+
+const { BannerPlugin, DefinePlugin } = rspack.default
 
 let VERSION = (()=>{
     let now = new Date

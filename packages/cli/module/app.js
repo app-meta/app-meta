@@ -17,7 +17,7 @@ const roleList = async ps=>{
         printTable(res.data)
     }
     else{
-        let header = ["uuid","name", "auth", "summary"]
+        let header = ["uuid","name", "auth", "ip", "summary"]
         printTable(buildTableRows(res.data, header), header)
         console.debug(`\n应用 <${ps.aid}> 共 ${chalk.magenta(res.data.length)} 个角色`)
     }
@@ -29,6 +29,7 @@ const roleCreate = async ps=>{
         { msg:`角色ID（数字、字母、下划线、英文点）`, key:"uuid", required, validate: s=>/^[0-9a-zA-Z_.]+$/.test(s) },
         { msg:`角色中文名`, key:"name" },
         { msg:`授权访问地址（请以/开头，多个用英文逗号隔开）`, key:'auth', required },
+        { msg:`授权终端IP（多个用英文逗号隔开，留空则为不限制）`, key:'ip' },
         { msg:`描述信息`, key:"summary" }
     ])
     await callServer(`/app/role/add`, role)
@@ -105,8 +106,9 @@ export default (root=new Command())=> {
         .requiredOption(...optionOfAid)
         .requiredOption(...optionOfUid)
         .requiredOption(...optionOfValue)
+        .option('--ip <string>', '指定IP地址', "")
         .action(async ps=>{
-            let res = await callServer(`/app/role/check`, {aid:ps.aid, uid:ps.uid, role:ps.value})
+            let res = await callServer(`/app/role/check`, {aid:ps.aid, uuid:ps.uid, auth:ps.value, ip: ps.ip})
             console.info(`访问权限检测：${res.data}`)
         })
 

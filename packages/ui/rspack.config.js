@@ -83,7 +83,18 @@ const config = {
             "_VERSION_": JSON.stringify(isProduction? VERSION : process.env.NODE_ENV),
             "_CONTEXT_": JSON.stringify(process.env.VUE_APP_CONTEXT||""),
             "_APP_INFO_": JSON.stringify({ dependencies: pkg.dependencies, devDependencies: pkg.devDependencies })
-        })
+        }),
+        {
+            apply(compiler) {
+                for (let i = 0; i < compiler.options.plugins?.length; i++) {
+                    const plugin = compiler.options.plugins[i]
+                    // 不显示进度条
+                    if (plugin?.name === "ProgressPlugin") {
+                        compiler.options.plugins[i] = { apply() { } }
+                    }
+                }
+            }
+        }
     ],
 	module: {
 		rules: [

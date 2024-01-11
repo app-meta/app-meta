@@ -32,6 +32,17 @@
                     <n-form-item label="服务端口">
                         <n-input-number v-model:value="bean.port" class="w-full" />
                     </n-form-item>
+                    <n-form-item label="免登录 URLs">
+                        <n-flex vertical class="w-full">
+                            <n-alert type="warning" :bordered="false">
+                                通常情况下，平台会对转发到后端的请求进行登录验证；如有特殊情况，可配置下方规则，对指定地址放行（支持通配符），请慎用此功能
+                            </n-alert>
+
+                            <n-dynamic-tags size="large" v-model:value="bean.publics" />
+                        </n-flex>
+
+                        <!-- <n-input v-model:value="bean.publics" placeholder="[慎用]不作登录检查的后端地址（支持通配符），多个用英文逗号隔开" class="w-full" /> -->
+                    </n-form-item>
                     <n-form-item label="启动参数">
                         <n-input v-model:value="bean.args" placeholder="程序启动参数，如--mode=production">
                             <template #suffix>

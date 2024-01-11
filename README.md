@@ -84,7 +84,7 @@ rspack版本|0.3.11
 详见：[PowerShell 中文乱码](https://www.cnblogs.com/lobtao/articles/14421673.html)
 
 ### Rspack配置
-> 2023年12月起，构建工具迁移至[Rspack](https://www.rspack.dev/)
+> 2023年12月起，构建工具迁移至[Rspack](https://www.rspack.dev/)，首次启动速度约 20s，后续重启、打包约 6s（Vite5 启动约 12s，打包约 50s）
 
 1. 请问如何配置 chunk 文件的存放目录
 > 类似 vue-cli 的 assetsDir 配置项，如配置值位 `abc`， 达到的效果是将 js、css、img 等放置在 `dist/abc` 目录下
