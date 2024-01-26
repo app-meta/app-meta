@@ -41,7 +41,7 @@
 
     let versionList = ref()
 
-    const bean       = reactive({version:H.date.date(Date(), "YY.M.d"), summary:"", aid: props.aid, pid: props.pid })
+    const bean       = reactive({version:H.date.date(Date(), "YY.M.D"), summary:"", aid: props.aid, pid: props.pid })
     const uploadDone = ()=>{
         M.notice.ok(`后端服务⌈${props.aid}⌋的新版本⌈${bean.version}⌋已部署`)
         versionList.value.refresh()
