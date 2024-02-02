@@ -6,7 +6,7 @@
                 <div :style="{lineHeight:(headerHeight-10)+'px'}"><n-text depth="3">左侧为代码编辑，右侧为预览（在编辑区按下 <Tag>CTRL+S</Tag> 可即时渲染）</n-text></div>
 
                 <n-space>
-                    <n-button type="primary" @click="toHelp" secondary>帮助（CTRL+H）</n-button>
+                    <n-button type="primary" @click="toHelp" secondary>帮助（CTRL+SHIFT+H）</n-button>
                     <n-button type="primary" @click="toView" secondary>预览（CTRL+S）</n-button>
                     <n-button type="primary" @click="toSave">保存</n-button>
                 </n-space>
@@ -42,7 +42,7 @@
     import CodeEditor from "@C/editor.code.vue"
     import Title from "@V/widget/page.title.vue"
 
-    import About from "./说明.md"
+    import About from "./说明.md?raw"
 
     import { template } from "."
     import SFCRender from "./sfc-render.vue"
@@ -58,12 +58,12 @@
     let { id, bean, inited, loading , updateContent } = pageEditor(template)
 
     const handleKeyDown = e =>{
-        let {ctrlKey, keyCode} = e
+        let {ctrlKey, keyCode, shiftKey } = e
         if(ctrlKey==true && keyCode==83){
             e.preventDefault()
             toView()
         }
-        else if(ctrlKey == true && keyCode == 72){
+        else if(ctrlKey == true && shiftKey == true && keyCode == 72){
             e.preventDefault()
             toHelp()
         }

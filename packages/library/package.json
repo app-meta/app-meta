@@ -3,8 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "type": "module",
     "scripts": {
-        "build": "rspack build"
+        "build": "vite build"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",

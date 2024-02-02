@@ -139,7 +139,7 @@
     import MDRender from "@C/markdown/md.viewer.vue"
 
     import { pageEditor } from "../"
-    import About from "./说明.md"
+    import About from "./说明.md?raw"
     import DevResult from "./dev-result.vue"
     import LogList from "../widget/terminal-log.vue"
 

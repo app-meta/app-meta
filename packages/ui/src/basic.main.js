@@ -11,6 +11,8 @@ import '@T/app.less'
 // 全局工具配置
 import "@U"
 
+import { setupStore } from '@/Store'
+
 //引入事件通信组件
 import mitt from 'mitt'
 
@@ -93,7 +95,6 @@ export const initApp = (routerPath, config={}, userInfo={}, enables={})=> new Pr
         //初始化 store
         //按需开启
         //============================================================
-        const { setupStore } = require("@/store")
         setupStore(app)
     }
 

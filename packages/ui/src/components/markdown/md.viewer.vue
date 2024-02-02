@@ -6,7 +6,7 @@
 <script setup>
     import { ref,onMounted, computed, watch } from 'vue'
 
-    import { sanitize } from 'dompurify'
+    import dompurify from 'dompurify'
     import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer'
     // 暗黑模式文字颜色 rgba(255, 255, 255, 0.82)
     import '@toast-ui/editor/dist/theme/toastui-editor-dark.css'
@@ -34,7 +34,7 @@
              * 定义 customHTMLSanitizer，将 onclick 标签加入到白名单中
              * 代码源自 https://github.com/nhn/tui.editor/blob/master/apps/editor/src/sanitizer/htmlSanitizer.ts#L13
              */
-            customHTMLSanitizer : html=> sanitize(html, {
+            customHTMLSanitizer : html=> dompurify.sanitize(html, {
                 ADD_ATTR: ['rel', 'target', 'hreflang', 'type', 'onclick'],
                 FORBID_TAGS: [
                     'input',

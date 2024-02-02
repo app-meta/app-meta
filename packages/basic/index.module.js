@@ -1,4 +1,4 @@
-const CryptoJS = require('crypto-js')
+import CryptoJS from 'crypto-js'
 
 /**
  * 补充到16的倍数，使用 NUL 补充
@@ -13,7 +13,7 @@ let padTo16 = (text)=>{
 
 const nulReg = new RegExp(String.fromCharCode(0), "g")
 
-exports.aes = {
+export const aes = {
     /**
     * 使用 AES/CBC/NoPadding 方式加密数据
     * @param {*} data
@@ -73,7 +73,7 @@ exports.aes = {
  * @param {*} limit     转换次数
  * @returns
  */
-exports.toBase64 = (origin, limit=1)=>{
+export const toBase64 = (origin, limit=1)=>{
     for (let i = 0; i < limit; i++) {
         origin = btoa(encodeURIComponent(origin)) //Buffer.from(origin).toString("base64")
     }
@@ -86,7 +86,7 @@ exports.toBase64 = (origin, limit=1)=>{
  * @param {*} limit     转换次数
  * @returns
  */
-exports.fromBase64 = (text, limit=1)=>{
+export const fromBase64 = (text, limit=1)=>{
     for (let i = 0; i < limit; i++) {
         text = decodeURIComponent(atob(text)) //Buffer.from(text, 'base64').toString("utf-8")
     }

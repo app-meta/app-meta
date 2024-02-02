@@ -5,19 +5,21 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "serve": "rspack serve",
+        "serve": "vite dev",
         "serve:mock": "rspack serve --mode test",
-        "build": "rspack build && node zip.js",
+        "build": "vite build && node zip.js",
         "zip-only": "node scripts/sign-and-zip.js"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "devDependencies": {
+        "@vitejs/plugin-vue": "^5.0.3",
         "archiver": "^6.0.1",
         "less": "^4.2.0",
         "less-loader": "^11.1.4",
         "mockjs": "^1.1.0",
+        "vite-plugin-html": "^3.2.2",
         "vue-loader": "^17.4.2"
     },
     "dependencies": {
