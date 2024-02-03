@@ -1,6 +1,14 @@
 import { initApp } from "./basic.main"
 import BuildRouter from "./basic.router"
 
+// import '@P/static/font-awesome/webfonts/fa-brands-400.woff2.ttf?url'
+// import '@P/static/font-awesome/webfonts/fa-regular-400.woff2?url'
+// import '@P/static/font-awesome/webfonts/fa-solid-900.ttf?url'
+import '@P/static/font-awesome/css/fontawesome.min.css?url'
+import '@P/static/font-awesome/css/brands.min.css?url'
+import '@P/static/font-awesome/css/solid.min.css?url'
+import '@P/static/font-awesome/css/regular.min.css?url'
+
 import Main from "@V/Main.vue"
 
 import Tag from "@C/custom/tag.vue"
