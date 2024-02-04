@@ -10,10 +10,14 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax'
 import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css'
 import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell'
 
-// mermaid 集成（按需增加，增加打包后体积 1MB）
-// 引入后，还需增加到 plugins、pluginsForViewer 数组中
-import pluginMermaid from './plugin.mermaid'
+/**
+ * mermaid 集成（按需增加，增加打包后体积 1MB）
+ * 引入后，还需增加到 plugins、pluginsForViewer 数组中
+ *
+ * 暂不使用，使用图片方式引入即可，大大节约打包时间（提速 40%）
+ */
+// import pluginMermaid from './plugin.mermaid'
 
-export const plugins = [colorSyntax, tableMergedCell, pluginMermaid]
+export const plugins = [colorSyntax, tableMergedCell]
 
-export const pluginsForViewer = [tableMergedCell, pluginMermaid]
+export const pluginsForViewer = [tableMergedCell]

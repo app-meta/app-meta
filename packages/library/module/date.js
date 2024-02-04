@@ -15,8 +15,9 @@ export {
     addDay
 }
 
-export const compact = (d = new Date())=> date(d, "YYYYMMDD")
-export const compactTime = (d=new Date())=> date(d, "HHmmss")
+export const compact = (d = new Date())=> date(d, "YYYYMMDDHHmmss")
+export const compactDate = (d = new Date())=> date(d, "YYYYMMDD")
+export const compactTime = (d = new Date())=> date(d, "HHmmss")
 export const hour  = ()=> new Date().getHours()
 /**
  * 获取时间点开始日期

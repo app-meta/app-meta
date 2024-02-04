@@ -1,4 +1,4 @@
-import { withPost, openUrl } from "../common"
+import { withPost, openUrl, logger } from "../common"
 import { get } from "./db"
 import { compress } from "./io"
 
@@ -27,6 +27,9 @@ export const prepare = (aid, pid, params, pure=false)=> new Promise((ok)=>{
         }
 
         ok({url, option})
+    }).catch(e=>{
+        logger.error(`查询数据库失败`, e)
+        ok({url, option})
     })
 })
 
@@ -36,7 +39,7 @@ export const prepare = (aid, pid, params, pure=false)=> new Promise((ok)=>{
  * @param {Object} ps
  * @param {String} params
  */
-const openAppOrPage = (aid, pid, ps={}, params)=> prepare(aid, pid, params).then(({ url, option })=> openUrl(url, Object.assign(ps, option)))
+const openAppOrPage = (aid, pid, ps={}, params)=> prepare(aid, pid, params).then(({ url, option })=>openUrl(url, Object.assign(ps, option)))
 
 /**
  * 运行应用，默认以新窗口打开（不判断应用预设的属性，如窗口大小）

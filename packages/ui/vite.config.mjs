@@ -2,8 +2,7 @@ import { join } from 'path'
 
 import { defineConfig, createLogger } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { createHtmlPlugin } from 'vite-plugin-html'
-import commonjs from '@rollup/plugin-commonjs'
+import ViteCompress from 'vite-plugin-compression2'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -67,38 +66,28 @@ export default defineConfig({
     build:{
         assetsDir:"static/assets",
         chunkSizeWarningLimit: 5000,
+        reportCompressedSize: false,
         rollupOptions:{
             output:{
-                assetFileNames: "static/assets/[hash:12][extname]",
-                chunkFileNames: "static/assets/[hash:12].js"
+                assetFileNames: "static/assets/[hash][extname]",
+                chunkFileNames: "static/js/[hash].js",
+                entryFileNames: "static/js/[name].[hash].js"
             }
         }
     },
     customLogger,
     plugins: [
-        // commonjs(),
         vue(),
-        createHtmlPlugin({
-            inject:{
-                data:{
-                    title: pkg.appName,
-                   //配置模板参数，通过 <%= 变量名 %> 使用，此处模拟 vue-cli 中的前缀目录
-                    BASE_URL
-                },
-                /*
-                动态注入静态资源，不然打包时会报警告信息：doesn't exist at build time, it will remain unchanged to be resolved at runtime
-
-                <link href="<%= BASE_URL %>/static/font-awesome/css/fontawesome.min.css" rel="stylesheet">
-                <link href="<%= BASE_URL %>/static/font-awesome/css/brands.min.css" rel="stylesheet">
-                <link href="<%= BASE_URL %>/static/font-awesome/css/solid.min.css" rel="stylesheet">
-                <link href="<%= BASE_URL %>/static/font-awesome/css/regular.min.css" rel="stylesheet">
-                */
-                // tags: ["fontawesome", "brands", "solid", "regular"].map(v=>({
-                //     tag:'link',
-                //     attrs:{ rel:"stylesheet", href:`${BASE_URL}/static/font-awesome/css/${v}.min.css` },
-                //     injectTo:'head'
-                // }))
-            }
-        })
+        // ViteCompress({
+        //     algorithm: 'gzip',
+        //     deleteOriginalAssets: true,
+        //     exclude:[/\.(png|gz|html|svg)$/],
+        //     threshold: 1024 * 1024
+        // }),
+        // 修改 html 的标题
+        {
+            name:"repair-html-title",
+            transformIndexHtml: (/**@type {String} */ html)=> html.replace("<%= title %>", pkg.appName)
+        }
     ]
 })

@@ -6,7 +6,6 @@
     "repository": "https://github.com/0604hx/app-meta",
     "scripts": {
         "serve": "pnpm -F ui run serve",
-        "serve:mock": "pnpm -F ui run serve:mock",
         "build": "pnpm -F library run build && pnpm -F ui run build",
         "build:gzip": "pnpm -F library run build && pnpm -F ui run build:gzip",
         "build:cli": "pnpm -F cli build",

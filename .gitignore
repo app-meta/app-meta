@@ -32,3 +32,5 @@ pnpm-lock.yaml
 packages/**/dist
 *.pack.zip
 meta-cli.json
+
+packages/ui/public/meta-helper.js
