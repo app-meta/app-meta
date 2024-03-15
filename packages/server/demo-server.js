@@ -68,9 +68,14 @@ app.post("/add", (req, res)=>{
     else
         res.send(error(`参数必须是数组格式`))
 })
-app.post("/time", (req, res)=> {
-    console.debug(req.headers)
-    res.send(ok(Date().toString()))
+
+app.route({
+    path: "/time",
+    method: ['GET', 'POST'],
+    handler: (req, res)=> {
+        console.debug(req.headers)
+        res.send(ok(Date().toString()))
+    }
 })
 
 

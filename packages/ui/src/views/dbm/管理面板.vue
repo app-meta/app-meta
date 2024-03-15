@@ -147,13 +147,14 @@
      */
     const onDetail = v=> v && tableDetail.value.length==0 && _loadTableDetail().then(d=> tableDetail.value=d)
 
-    const _loadTableDetail = ()=> new Promise(ok=>{
-        let uuid = `${model.db}.${model.table}`
+    const _loadTableDetail = (info)=> new Promise(ok=>{
+        const { db, table } = info || model
+        let uuid = `${db}.${table}`
         if(tableDatas[uuid]) return ok(tableDatas[uuid])
 
         RESULT(
             "/dbm/items",
-            { db:model.db, table:model.table, sourceId:id },
+            { db, table, sourceId:id },
             d=> {
                 tableDatas[uuid] = d.data
                 ok(d.data)
@@ -162,9 +163,10 @@
         )
     })
 
-    const onRowEdit = (row,db,table)=>_loadTableDetail().then(d=> _rowEdit(d, row, db, table))
+    const onRowEdit = (row,db,table)=>_loadTableDetail({ db, table }).then(d=> _rowEdit(d, row, db, table))
 
     const _rowEdit = (tableDetail, row, db, table)=>{
+        console.debug(tableDetail, row)
         let bean = tableDetail.slice(1).map((f, i)=>({id:f[0], type:f[1], pri:f[3]=='PRI', value: row[i], form: detectForm(f[1])}))
         if(!bean.some(b=>b.pri===true)) return M.notice.error(`未检测到数据表 ${model.db}.${model.table} 的主键信息，本次行数据编辑已中断`, "无法编辑该行数据")
 

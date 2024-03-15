@@ -1,11 +1,12 @@
 import { createReadStream, existsSync, readFileSync, statSync, mkdirSync } from 'fs'
+import WebSocket from 'ws'
 
 import FormData from 'form-data'
 import confirm from '@inquirer/confirm'
 
 import { Command, Argument } from 'commander'
-import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfId, optionOfOutput, optionOfPid, optionOfUid, optionOfValue } from '../core/base.js'
-import { callServer, isDir, isFile, printDebug, printOK, printObj, printObjects, printTable, startLoading, stopLoading, zipDir } from '../core/util.js'
+import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfOutput, optionOfPid, optionOfUid, optionOfValue } from '../core/base.js'
+import { buildHeaders, callServer, isDir, isFile, printDebug, printOK, printObj, printTable, remoteUrl, startLoading, stopLoading, zipDir } from '../core/util.js'
 import { join, dirname } from 'path'
 import chalk from 'chalk'
 
@@ -145,6 +146,30 @@ const pageLinks = async ps=>{
     printTable(res.data.map(i=>cols.map(c=>i[c])), cols)
 }
 
+/**
+ * 跟踪远程日志文件
+ * @param {*} ps
+ */
+const _tailRemoteFile = async ps=>{
+    let url = remoteUrl("/ws/file-tail", true)
+
+    let headers = await buildHeaders()
+    headers.params = JSON.stringify(ps)
+
+    const client = new WebSocket(url, { headers })
+    client.on('open', ()=> console.debug(chalk.magenta(`与服务器连接成功 🤝（CTRL+C 退出）`)))
+    // client.on('close',()=> console.debug(chalk.magenta(`\n与服务器连接关闭 👋`)))
+    client.on('error', e=> {
+        console.debug(chalk.red(e))
+    })
+    client.on('message', /** @param {Buffer} buf */buf=>{
+        let line = buf.toString()
+        if(line.endsWith("\n") || line.endsWith("\r\n"))
+            line = line.substring(0, line.length-2)
+        console.debug(line)
+    })
+}
+
 const listOrDownload = async ps=>{
     if(!ps.aid)   throw `请通过 -a,--aid 指定应用ID`
     if(ps.download===true){
@@ -159,6 +184,9 @@ const listOrDownload = async ps=>{
         if(answer != true)  return
 
         await callServer("/page/terminal/file", {id: ps.aid, key: ps.path, value:"delete"})
+    }
+    else if(ps.tail === true){
+        _tailRemoteFile(ps)
     }
     else{
         let toRow = f=> [f.type==0?chalk.magenta('目录'):chalk.blue('文件'), f.name, f.type==0?"-":`${f.size} B`, f.time]
@@ -212,12 +240,13 @@ export default (app=new Command())=> {
         .action(deploy)
 
     page.command("file")
-        .description(`显示后端服务部署的目录结构或下载文件（该功能仅限 template=server）`)
+        .description(`显示后端服务部署的目录结构、下载/${chalk.underline('跟踪(--tail)')}文件（该功能仅限 template=server）`)
         .option(...optionOfAid)
         .option(...optionOfOutput)
         .option('-d, --download', "下载文件")
         .option('-r, --remove', "删除文件")
         .option('-p, --path [string]', "文件/目录路径，默认为根目录")
+        .option('-t, --tail', '跟踪某个文本文件的更新，仅支持 UTF-8 编码', false)
         .action(listOrDownload)
 
     page.command("status [id]")

@@ -26,7 +26,7 @@ const showDetail = async idOrPs=>{
     printTable(log)
     console.log(chalk.magenta('---------------------------- 详细信息 ----------------------------'))
     if(detail){
-        let SPLIT = ""
+        let SPLIT = "\n"
         let reqHeader = toJSON(detail.reqHeader)
         printObj(`请求头/REQUEST HEADER`, reqHeader, 30)
 
@@ -35,7 +35,7 @@ const showDetail = async idOrPs=>{
 
         let resHeader = toJSON(detail.resHeader)
         printObj(`${SPLIT}响应头/RESPONSE HEADER`, resHeader, 30)
-        printObj(`${SPLIT}响应体/RESPONSE BODY`, detail.resBody)
+        // printObj(`${SPLIT}响应体/RESPONSE BODY`, detail.resBody)
 
         //判断是否为 GZIP 返回内容
         if(resHeader['Content-Encoding']=='gzip' || resHeader['content-encoding']=='gzip'){

@@ -180,27 +180,16 @@ export const startLoading = (textOrOptions)=> {
     return spinner
 }
 
-/**
- * 由于使用的是 app.parseAsync 进行统一异常捕获，调用此方法时，请使用 await callServer 的方法
- * 否则无法正常捕获到异常
- *
- * @param {String}  action
- * @param {Object}  data
- * @param {boolean} bodyType    0=JSON 格式，1=Form，2=BODY（发送文件），3=GET 方式提交
- * @param {boolean} withToken
- * @param {Object}  options
- * @returns
- */
-export const callServer = async (action, data={}, bodyType=0, withToken=true, options={}, saveToFile)=> {
-    let started = Date.now()
+const remoteUrl = (suffix="", isWebSocket=false)=> {
+    if(!configs)
+        loadConfig()
 
-    let body = Object.assign({}, options)
-    if(bodyType != 3)
-        body[bodyType==0?'json': (bodyType==1?'form':'body')] = data
+    let url = `${configs.host}${suffix}`
 
-    if(!configs)    loadConfig()
-    let method = bodyType == 3 ? "get":"post"
+    return isWebSocket ? `ws${url.substring(url.indexOf("://"))}` : url
+}
 
+const buildHeaders = async (withToken=true)=>{
     // 构建 header
     let headers = { CHANNEL: "cli" }
     if(withToken){
@@ -225,9 +214,32 @@ export const callServer = async (action, data={}, bodyType=0, withToken=true, op
         headers[configs.header] = token
     }
 
-    body.headers = headers
+    return headers
+}
 
-    let url = `${configs.host}${action}`
+/**
+ * 由于使用的是 app.parseAsync 进行统一异常捕获，调用此方法时，请使用 await callServer 的方法
+ * 否则无法正常捕获到异常
+ *
+ * @param {String}  action
+ * @param {Object}  data
+ * @param {boolean} bodyType    0=JSON 格式，1=Form，2=BODY（发送文件），3=GET 方式提交
+ * @param {boolean} withToken
+ * @param {Object}  options
+ * @returns
+ */
+export const callServer = async (action, data={}, bodyType=0, withToken=true, options={}, saveToFile)=> {
+    let started = Date.now()
+    let url = remoteUrl(action)
+
+    let body = Object.assign({}, options)
+    if(bodyType != 3)
+        body[bodyType==0?'json': (bodyType==1?'form':'body')] = data
+
+    let method = bodyType == 3 ? "get":"post"
+
+    body.headers = await buildHeaders(withToken)
+
     if(!!saveToFile && typeof(saveToFile) == 'string'){
         await pipeline(
             got.stream[method](url, body),
@@ -357,3 +369,4 @@ export const readFirstLine = (path, options={})=>{
     })
 }
 
+export { remoteUrl, buildHeaders }
