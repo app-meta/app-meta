@@ -1,5 +1,5 @@
 <template>
-    <n-dropdown trigger="click" :options="options" :show-arrow="true" width="150" @select="onSelect" :render-option="render">
+    <n-dropdown size="small" trigger="click" :options="options" :show-arrow="true" width="150" @select="onSelect" :render-option="render">
         <n-button circle type="primary" size="small" secondary><template #icon><n-icon :component="Plus"/></template></n-button>
     </n-dropdown>
 </template>

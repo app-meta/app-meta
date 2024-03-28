@@ -10,7 +10,7 @@
     import DocumentList from "../document-list.vue"
 
     import { renderProps, loadContent } from "../"
-    import SFCRender from "./sfc-render.vue"
+    import SFCRender from "./vant-sfc-render.vue"
 
     E.emit("main.padding", 0)
     const props = defineProps(renderProps)
