@@ -13,6 +13,7 @@ const { post } = require('got')
 const FormData = require("form-data")
 
 const { argv, cwd } = require('process')
+const { encoding } = require('../core/base')
 
 const isDir = d=>existsSync(d) && statSync(d).isDirectory()
 
@@ -64,7 +65,7 @@ async function start(pack=true, deploy=true){
         if(!existsSync(metaJSON))   return console.error(`[部署] 找不到配置文件 ${metaJSON}，请创建并配置参数...`)
         const PS = require(metaJSON)
 
-        const pkg = JSON.parse(readFileSync(`${root}/package.json`, {encoding:'utf-8'}))
+        const pkg = JSON.parse(readFileSync(`${root}/package.json`, { encoding }))
         console.debug(`[部署] 获取到 ${PS.UID} 的token， 即将部署到（AID=${pkg.appId} / ${pkg.pageId}）...`)
         if(!pkg.appId){
             console.error(`[部署] package.json 文件中未定义 appId、pageId`)

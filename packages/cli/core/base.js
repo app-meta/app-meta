@@ -18,3 +18,5 @@ export const optionOfOutput = ['-o, --output <string>', '数据输出位置']
 export const needAid = ps=> {
     if(!ps.aid)   throw `请通过 -a,--aid 指定应用ID`
 }
+
+export const encoding = 'utf-8'

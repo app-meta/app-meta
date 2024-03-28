@@ -6,7 +6,7 @@
     <template v-else-if="state==1">
         <component :is="viewer()" />
 
-        <BottomMenu :page="bean.page" />
+        <BottomMenu v-if="showMenu" :page="bean.page" />
     </template>
     <template v-else>
         <n-alert v-if="state==2" title="应用/页面不存在" type="error">
@@ -50,6 +50,7 @@
     import BlockRender from "./数据维护/Render.vue"
     import ChartRender from "./统计图表/Render.vue"
     import SFCRender from "./SFC/Render.vue"
+    import H5Render from "./小程序/Render.vue"
 
     import DefaultHome from "./Home.vue"
     import About from "./about.vue"
@@ -64,6 +65,7 @@
      * 状态：-1=加载中，0=系统自带的默认首页，1=页面可正常访问，2=页面不存在，3=页面不可见，4=页面未授权
      */
     let state   = ref(-1)
+    let showMenu= true
     let data    = undefined
 
     let viewer  = ()=> {
@@ -77,6 +79,7 @@
             tpl=='import'?      BlockRender:
             tpl=='chart'?       ChartRender:
             tpl=='sfc'?         SFCRender:
+            tpl=='h5'?          H5Render:
             null
         if(com == null) throw Error(`应用⌈${bean.page.name}⌋未定义对应的渲染器，请联系管理员`)
         return h(com, {data, aid, page: bean.page, params: props.params})
@@ -114,10 +117,20 @@
                 }
 
                 //运行小程序
-                if(template === 'h5')
-                    return FETCH_JSON(window.SERVER+"/app/launch", {aid, pid, channel}, true).then(()=> location.href = dd.data)
+                if(template === 'h5'){
+                    // return FETCH_JSON(window.SERVER+"/app/launch", {aid, pid, channel}, true).then(()=> location.href = dd.data)
+                    showMenu = false
+                    // 不需要内边距
+                    E.emit("main.padding", 0)
+
+                    document.querySelector("body .n-layout-footer").remove()
+                    setTimeout(() => {
+                        document.querySelector(".win-layout").style.bottom='0px'
+                    }, 100)
+                }
 
                 data = dd.data
+
                 state.value = 1
 
                 //初始化 DATA 模块，对于 table 类型，无需注入 pid（可以自由查询数据）

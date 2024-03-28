@@ -63,21 +63,41 @@
                         <n-input v-model:value="bean.logFile" placeholder="导出日志文件时会用到" />
                     </n-form-item> -->
                     <n-form-item label="启用数据库">
-                        <n-switch v-model:value="bean.useDB" />
-                        <n-text depth="3" class="ml-3">勾选后则需要填写详细的数据库信息</n-text>
+                        <n-space vertical class="w-full mt-2">
+                            <div>
+                                <n-switch v-model:value="bean.useDB" size="large" />
+                                <n-text depth="3" class="ml-3">勾选后，部署服务时平台会注入数据源信息</n-text>
+                            </div>
+                            <n-card v-if="bean.useDB">
+                                <template #header>
+                                    <Database class="icon" />
+                                    配置数据源：
+                                    <n-switch v-model:value="bean.useSource" :round="false" size="large">
+                                        <template #checked>现有数据源</template>
+                                        <template #unchecked>自定义</template>
+                                    </n-switch>
+                                </template>
+                                <n-form :show-feedback="false" label-placement="top" label-width="140">
+                                    <n-form-item v-if="bean.useSource" label="请选择数据源（仅限已授权）">
+                                        <DbmSelector v-model="bean.dbSource" />
+                                    </n-form-item>
+                                    <n-grid v-else x-gap="10" cols="5">
+                                        <n-form-item-gi label="数据库地址" span="2">
+                                            <n-input-group>
+                                                <n-input v-model:value="bean.dbHost" />
+                                                <n-input-group-label >:</n-input-group-label>
+                                                <n-input-number v-model:value="bean.dbPort" :min="0" placeholder="端口" />
+                                            </n-input-group>
+                                        </n-form-item-gi>
+                                        <n-form-item-gi label="库名"><n-input v-model:value="bean.dbName" /></n-form-item-gi>
+                                        <n-form-item-gi label="连接用户"><n-input v-model:value="bean.dbUser" /></n-form-item-gi>
+                                        <n-form-item-gi label="授权密码"><n-input type="password" v-model:value="bean.dbPwd" /></n-form-item-gi>
+                                    </n-grid>
+                                </n-form>
+                            </n-card>
+                        </n-space>
                     </n-form-item>
-                    <template v-if="bean.useDB">
-                        <n-form-item label="数据库地址">
-                            <n-input-group>
-                                <n-input v-model:value="bean.dbHost" />
-                                <n-input-group-label size="large">:</n-input-group-label>
-                                <n-input-number style="width:220px" v-model:value="bean.dbPort" :min="0" placeholder="端口" />
-                            </n-input-group>
-                        </n-form-item>
-                        <n-form-item label="数据库名称"><n-input v-model:value="bean.dbName" /></n-form-item>
-                        <n-form-item label="数据库用户"><n-input v-model:value="bean.dbUser" /></n-form-item>
-                        <n-form-item label="数据库密码"><n-input type="password" v-model:value="bean.dbPwd" /></n-form-item>
-                    </template>
+
                 </template>
             </n-space>
         </n-form>
@@ -91,9 +111,11 @@
 
 <script setup>
     import { ref } from 'vue'
-    import { Trash, QuestionCircle } from '@vicons/fa'
+    import { QuestionCircle, Database } from '@vicons/fa'
 
-    import { deployModes, languages } from "."
+    import DbmSelector from "@V/dbm/selector-source.vue"
+
+    import { deployModes, languages,checkServerConfig } from "."
 
     const props = defineProps({
         bean: {type:Object},
@@ -101,8 +123,9 @@
     })
 
     let toSave = () => {
-        let { useDB, dbHost, dbName, dbUser, dbPwd } = props.bean
-
-        props.updater(_raw(props.bean), ()=> M.notice.ok(`后端服务配置保存成功`))
+        let d = _raw(props.bean)
+        if(checkServerConfig(d) === true){
+            props.updater(d, ()=> M.notice.ok(`后端服务配置保存成功`))
+        }
     }
 </script>

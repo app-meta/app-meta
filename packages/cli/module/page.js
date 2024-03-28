@@ -5,18 +5,19 @@ import FormData from 'form-data'
 import confirm from '@inquirer/confirm'
 
 import { Command, Argument } from 'commander'
-import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfOutput, optionOfPid, optionOfUid, optionOfValue } from '../core/base.js'
+import { VERBOSE, appName, optionOfAid, optionOfFile, optionOfOutput, optionOfPid, optionOfUid, optionOfValue, encoding } from '../core/base.js'
 import { buildHeaders, callServer, isDir, isFile, printDebug, printOK, printObj, printTable, remoteUrl, startLoading, stopLoading, zipDir } from '../core/util.js'
 import { join, dirname } from 'path'
 import chalk from 'chalk'
 
 const DIST = "dist"
+const H5 = "h5"
 
 const loadPkgJSON = dir=>{
     let file = `${dir}/package.json`
     if(!isFile(file))   throw `${file} 文件不存在`
 
-    return JSON.parse(readFileSync(file, {encoding:'utf-8'}))
+    return JSON.parse(readFileSync(file, {encoding}))
 }
 
 /**
@@ -70,7 +71,7 @@ const deploy = async (packageName, ps, cmd)=>{
     ps.pid ??= pkg.pageId
     ps.version ??= (now=>`${now.getFullYear()-2000}.${now.getMonth()+1}.${now.getDate()}`)(new Date)
     ps.message ??= ""
-    if(!(ps.aid && ps.pid))  throw `未指定 appId、pageId（请通过 -a、-p 或者 package.json 定义）`
+    if(!ps.aid || (pkg.template==H5 && !ps.pid))  throw `未指定 appId、pageId（请通过 -a、-p 或者 package.json 定义）`
 
     let body = new FormData()
     body.append('file', createReadStream(packFile))
@@ -82,7 +83,7 @@ const deploy = async (packageName, ps, cmd)=>{
     debug && printDebug(`即将上传文件，template=${pkg.template} version=${ps.version} message=${ps.message}`)
     printTable({ template: pkg.template, version:ps.version, message: ps.message })
 
-    let res = await callServer(`/page/${pkg.template||"h5"}/deploy`, body, 2)
+    let res = await callServer(`/page/${pkg.template==H5?H5:'terminal'}/deploy`, body, 2)
     printOK("部署完成")
 
     if(res.data)
@@ -113,7 +114,7 @@ const pageModify = async (type, ps)=>{
         let model = {id}
         if(ps.file){
             if(!isFile(ps.file))    throw `${ps.file} 不是一个有效的文件`
-            model.value = readFileSync(ps.file, {encoding:'utf-8'})
+            model.value = readFileSync(ps.file, {encoding})
         }
         else
             model.value = ps.value
@@ -148,7 +149,7 @@ const pageLinks = async ps=>{
 
 /**
  * 跟踪远程日志文件
- * @param {*} ps
+ * @param {PageFileOptions} ps
  */
 const _tailRemoteFile = async ps=>{
     let url = remoteUrl("/ws/file-tail", true)
@@ -157,8 +158,8 @@ const _tailRemoteFile = async ps=>{
     headers.params = JSON.stringify(ps)
 
     const client = new WebSocket(url, { headers })
-    client.on('open', ()=> console.debug(chalk.magenta(`与服务器连接成功 🤝（CTRL+C 退出）`)))
-    // client.on('close',()=> console.debug(chalk.magenta(`\n与服务器连接关闭 👋`)))
+    client.on('open', ()=> console.debug(chalk.magenta(`与服务器连接成功 （CTRL+C 退出）`)))
+    // client.on('close',()=> console.debug(chalk.magenta(`\n与服务器连接关闭`)))
     client.on('error', e=> {
         console.debug(chalk.red(e))
     })
@@ -233,7 +234,7 @@ export default (app=new Command())=> {
         `)
         .option(...optionOfAid)
         .option(...optionOfPid)
-        .option('-z, --zip [boolean]', "仅进行 ZIP 打包")
+        .option('-z, --zip [boolean]', "自动进行 ZIP 打包（命名：{包名}.pack.zip）")
         .option('-d, --dir [string]', "monorepo 项目下包存放目录", 'packages')
         .option('--version [string]', "版本号（默认为当前日期）")
         .option('-m, --message [string]', "更新描述信息")
@@ -246,7 +247,8 @@ export default (app=new Command())=> {
         .option('-d, --download', "下载文件")
         .option('-r, --remove', "删除文件")
         .option('-p, --path [string]', "文件/目录路径，默认为根目录")
-        .option('-t, --tail', '跟踪某个文本文件的更新，仅支持 UTF-8 编码', false)
+        .option('-t, --tail', '跟踪某个文本文件的更新', false)
+        .option('-c, --charset [string]', '编码，默认 UTF-8', encoding)
         .action(listOrDownload)
 
     page.command("status [id]")
@@ -268,7 +270,7 @@ export default (app=new Command())=> {
         .description("创建新页面/功能")
         .requiredOption(...optionOfAid)
         .option("-n, --name <string>", "名称")
-        .option("-t, --template <string>", "类型", "h5")
+        .option("-t, --template <string>", "类型", H5)
         .action(create)
 
     page.command("update")

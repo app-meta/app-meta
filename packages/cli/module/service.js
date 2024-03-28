@@ -3,7 +3,7 @@ import { gunzipSync } from 'zlib'
 import { Command } from 'commander'
 
 import { callServer, printObj, printTable, startLoading, stopLoading, tryLoadFile } from '../core/util.js'
-import { optionOfAid, optionOfFile, optionOfUid } from '../core/base.js'
+import { encoding, optionOfAid, optionOfFile, optionOfUid } from '../core/base.js'
 import chalk from 'chalk'
 
 const toJSON = text=> text? JSON.parse(text):{}
@@ -41,11 +41,11 @@ const showDetail = async idOrPs=>{
         if(resHeader['Content-Encoding']=='gzip' || resHeader['content-encoding']=='gzip'){
             printObj(
                 `${SPLIT}检测到响应为 GZIP 编码，尝试还原`,
-                gunzipSync(Buffer.from(detail.resBody, 'base64')).toString('utf-8')
+                gunzipSync(Buffer.from(detail.resBody, 'base64')).toString(encoding)
             )
         }
         else{
-            printObj(`${SPLIT}解码响应内容（BASE64）`, Buffer.from(detail.resBody, 'base64').toString('utf-8'))
+            printObj(`${SPLIT}解码响应内容（BASE64）`, Buffer.from(detail.resBody, 'base64').toString(encoding))
         }
     }
     else

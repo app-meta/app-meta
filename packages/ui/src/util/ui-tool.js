@@ -125,6 +125,8 @@ export default {
             throw Error(`${text} 不是有效的 options 数据内容，请参考文档进行配置`)
 
         return options.map(o=> {
+            if(typeof(o) === 'object')  return o
+
             let i = o.indexOf("|")
             let obj = {}
             if(i==-1)

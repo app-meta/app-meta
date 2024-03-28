@@ -10,6 +10,7 @@ import { compact } from "./date"
  */
 let db = null
 
+const VERSION = 20241231000000
 const tables = [
     'test',
     /**
@@ -26,7 +27,7 @@ const tables = [
 export const init = ()=> new Promise((ok, fail)=>{
     if(!!db) return ok(db)
 
-    const req = indexedDB.open(globalName, compact())
+    const req = indexedDB.open(globalName, VERSION)
     req.onsuccess = e=> {
         db = e.target.result
         logger.debug("数据库连接成功^.^")
@@ -75,7 +76,7 @@ export const insert = (table, rows)=> new Promise(async (ok, fail)=>{
  * @returns
  */
 export const get = (table, key)=> new Promise(async (ok, fail)=>{
-    await init()
+    await init().catch(fail)
 
     const req = db.transaction(table, 'readonly').objectStore(table).get(key)
     req.onsuccess = e=> ok(req.result)

@@ -26,6 +26,10 @@ export default {
             "global._VERSION_": JSON.stringify(VERSION),
         })
     ],
+    externals: {
+        "bufferutil": "bufferutil",
+        "utf-8-validate": "utf-8-validate",
+    },
     performance:{
         // 关闭提示
         hints:false

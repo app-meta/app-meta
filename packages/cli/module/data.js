@@ -3,7 +3,7 @@ import { createWriteStream } from 'fs'
 import chalk from 'chalk'
 
 import { callServer, printTable, startLoading, stopLoading } from '../core/util.js'
-import { optionOfAid, optionOfOutput, optionOfPid } from '../core/base.js'
+import { optionOfAid, optionOfOutput, optionOfPid, encoding } from '../core/base.js'
 
 const query = async ps=>{
     if(!ps.aid)                                 throw `请通过 -a,--aid 指定应用ID`
@@ -18,7 +18,7 @@ const query = async ps=>{
     if(datas.length == 0)   return
 
     if(ps.output){
-        let fw = createWriteStream(ps.output, {encoding:'utf-8'})
+        let fw = createWriteStream(ps.output, {encoding})
         fw.write("[\n")
         for (let i = 0; i < datas.length; i++) {
             const d = datas[i]

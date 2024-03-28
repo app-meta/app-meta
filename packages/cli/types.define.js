@@ -8,3 +8,11 @@
  * @property {Boolean} required - 是否为必填
  * @property {Function} validate - 检验函数，返回 true 则通过
  */
+
+/**
+ * @typedef {Object} PageFileOptions - 文件部署参数
+ * @property {String} charset - 编码
+ * @property {Boolean} tail - 跟踪
+ * @property {Boolean} download - 下载
+ * @property {Boolean} remove - 删除
+ */
