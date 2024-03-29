@@ -1,8 +1,10 @@
 <template>
-    <van-loading v-if="state==0" size="24px" vertical>组件渲染中...</van-loading>
-    <!-- <component v-else-if="state==1" :is='com'></component> -->
-    <div v-else-if="state==1" id="vantSFC"></div>
-    <van-empty v-else-if="statue==-1" image="error" :description="error" />
+    <n-spin :show="state==0">
+        <component v-if="state==1" :is='com'></component>
+        <n-alert v-else-if="state==-1" type="error" :bordered="false" title="渲染 SFC 失败">
+            {{error}}
+        </n-alert>
+    </n-spin>
 </template>
 
 <script setup>
@@ -11,15 +13,6 @@
     import * as vue from 'vue'
     import { useRoute, useRouter } from 'vue-router'
 
-    import { Loading as VanLoading, Empty as VanEmpty } from 'vant'
-
-    /**
-     * 引入 Vant
-     */
-    import * as vant from 'vant'
-    import '@vant/touch-emulator'
-    import 'vant/lib/index.css'
-
     import { loadModule } from 'vue3-sfc-loader'
 
     /*
@@ -27,6 +20,11 @@
      */
     import Chart from "@C/chart.vue"
     import MDRender from "@C/markdown/md.viewer.vue"
+    import FileImportor from "@CC/file.import.vue"
+    import ClickInput from "@C/dbclick.input.vue"
+    import Uploader from "@C/uploader.vue"
+    import Title from "@V/widget/page.title.vue"
+    import P from "@Pagination"
 
     const props = defineProps({
         code:{type:String, default:""},
@@ -42,25 +40,26 @@
         if(!props.code) return
 
         state.value = 0
-        loadModule(`async-sfc.vue`, {
+        loadModule(`async-sfc-naive.vue`, {
             moduleCache: {
                 vue,
-                vant,
                 'vue-router'                : { useRoute, useRouter },
 
+                "@Pagination"               : P,
                 "@C/chart.vue"              : Chart,
                 "@C/markdown/md.viewer.vue" : MDRender,
+                "@CC/file.import.vue"       : FileImportor,
+                "@C/dbclick.input.vue"      : ClickInput,
+                "@C/uploader.vue"           : Uploader,
+                "@V/widget/page.title.vue"  : Title
             },
             getFile: () => props.code,
-            addStyle: (name) => {},
+            addStyle: () => {},
         })
         .then(component=>{
             com.value = markRaw(component)
-            state.value = 1
-
-            nextTick(()=>{
-                vue.createApp(component).use(vant).mount("#vantSFC")
-
+            nextTick(()=> {
+                state.value = 1
                 props.done && props.done()
             })
         })

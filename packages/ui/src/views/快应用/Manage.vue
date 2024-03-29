@@ -38,7 +38,7 @@
             })
         },
         {
-            title:"类型", key:"template", width: 110, render:row=> h(Template, {bean: findTemplate(row.template)})
+            title:"类型", key:"template", width: 100, render:row=> h(Template, {bean: findTemplate(row.template)})
         },
         {
             title:"可访问", key:"active", width:70,
