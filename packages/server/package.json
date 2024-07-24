@@ -1,0 +1,19 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "demo": "node fastify.js",
+        "demo-server": "node demo-server.js"
+    },
+    "keywords": [],
+    "author": "0604hx <zxingming@foxmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@app-meta/basic": "workspace:1.0.0",
+        "fastify": "^4.24.3",
+        "querystring": "^0.2.1"
+    }
+}

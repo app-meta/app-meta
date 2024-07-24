@@ -1,0 +1,14 @@
+/*
+修正序号不显示的问题，原因是 vant、tailwind 样式配置了
+
+ol,li {
+    list-style: none;
+}
+
+详见 https://github.com/imzbf/md-editor-v3/issues/533
+*/
+.md-editor-preview {
+    ol, li {
+        list-style: disc !important;
+    }
+}

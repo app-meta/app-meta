@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta http-equiv="pragram" content="no-cache">
+        <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="expires" content="0">
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <link rel="icon" href="/icons.png">
+        <title><%= title %></title>
+
+        <!--add font-awesome5 -->
+        <!--
+            此类静态资源在 main.js 中导入（添加 ?url）
+            不然打包时会报警告信息：doesn't exist at build time, it will remain unchanged to be resolved at runtime
+
+            目前折中方案是，自定义
+        -->
+        <link rel="stylesheet" href="/static/font-awesome/css/fontawesome.min.css">
+        <link rel="stylesheet" href="/static/font-awesome/css/brands.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/font-awesome/css/solid.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/font-awesome/css/regular.min.css" rel="stylesheet">
+
+        <!-- built files will be auto injected -->
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

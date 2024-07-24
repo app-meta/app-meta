@@ -1,0 +1,81 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机抽签小程序</title>
+
+    <link rel="stylesheet" href="bulma.min.css" />
+</head>
+<body class="p-3">
+    <article class="message is-info">
+        <div class="message-header">欢迎使用抽签工具</div>
+        <div class="message-body">
+            请点击下方按钮进行随机分配评估公司，然后点击 <code>提交按钮</code> 保存数据。
+        </div>
+    </article>
+
+    <!-- <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">机构/部门</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <input class="input" id="jg" type="text" placeholder="请输入部门信息">
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="field">
+        <label class="label">机构/部门</label>
+        <div class="control">
+            <input class="input" id="jg" type="text" placeholder="请输入部门信息">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">业务发生月份</label>
+        <div class="control">
+            <div class="select is-fullwidth">
+                <select id="rq">
+                    <option value="1">1 月</option>
+                    <option value="2">2 月</option>
+                    <option value="3">3 月</option>
+                    <option value="4">4 月</option>
+                    <option value="5">5 月</option>
+                    <option value="6">6 月</option>
+                    <option value="7">7 月</option>
+                    <option value="8">8 月</option>
+                    <option value="9">9 月</option>
+                    <option value="10">10 月</option>
+                    <option value="11">11 月</option>
+                    <option value="12">12 月</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">评估公司</label>
+        <div class="control">
+            <input class="input" id="gs" type="text">
+        </div>
+    </div>
+
+    <div class="field has-text-centered">
+        <div class="control">
+            <button onclick="toSave()" class="button is-primary">提交数据</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    const DP = window.DataProvider?new DataProvider(true):{}
+
+    const fields = ["jg","gs","rq"]
+    let toSave = ()=>{
+        let o = {}
+        fields.forEach(k=> o[k] = document.querySelector("#"+k).value)
+        console.debug("提交数据", o)
+        DP.insert(o).then(d=>console.debug(d))
+    }
+</script>
+</html>

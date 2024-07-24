@@ -1,0 +1,81 @@
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP·META</title>
+</head>
+<body>
+    <div class="main" style="height:50vh">
+        <div>
+            <div class="title">APP META</div>
+            <div>欢迎使用</div>
+        </div>
+    </div>
+    <div style="margin:10px auto;width:80%;">
+        <div id="error" class="error"></div>
+        <div style="font-size:1.3rem">当您看到此页面，说明 <span class="tag">配置参数</span> 未生效，请参考下面步骤进行排查：</div>
+        <div style="margin-top: 10px;">
+            <div>1、在数据目录下新建<span class="item">config.json</span>文件</div>
+            <div>2、若使用远程 URL，请检查资源是否可用</div>
+            <div>3、重启应用程序</div>
+            <div>4、若问题仍未解决，请反馈给技术人员</div>
+        </div>
+    </div>
+
+    <script>
+        const query = new Map(decodeURIComponent(location.search).slice(1).split("&").map(v => v.split("=")))
+        if(query.get("code")){
+            let ele = document.querySelector("#error")
+            ele.innerHTML = `<span style="font-size: 2rem;">CODE=${query.get("code")}</span><br>${query.get("msg")||""}`
+        }
+    </script>
+</body>
+</html>
+
+<style>
+    html, body {
+        padding: 0px;
+        margin:0px;
+    }
+    .main {
+        background: #BB2649;
+        color: white;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .main .title {
+        font-size: 3.2rem;
+        margin: 20px;
+    }
+    .item {
+        color: #2080f0;
+        margin:0 6px 0px 6px;
+    }
+    .tag {
+        white-space: nowrap;
+        position: relative;
+        box-sizing: border-box;
+        cursor: default;
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        padding: 0 7px;
+        border-radius: 2px;
+        color: #2080f0;
+        background-color: rgba(32, 128, 240, 0.12);
+        line-height: 1;
+        height: 28px;
+        font-size: 14px;
+    }
+    .error {
+        color: #d03050;
+        background-color: rgba(208, 48, 80, 0.1);
+        padding: 10px;
+        font-size: 1.3rem;
+    }
+</style>

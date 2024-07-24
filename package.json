@@ -1,0 +1,36 @@
+{
+    "name": "app-meta",
+    "version": "1.0.0",
+    "appName": "APP 元宇宙",
+    "description": "",
+    "repository": "https://github.com/0604hx/app-meta",
+    "scripts": {
+        "serve": "pnpm -F ui run serve",
+        "build": "pnpm -F library run build && pnpm -F ui run build",
+        "build:gzip": "pnpm -F library run build && pnpm -F ui run build:gzip",
+        "build:cli": "pnpm -F cli build",
+        "build:library": "pnpm -F library build",
+        "ui:package": "pnpm build",
+        "client:package": "pnpm -F client package:dist",
+        "client:package-dir": "pnpm -F client package",
+        "client:start": "pnpm -F client start",
+        "client:start-win": "pnpm -F client start:win",
+        "client:watch": "pnpm -F client watch",
+        "client:watch-win": "pnpm -F client watch:win",
+        "cli:package": "pnpm -F cli package",
+        "server": "pnpm -F server start",
+        "server:demo": "pnpm -F server demo-server",
+        "docs:dev": "pnpm -F docs dev",
+        "docs:build": "pnpm -F docs build"
+    },
+    "keywords": [
+        "VUE3",
+        "Naive UI",
+        "Application Meta"
+    ],
+    "author": "0604hx <zxingming@foxmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "vite": "^5.2.11"
+    }
+}

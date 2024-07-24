@@ -1,0 +1,148 @@
+@primary: var(--n-color-target, #18a058);
+@info: #2080f0;
+@purple: #8c0776;
+@warning: #f0a020;
+@error: #d03050;
+@black: #001529;
+
+.info {color:@info !important;}
+.bg-info {background-color: @info !important;color: white !important}
+.success {color:@primary !important;}
+.bg-success {background-color: @primary !important;color: white !important}
+.warning {color:@warning !important;}
+.bg-warning {background-color: @warning !important;color: white !important}
+.error {color: @error !important;}
+.bg-error {background-color: @error !important;color: white !important}
+.primary {color:@primary !important;}
+.bg-primary {background-color: @primary !important;color: white !important}
+.purple {color: @purple !important}
+.bg-purple {background-color: @purple !important; color: white !important}
+.black {color: @black !important}
+.bg-black {background-color: @black !important}
+.white {color: white;}
+.bg-white {background-color: white !important;}
+
+.btn {
+    background-color: @primary;
+    color: white !important;
+    text-decoration: none !important;
+    padding: 12px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+
+    &-small {
+        padding: 0 7px !important;
+    }
+    &-info {
+        background-color: @info !important;
+    }
+    &-warning {
+        background-color: @warning !important;
+    }
+    &-error {
+        background-color: @error !important;
+    }
+    &-purple {
+        background-color: @purple !important;
+    }
+}
+
+.h {
+    font-weight: 400;
+    font-size: 14px;
+    color: rgba(69,90,100,.6);
+}
+
+.hover {
+    .hover-item {
+        visibility: hidden;
+    }
+    &:hover .hover-item{
+        visibility: visible;
+    }
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+
+    .n-list-item__main {
+        white-space: nowrap;
+        overflow: hidden;
+        word-break: keep-all;
+        text-overflow: ellipsis;
+    }
+}
+
+
+.break {
+    word-break: break-all;
+    white-space: break-spaces;
+}
+
+// ::-webkit-scrollbar {
+//     width: var(--n-scrollbar-width);
+//     height: var(--n-scrollbar-height);
+
+//     // background-color: red;//rgba(255, 255, 255, 0.2);
+// }
+
+// ::-webkit-scrollbar-thumb {
+//     background: var(--n-scrollbar-color);//rgba(255, 255, 255, 0.2);
+//     border-radius: var(--n-scrollbar-border-radius);
+
+//     &:hover {
+//         background: var(--n-scrollbar-color-hover);//rgba(255, 255, 255, 0.3);
+//     }
+// }
+
+// ::-webkit-scrollbar-track {
+//     border-radius: 20px;
+//     background-color:var(--n-scrollbar-color);//rgba(0, 0, 0, 0.1);//rgba(255, 255, 255, 0.1);
+// }
+
+/*
+自定义全局滚动条
+不够优雅，以后再优化吧
+*/
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: #afafaf;//rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+
+    &:hover {
+        background: #999;//rgba(255, 255, 255, 0.3);
+    }
+}
+::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color:#33333310;//rgba(0, 0, 0, 0.1);//rgba(255, 255, 255, 0.1);
+}
+
+/*
+专为 Windows.vue 设置，当页面内容想要占满全屏高度（height:100%）时，添加该 class
+*/
+.window-h-full {
+    height: calc(100vh - 36px) !important;
+}
+
+.app-view-dialog {
+    .n-dialog__close {
+        margin: 6px 6px;
+    }
+    .n-dialog__content {
+        height: 100%;
+    }
+}
+
+.markdown-content-div {
+    .md-editor-preview-wrapper {
+        padding: 5px 0px !important;
+    }
+}
