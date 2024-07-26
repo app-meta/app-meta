@@ -4,7 +4,6 @@
         <n-space>
             <n-button v-for="(item, index) in beans" block secondary  @click="runPage(item)">
                 <template #icon><n-icon :component="item.tpl.icon" :class="item.tpl.theme" /></template>
-                <!-- {{item.name}} -->
                 <n-ellipsis><Title size="small" :text="item.name" /></n-ellipsis>
             </n-button>
         </n-space>

@@ -26,6 +26,13 @@
 ## 开发说明
 > 这是一个基于 [pnpm](https://pnpm.io/) 的 monorepo 项目，构建工具为[vite5](https://vite.dev/) +  [webpack5](https://webpack.js.org/)
 
+```shell
+git clone https://github.com/app-meta/app-meta
+cd app-meta
+# 请确保已安装最新版本的 pnpm
+pnpm i
+```
+
 ### 包说明
 > 项目包存放于`packages`下
 

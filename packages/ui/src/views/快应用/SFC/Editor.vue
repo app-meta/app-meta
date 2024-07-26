@@ -57,6 +57,8 @@
 
     import About from "./说明.md?raw"
 
+    console.debug(About)
+
     import MDRender from "@md.viewer"
 
     import { translator, getRender, uiVersionText } from "."

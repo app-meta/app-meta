@@ -18,14 +18,13 @@
                 <n-gi v-for="page in pages">
                     <n-button block secondary  type="default" tag="div" @click="runPage(page)" style="padding: 14px 24px;">
                         <div class="text-left w-full">
-                            <n-space justify="space-between">
-                                <div class="text-lg">
-                                    <span class="mr-2 mt-2"><Template icon :bean="page.tpl" /></span>
-                                    <!-- <Title :text="page.name" /> -->
-                                    <n-ellipsis><Title size="small" :text="page.name" /></n-ellipsis>
-                                </div>
+                            <n-flex justify="space-between">
+                                <n-flex size="small" class="text-lg" :style>
+                                    <span class="mt-1"><Template icon :bean="page.tpl" /></span>
+                                    <n-ellipsis :style><Title size="small" :text="page.name" /></n-ellipsis>
+                                </n-flex>
                                 <PageLink :id="page.id" :linked="page.active" color="primary" />
-                            </n-space>
+                            </n-flex>
                             <n-space justify="space-between" class="mt-2">
                                 <div>
                                     <n-icon :component="Fire" /> 热度 {{page.launch}}
@@ -60,6 +59,7 @@
         app:{type:Object}
     })
 
+    const style = { width: "calc(100% - 40px)" }
     let pageLoaded  = ref(false)
     let pages       = []
 
