@@ -24,7 +24,7 @@
 
         <template #action v-if="showFooter">
             <n-space>
-                <div title="热度（执行次数）"><Rocket class="icon" /> {{bean.launch}}</div>
+                <div title="热度（执行次数）"><Rocket class="icon" /> <Count :value="bean.launch"/></div>
                 <div v-if="bean.mark" title="收藏数"><Fire class="icon" /> {{bean.mark}}</div>
                 <div v-if="bean.thumb" title="点赞数"><ThumbsUpRegular class="icon" /> {{bean.thumb}}</div>
             </n-space>
@@ -38,6 +38,7 @@
 
     import Logo from "@VW/app.logo.vue"
     import LinkBtn from "@VW/app.link.vue"
+    import Count from "@VW/count.vue"
 
     import { runApp } from "@S/Runner"
 

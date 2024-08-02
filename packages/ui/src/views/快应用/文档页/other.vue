@@ -15,7 +15,7 @@
     let current = ref(props.page.id)
 
     onMounted(() => {
-        RESULT("/page/list", {form:{EQ_aid:props.page.aid, EQ_template:"markdown"}}, d=> {
+        RESULT("/page/list", {form:{EQ_aid:props.page.aid, EQ_template:"markdown", EQ_active:true, EQ_search:true}}, d=> {
             menus.value = d.data.map(p=>({
                 name    : p.name,
                 label   : ()=>h(NEllipsis, {tooltip:{placement:"right"}}, ()=>h(Title, {text: p.name})),

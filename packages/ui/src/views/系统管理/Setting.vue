@@ -1,5 +1,5 @@
 <template>
-    <n-card segmented content-style="padding:0px">
+    <n-card segmented>
         <template #header>
             <Cog class="icon" />
             系统设置
@@ -7,6 +7,36 @@
         </template>
 
         <n-form :label-width="labelWidth">
+            <n-tabs type="line" animated default-value="COMMON" size="large">
+                <template #suffix>
+                    <n-button type="primary" size="large" :disabled="changed==0" @click="saveDo">
+                        <template #icon><n-icon :component="CheckCircle" /></template>
+                        保存（共<b class="ml-1 mr-1">{{changed}}</b>处改动）
+                    </n-button>
+                </template>
+
+                <template v-for="g in groups">
+                    <n-tab-pane v-if="g.size" :name="g.group" :tab="g.title">
+                        <n-table size="small" :bordered="false">
+                            <template v-for="item in settings">
+                                <tr v-if="item.category==g.group">
+                                    <td :width="labelWidth" class="text-right"> {{item.title}} </td>
+                                    <td width="40%">
+                                        <n-input v-if="item.form=='TEXT' || item.form=='TEXTAREA'" :rows="3" :status="item.old!=item.content?'warning':null" :type="item.form" v-model:value="item.content" />
+                                        <n-input-number v-else-if="item.form=='NUMBER'" :status="item.old!=item.content?'warning':null" v-model:value="item.content" />
+                                        <n-select v-else-if="item.form=='SELECT'" v-model:value="item.content" :options="item.items" :status="item.old!=item.content?'warning':null"/>
+                                        <n-switch v-else-if="item.form=='RADIO'" v-model:value="item.content" />
+                                    </td>
+                                    <td><n-text depth="3">{{item.summary}}</n-text></td>
+                                </tr>
+                            </template>
+                        </n-table>
+                    </n-tab-pane>
+                </template>
+            </n-tabs>
+        </n-form>
+
+        <!-- <n-form :label-width="labelWidth">
             <template v-for="g in groups">
                 <n-card v-if="g.size" size="small" class="mb-2" :bordered="false" segmented>
                     <template #header> <n-tag :bordered="false" type="primary" size="large">{{g.title}}</n-tag></template>
@@ -31,7 +61,7 @@
         <div class="text-center">
             <n-button type="primary" size="large" :disabled="changed==0" @click="saveDo"><template #icon><n-icon :component="CheckCircle" /></template> 保存已修改</n-button>
             <div>共有 <b>{{changed}}</b> 处改动</div>
-        </div>
+        </div> -->
     </n-card>
 </template>
 
@@ -68,6 +98,9 @@
                 {group:"SYSTEM", title:"系统相关", summary:"系统级别配置项", size:0},
                 {group:"AUTH", title:"用户权限", summary:"", size:0 },
                 {group:"CONTENT", title:"内容/文档", summary:"", size:0},
+                {group:"APP", title:"应用", size:0},
+                {group:"DBM", title:"数据源",size:0},
+                {group:"TERMINAL", title:"终端", size:0}
             ]
 
             d.data.forEach(s=>{

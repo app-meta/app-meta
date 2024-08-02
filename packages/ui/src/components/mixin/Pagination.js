@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-03-31 17:50:26
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2024-07-23 16:45:52
+ * @Last Modified time: 2024-08-02 09:13:23
  *
  * 分页复用模块
  */
@@ -22,11 +22,11 @@ export default (api, autoLoad=true, loader=undefined)=>{
         prefix: info=> createVNode('div', {}, `加载 ${beans.value.length} 条数据（数据总数 ${info.itemCount}）`),
         onChange: page=> {
             pagination.page = page
-            refresh()
+            refresh(false)
         },
         onUpdatePageSize : pageSize => {
             pagination.pageSize = pageSize
-            refresh()
+            refresh(false)
         }
     })
     let form = ref(ps.form||{})
@@ -38,8 +38,11 @@ export default (api, autoLoad=true, loader=undefined)=>{
         console.debug(`分页信息加载完成`, ps.url, d)
     }
 
-    let refresh = loader || function(){
-        let body = { form: _raw(form.value), pagination: {page: pagination.page, pageSize: pagination.pageSize} }
+    /**
+     * 参数 reset 为是否重置分页，默认 true
+     */
+    let refresh = loader || function(reset=true) {
+        let body = { form: _raw(form.value), pagination: {page: reset ? 1 : pagination.page, pageSize: pagination.pageSize} }
         pagination.loading = true
         if(!!ps.aid){
             //使用 H.service.json 获取数据
