@@ -41,7 +41,7 @@
     let height = "calc(100% - 0px)"
     let align = "center"
     let columns = [
-        { title:"序号", width:55, align, render:(row, i)=> h('span', {class:"cursor-pointer", title:"点击复制ID", onClick:()=> copyId(row) }, i+1)},
+        { title:"序号", width:55, align, render:(row, i)=> i+1},
         {
             title:"标题", key:"name",
             render: row=> h(ClickInput, {
@@ -223,10 +223,7 @@
                 M.dialog({
                     maskClosable: false, showIcon: false, style:{width:'480px'},
                     title: `迁移 ⌈${curRow.name}⌋ 到其他应用`,
-                    content: ()=>h(AppSelector, {
-                        value: curRow.aid,
-                        "on-update:value": v=> newId = v
-                    }),
+                    content: ()=>h(AppSelector, { "on-update:value": v=> newId = v }),
                     positiveText:"确定迁移",
                     positiveButtonProps:{size:"large"},
                     onPositiveClick: ()=>{
