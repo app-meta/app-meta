@@ -78,7 +78,7 @@
 <script setup>
     import { ref, reactive } from 'vue'
 
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
     import FileSelector from '@grid-form/render-naive/widgets/FileSelector.vue'
 
     const emits = defineEmits(["update"])

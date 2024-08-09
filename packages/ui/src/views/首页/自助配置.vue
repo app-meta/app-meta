@@ -66,7 +66,7 @@
     import { ref } from 'vue'
     import { Cog } from "@vicons/fa"
 
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
 
     import { saveConfig, loadConfig } from "."
 

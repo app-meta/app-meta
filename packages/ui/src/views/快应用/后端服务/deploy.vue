@@ -45,5 +45,6 @@
     const uploadDone = ()=>{
         M.notice.ok(`后端服务⌈${props.aid}⌋的新版本⌈${bean.version}⌋已部署`)
         versionList.value.refresh()
+        bean.summary = ""
     }
 </script>

@@ -1,7 +1,7 @@
 <!--运行快应用-->
 <template>
     <n-card size="small" segmented>
-        <template #header> <Database class="icon" /> {{page.name}} </template>
+        <template #header> <Database class="icon" /> <Title :text="page.name" /> </template>
         <MDRender :code="bean.summary" />
 
         <div class="text-center mt-4">
@@ -18,6 +18,7 @@
 
     import MDRender from "@md.viewer"
     import DocumentList from "../document-list.vue"
+    import Title from "@V/widget/page.title.vue"
 
     import { runScript } from "@S/Runner"
     import { renderProps } from "../"

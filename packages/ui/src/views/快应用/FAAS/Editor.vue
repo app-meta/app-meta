@@ -77,7 +77,7 @@
             </template>
             <!-- <n-input type="textarea" :rows="3" v-model:value="bean.cmd" /> -->
             <div class="w-full">
-                <CodeEditor v-model:value="bean.cmd" ref="editor" language="sql" height="240px" />
+                <CodeEditor v-model:value="bean.cmd" language="sql" height="240px" />
             </div>
         </n-form-item>
 
@@ -134,7 +134,7 @@
     import { h, ref, onMounted, reactive } from 'vue'
     import { Plus, Trash, Cog } from "@vicons/fa"
 
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
     import MDEditor from "@md.editor"
     import MDRender from "@md.viewer"
 

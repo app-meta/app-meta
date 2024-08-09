@@ -2,7 +2,6 @@ import { join } from 'path'
 
 import { defineConfig, createLogger } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import ViteCompress from 'vite-plugin-compression2'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -53,6 +52,7 @@ export default defineConfig({
             '@F'            : resolve("src/views/快应用"),
             '@md.viewer'    : resolve(`src/components/markdown/${MARKDOWN}/md.viewer.vue`),
             '@md.editor'    : resolve(`src/components/markdown/${MARKDOWN}/md.editor.vue`),
+            '@code.editor'  : resolve(`src/components/code/codemirror.vue`),//代码编辑器，可选：codemirror、monaco（VsCode）
         }
     },
     define:{

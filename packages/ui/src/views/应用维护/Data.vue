@@ -1,8 +1,8 @@
 <template>
-    <n-tabs @update:value="onTabChange">
+    <n-tabs type="line" @update:value="onTabChange">
         <n-tab-pane name="block" tab="数据块 / BLOCK">
             <div v-if="!blockLoaded" class="text-center"><n-spin /></div>
-            <n-table v-else :bordered="false">
+            <n-table v-else :bordered="false" size="small">
                 <thead>
                     <tr>
                         <th width="180">UUID</th>
@@ -19,7 +19,7 @@
                         <td class="text-center">
                             <n-popconfirm :negative-text="null" @positive-click="()=>delBlock(item.uuid, index)" placement="top-end">
                                 <template #trigger>
-                                    <n-button type="error" size="tiny" circle><template #icon><n-icon :component="Trash" /></template></n-button>
+                                    <n-button type="error" secondary size="tiny" text><template #icon><n-icon :component="Trash" /></template></n-button>
                                 </template>
                                 删除数据块⌈{{item.uuid}}⌋吗？
                             </n-popconfirm>

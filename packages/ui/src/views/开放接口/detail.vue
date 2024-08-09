@@ -37,7 +37,7 @@
             </template>
             <!-- <n-input type="textarea" :rows="3" v-model:value="bean.cmd" /> -->
             <div class="w-full">
-                <CodeEditor v-model:value="bean.cmd" ref="editor" language="sql" style="height: 80px;" />
+                <CodeEditor v-model:value="bean.cmd" language="sql" style="height: 80px;" />
             </div>
         </n-form-item>
 
@@ -91,7 +91,7 @@
 
     import AuthSelector from "@CC/selector.auth.vue"
     import MDEditor from "@md.editor"
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
 
     const tupe = `{{ 变量名 }}`
 

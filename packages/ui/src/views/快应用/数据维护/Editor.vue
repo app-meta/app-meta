@@ -53,7 +53,7 @@
     import { ref } from 'vue'
     import { Trash } from '@vicons/fa'
 
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
     import MDEditor from "@md.editor"
 
     let mdEditor = ref()

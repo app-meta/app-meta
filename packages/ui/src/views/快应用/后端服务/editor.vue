@@ -1,6 +1,4 @@
-<!---->
 <template>
-    <!-- style="width:960px;margin:0px auto;" -->
     <n-card segmented size="small">
         <template #header>
             <b>后端服务配置</b>
@@ -36,12 +34,9 @@
                     </n-form-item>
                     <n-form-item label="免登录 URLs">
                         <n-flex vertical class="w-full">
-                            <!-- <n-alert type="warning" :bordered="false"></n-alert> -->
                             <n-dynamic-tags size="large" v-model:value="bean.publics" />
-                            <div class="h">通常情况下，平台会对转发到后端的请求进行登录验证；如有特殊情况，可配置下方规则，对指定地址放行（支持通配符），请慎用此功能</div>
+                            <div class="h">通常情况下，平台会对转发到后端的请求进行登录验证；如有特殊情况，可配置上方规则，对指定地址放行（支持通配符），请慎用此功能</div>
                         </n-flex>
-
-                        <!-- <n-input v-model:value="bean.publics" placeholder="[慎用]不作登录检查的后端地址（支持通配符），多个用英文逗号隔开" class="w-full" /> -->
                     </n-form-item>
                     <n-form-item label="启动参数">
                         <n-input v-model:value="bean.args" placeholder="程序启动参数，如--mode=production">
@@ -100,7 +95,7 @@
 
                     <n-form-item label="额外配置项">
                         <n-space vertical class="w-full">
-                            <CodeEditor v-model:value="custom" ref="editor" language="json" height="180px" placeholder="请输入JSON格式" />
+                            <CodeEditor v-model:value="custom" language="json" height="180px" placeholder="请输入JSON格式" />
                             <div class="h">
                                 额外配置将注入到 <Tag>custom</Tag> 属性。
                             </div>
@@ -122,7 +117,7 @@
     import { QuestionCircle, Database } from '@vicons/fa'
 
     import DbmSelector from "@V/dbm/selector-source.vue"
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
 
     import { deployModes, languages, checkServerConfig } from "."
 
@@ -146,7 +141,6 @@
             props.updater(d, ()=> {
                 // 刷新配置文件
                 RESULT("/page/terminal/refresh-config", { id: props.aid }, ()=>M.notice.ok(`后端服务配置保存成功`))
-                // M.notice.ok(`后端服务配置保存成功`)
             })
         }
     }

@@ -102,7 +102,7 @@
     import { pageEditor, initCtrlAndS } from "../"
     import { Check, Upload, Robot, QuestionCircle } from "@vicons/fa"
 
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
 
     import { createRobot } from "."
 

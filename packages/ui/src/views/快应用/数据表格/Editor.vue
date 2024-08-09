@@ -135,7 +135,7 @@
     import { pageEditor } from "../"
     import { tableConfig, buildQueryFilter, operations } from "./"
 
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
 
     import FieldFilter from "./field-filter.vue"
     import PageSelector from "./page-selector.vue"

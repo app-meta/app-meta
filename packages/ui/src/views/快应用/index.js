@@ -62,10 +62,6 @@ export const templates = [
             })
         })
     },
-    // {
-    //     id:"sfc2",text:"单文件组件2.0", theme: MIX, icon: Vuejs, summary:"自定义Vue3单文件组件（基于 Vant4 渲染，兼容 PC 及移动端），能够使用全局组件及接口",
-    //     onCreate:aid=>({name:`单文件组件2.0（双端适配）`})
-    // },
     { id:"h5",text:"H5小程序", theme: MIX, icon: Html5, summary:"自由灵活的 HTML5 页面（适用于具备开发能力的技术人员）"},
     {
         id:"faas", text:"FaaS函数", theme: MIX, icon:Code, onCreate:aid=>({name:"新建FaaS函数", search: false}),

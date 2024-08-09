@@ -63,7 +63,7 @@
     import TableView from "./table.vue"
     import TableViewer from "./TableViewer.vue"
     import RowEdit from "./row-edit.vue"
-    import CodeEditor from "@C/editor.code.vue"
+    import CodeEditor from "@code.editor"
 
     const route = useRoute()
     const id = route.params.id
