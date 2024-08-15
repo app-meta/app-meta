@@ -6,7 +6,6 @@ export const EXTRA_APP  = 2
 
 const categories = [
     { name:"快应用", value: FAST_APP, summary:"基于平台提供的模块快捷创建数据应用", theme:"primary" },
-    // { name:"WEB机器人", value: WEB_RPA, summary:"WEB类RPA机器人（允许 JavaScript 脚本）", theme:"info", disabled:true },
     { name:"外置应用", value: EXTRA_APP, summary:"", theme:"warning", disabled:true }
 ]
 

@@ -234,5 +234,8 @@ export default {
         // 移除组件
         render(null, document.body)
         render(h(Preview, {bean}), document.body)
+    },
+    wrap (text, theme="info"){
+        return `<span class="${theme} ml-1 mr-1">⌈${text}⌋</span>`
     }
 }

@@ -20,7 +20,7 @@
             <n-tag :bordered="false" :type>{{bean.page.name||('#'+pid)}}</n-tag>
             未开放，请联系应用管理员开启后再重试。
         </n-alert>
-        <n-alert v-else-if="state==4" title="服务未授权" type="warning">
+        <n-alert v-else-if="state==4" :title="errorMsg||'服务未授权'" type="warning">
             您未获得应用
             <n-tag :bordered="false" :type>{{aid}}</n-tag> /
             <n-tag :bordered="false" :type>{{bean.page.name||('#'+pid)}}</n-tag>
@@ -72,6 +72,7 @@
      */
     let state   = ref(-1)
     let data    = undefined
+    let errorMsg= ""
 
     let viewer  = ()=> {
         let tpl = bean.page.template
@@ -133,6 +134,8 @@
             loadContent(pid)
                 .then(dd=>{
                     if(dd.success != true){
+                        H.log.error(`读取 Page 信息出错`, dd.message)
+                        errorMsg = dd.message
                         return state.value = 4
                     }
 
