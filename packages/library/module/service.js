@@ -88,6 +88,15 @@ export const json = (aid, path, data, useJson=true, extraHeaders={}, responseHan
 export const text = (aid, path, data, useJson=true) => json(aid, path, data, useJson, res=>res.text())
 
 /**
+ * 上传文件专用
+ * @param {String} aid
+ * @param {String} path
+ * @param {Object} formData
+ * @returns
+ */
+export const upload = (aid, path, formData)=> json(aid, path, formData, false)
+
+/**
  * @typedef {Object} DownloadConfig
  * @property {Boolean} json - 是否使用JSON格式传递参数
  * @property {String} fName - 指定保存的文件名

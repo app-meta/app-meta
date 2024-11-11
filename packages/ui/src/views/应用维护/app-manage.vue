@@ -16,7 +16,7 @@
 <script setup>
     import { ref, onMounted, h, nextTick } from 'vue'
     import { useRouter } from 'vue-router'
-    import { Search, Plus, Trash, Edit, Table, Database, CodeBranch, Microsoft, Code, TachometerAlt, Cog, EllipsisH as Ellipsis } from "@vicons/fa"
+    import { Search, Plus, Trash, Edit, ShieldAlt, Table, Database, CodeBranch, Microsoft, Code, TachometerAlt, Cog, EllipsisH as Ellipsis } from "@vicons/fa"
     import { NPopconfirm, NDropdown, NButtonGroup, NTag } from 'naive-ui'
 
     import { runApp } from "@S/Runner"
@@ -62,6 +62,7 @@
                     {
                         trigger:"click",
                         options: [
+                            { label:"权限/角色管理", key:"auth", icon:()=> UI.iconBtn(ShieldAlt)},
                             { label:"访问数据统计", key:"dashboard", icon:()=>UI.iconBtn(TachometerAlt)},
                             { label:"管理应用数据库",icon:()=>UI.iconBtn(Database), key:"data"},
                             { label:"上架", key:"_", icon:()=>UI.iconBtn(Cog), children: [{label:"下架应用",key:"offline", disabled: row.offline}, {label:"上架应用",key:"online", disabled: !row.offline}]},
@@ -92,6 +93,9 @@
 
     const onSelect = (row, key, index)=>{
         switch(key){
+            case "auth":
+                H.openUrl(router.resolve({name:`app-auth`, params:{id: row.id}}).href, {title: `${row.name} | 权限/角色`, center:true })
+                break
             case "dashboard":
                 M.dialog({
                     title:`${row.name}/应用访问统计`,

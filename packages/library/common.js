@@ -45,13 +45,23 @@ export const setContextPath = prefix=> contextPath = prefix
  */
 export const withPost = (action="", data, json=true, extraHeaders={}, handler=handleResponse)=>{
     contextPath ??= window.SERVER
-
+    //'Content-Type': json?'application/json':'application/x-www-form-urlencoded'
+    let body = undefined
+    if(json){
+        extraHeaders['Content-Type'] = 'application/json'
+        body = JSON.stringify(data)
+    }else{
+        if(data){
+            body = new FormData()
+            Object.keys(data).forEach(k=> body.append(k, data[k]))
+        }
+    }
     return fetch(
         buildUrl(action),
         {
             method: "POST",
-            headers:{ ...extraHeaders, CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA"), 'Content-Type': json?'application/json':'application/x-www-form-urlencoded'},
-            body: data ? (json ? JSON.stringify(data) : stringify(data)):undefined
+            headers:{ ...extraHeaders, CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA") },
+            body
         }
     ).then(handler)
 }

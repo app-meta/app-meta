@@ -32,6 +32,11 @@ Commands:
 * `pnpm offline` 将打包后的文件及`package.json`压缩为离线包
 * 在其他机器上解压上一步包（到指定位置），在目录下执行`npm link`即可完成全局安装，届时可以通过`meta -h`使用 😀
 
+**如何在开发环境下全局安装？**
+
+1. `pnpm build`打包后
+2. 执行 `npm i -g .`（此时会在 npm 全局目录下新增 `meta.cmd`、`meta`，指向 `dist`）
+
 ### 应用配置
 
 1. 管理员配置`终端会员`（设置用户ID及密钥）

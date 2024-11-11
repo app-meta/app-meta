@@ -8,6 +8,7 @@
         <Codemirror
             v-model="code"
             theme="amy"
+            :style="{ height }"
             :indentWithTab="false"
             :placeholder="placeholder"
             :autofocus="autofocus"
@@ -22,7 +23,6 @@
 
 <script setup>
     import { ref,onMounted, watch } from 'vue'
-
 
     import { keymap} from "@codemirror/view"
     import { Prec, EditorState } from "@codemirror/state";

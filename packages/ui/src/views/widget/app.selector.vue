@@ -16,5 +16,5 @@
     let shadow = ref(props.value)
     let options = ref([])
 
-    onMounted(() => RESULT("/app/list-mine", {}, d=> options.value = d.data.map(v=>({label:`${v.id}/${v.name}`, value:v.id}))))
+    onMounted(() => RESULT("/app/list-mine", {}, d=> options.value = d.data.map(v=>({label:`${v.id} | ${v.name}`, value:v.id}))))
 </script>
