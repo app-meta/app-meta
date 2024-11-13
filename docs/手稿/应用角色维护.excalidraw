@@ -1,0 +1,41 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://handraw.top",
+  "elements": [
+    {
+      "id": "v5z7J7uphJwuk2QYoUwLu",
+      "type": "rectangle",
+      "x": 1643.2445377948927,
+      "y": -235.14620208740234,
+      "width": 590.030822753906,
+      "height": 339.6922912597656,
+      "angle": 0,
+      "strokeColor": "#9c36b5",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 707612414,
+      "version": 52,
+      "versionNonce": 458393534,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1731387407834,
+      "link": null,
+      "locked": false
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#f5faff"
+  },
+  "files": {}
+}

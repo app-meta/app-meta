@@ -235,7 +235,10 @@ export default {
         render(null, document.body)
         render(h(Preview, {bean}), document.body)
     },
-    wrap (text, theme="info"){
+    wrap (text){
+        return `⌈${text}⌋`
+    },
+    wrapHtml (text, theme="info"){
         return `<span class="${theme} ml-1 mr-1">⌈${text}⌋</span>`
     }
 }

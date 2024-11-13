@@ -94,7 +94,7 @@
     const onSelect = (row, key, index)=>{
         switch(key){
             case "auth":
-                H.openUrl(router.resolve({name:`app-auth`, params:{id: row.id}}).href, {title: `${row.name} | 权限/角色`, center:true })
+                H.openUrl(router.resolve({name:`app-role`, params:{aid: row.id}}).href, {title: `${row.name} | 权限/角色`, center:true })
                 break
             case "dashboard":
                 M.dialog({
@@ -108,9 +108,12 @@
             case "data":
                 router.push({name:"app-data", params:{id: row.id}})
                 break
+            case "role":
+                router.push({name:"app-role", params:{id: row.id}})
+                break
             case "offline":
             case "online":
-                let msg = `目前应用处于${UI.wrap(row.offline?"下架":"上架")}状态，确定切换到${UI.wrap(row.offline?"上架":"下架（功能页面将无法使用）", "error")}吗？`
+                let msg = `目前应用处于${UI.wrapHtml(row.offline?"下架":"上架")}状态，确定切换到${UI.wrapHtml(row.offline?"上架":"下架（功能页面将无法使用）", "error")}吗？`
                 M.confirm(`操作确认`, UI.html(msg), ()=> RESULT("/app/offline", {id:row.id}, d=>{
                     M.ok('操作成功')
                     refresh()
@@ -119,7 +122,7 @@
             case "delete":
                 M.confirm(
                     "删除确认",
-                    UI.html(`删除应用${UI.wrap(row.id+"/"+row.name)}吗？`),
+                    UI.html(`删除应用${UI.wrapHtml(row.id+"/"+row.name)}吗？`),
                     ()=> RESULT("/app/delete", {id: row.id}, d=> {
                         M.notice.ok(`应用删除成功`)
                         beans.value.splice(index, 1)

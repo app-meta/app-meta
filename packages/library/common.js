@@ -19,10 +19,7 @@ const buildUrl = action=> /^https?:\/\//.test(action) ? action : `${contextPath}
  * @returns
  */
 const handleResponse = response=> response.json().then(json=>{
-    if(response.ok && json.success===true)
-        return json
-    else
-        return Promise.reject(json)
+    return response.ok && json.success===true ? json : Promise.reject(json)
 })
 
 export { globalName }
@@ -45,25 +42,25 @@ export const setContextPath = prefix=> contextPath = prefix
  */
 export const withPost = (action="", data, json=true, extraHeaders={}, handler=handleResponse)=>{
     contextPath ??= window.SERVER
-    //'Content-Type': json?'application/json':'application/x-www-form-urlencoded'
     let body = undefined
     if(json){
         extraHeaders['Content-Type'] = 'application/json'
         body = JSON.stringify(data)
     }else{
         if(data){
-            body = new FormData()
-            Object.keys(data).forEach(k=> body.append(k, data[k]))
+            //判断是否为文件
+            if(Object.keys(data).some(k=> data[k] instanceof File)){
+                body = new FormData()
+                Object.keys(data).forEach(k=> body.append(k, data[k]))
+            }
+            else{
+                body = stringify(data)
+                extraHeaders['Content-Type'] = 'application/x-www-form-urlencoded'
+            }
         }
     }
-    return fetch(
-        buildUrl(action),
-        {
-            method: "POST",
-            headers:{ ...extraHeaders, CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA") },
-            body
-        }
-    ).then(handler)
+    let headers = { ...extraHeaders, CHANNEL: window.CHANNEL, "MUA": localStorage.getItem("MUA") }
+    return fetch(buildUrl(action), { method: "POST", headers, body }).then(handler)
 }
 
 export const withGet = (action="", extraHeaders={}, handler=handleResponse)=> fetch(
