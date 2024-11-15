@@ -95,7 +95,14 @@
             )
         },
         { title:"热度", key:"launch", width: 60, render:row=> h(Count, {value: row.launch}) },
-        { title:"更新日期", key:"addOn", width: 170, render: row=> H.date.datetime(row.addOn) },
+        {
+            title:"更新日期", key:"updateOn", width: 170,
+            render: row=> h(
+                'span',
+                {title:`创建于${H.date.datetime(row.addOn)}`},
+                H.date.datetime(row.updateOn||row.addOn)
+            )
+        },
         {
             width:140, align,
             title: ()=> h(NSpace, {justify:"center"}, ()=>[

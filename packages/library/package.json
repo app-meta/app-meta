@@ -5,7 +5,7 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "build": "vite build"
+        "build": "rsbuild build"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",

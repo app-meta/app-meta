@@ -1,13 +1,21 @@
 <template>
     <n-alert :bordered="false" title="应用角色说明" show-icon type="info">
-        <div>1、角色仅作用于应用内鉴权</div>
+        <div>1、角色仅作用于应用内鉴权，如不配置角色，则默认不做拦截</div>
         <div>2、我要
             <n-button @click="toCheck" size="tiny" class="ml-1" secondary type="primary">查询用户关联</n-button>
             <n-button @click="toLink" size="tiny" class="ml-2" secondary type="primary">关联用户到角色</n-button>
         </div>
     </n-alert>
-    <n-data-table class="mt-2" :columns :loading :data :style="{height}"
-        :bordered="false" striped size="small" flex-height />
+
+    <n-tabs type="line">
+        <n-tab-pane name="role" tab="角色清单">
+            <n-data-table class="mt-2" :columns :loading :data :style="{height}"
+                :bordered="false" striped size="small" flex-height />
+        </n-tab-pane>
+        <n-tab-pane name="link" tab="分配情况" display-directive="show:lazy">
+            <LinkList :aid :height />
+        </n-tab-pane>
+    </n-tabs>
 
     <n-modal v-model:show="add.show" :style="{width:'640px'}" preset="dialog" :title="add.title">
         <n-form class="mt-2" label-width="120" label-placement="left">
@@ -55,12 +63,13 @@
     import { NButtonGroup, NPopconfirm } from 'naive-ui'
 
     import Tag from "@C/custom/tag.vue"
+    import LinkList from "./角色分配清单.vue"
 
     const route = useRoute()
 
     let aid = route.params.aid
 
-    let height = "calc(100vh - 170px)"
+    let height = "calc(100vh - 230px)"
     let loading = ref(false)
     let form = ref({LIKE_name:"", aid})
     let data = ref([])

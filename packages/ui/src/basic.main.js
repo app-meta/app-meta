@@ -105,11 +105,14 @@ export const initApp = (routerPath, config={}, userInfo={}, enables={})=> new Pr
     if(typeof(routerPath) == 'object' && typeof(routerPath.beforeEach)=='function'){
         app.use(routerPath)
     }
-    else {
-        const router = require(routerPath)
-        if(!isProduction)   console.debug(`从 ${routerPath} 加载路由信息...`)
-        app.use(router)
+    else{
+        console.error(`请定义路由信息...`)
     }
+    // else {
+    //     const router = require(routerPath)
+    //     if(!isProduction)   console.debug(`从 ${routerPath} 加载路由信息...`)
+    //     app.use(router)
+    // }
 
     app.use(naive)
     setupDirectives(app)
