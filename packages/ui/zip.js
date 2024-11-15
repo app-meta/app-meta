@@ -28,6 +28,7 @@ let md5AppJSFile = (regx=/index\./)=>{
         let content = fs.readFileSync(path.resolve(dist, assetsDir, f))
         data = md5(md5(content)+data)
         signs.push(`${assetsDir}/${f} ${data}`)
+        console.log(`添加签名 ${f} ${data}`)
     })
 
     fs.writeFileSync(`${dist}/SIGN`, signs.join("\n"))

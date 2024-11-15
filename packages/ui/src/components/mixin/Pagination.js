@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-03-31 17:50:26
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2024-08-02 09:13:23
+ * @Last Modified time: 2024-11-13 23:14:22
  *
  * 分页复用模块
  */
@@ -20,7 +20,7 @@ export default (api, autoLoad=true, loader=undefined)=>{
         pageSizes: [20, 50, 100, 200],
         itemCount:0,
         prefix: info=> createVNode('div', {}, `加载 ${beans.value.length} 条数据（数据总数 ${info.itemCount}）`),
-        onChange: page=> {
+        onUpdateValue: page=> {
             pagination.page = page
             refresh(false)
         },

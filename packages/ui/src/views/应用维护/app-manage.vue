@@ -2,7 +2,7 @@
     <n-space>
         <n-input v-model:value="form.LIKE_id_name" placeholder="应用编号/名称" clearable />
         <n-input v-model:value="form.LIKE_author" placeholder="作者" style="width: 100px;" clearable />
-        <n-select :options :onChange="()=>nextTick(refresh)" v-model:value="form.EQ_offline" placeholder="状态" style="width: 120px;"></n-select>
+        <n-select :options :onUpdateValue="()=>nextTick(refresh)" v-model:value="form.EQ_offline" placeholder="状态" style="width: 120px;"></n-select>
         <n-button secondary circle type="primary" @click="refresh">
             <template #icon><n-icon :component="Search" /> </template>
         </n-button>

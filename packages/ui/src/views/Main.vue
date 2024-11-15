@@ -26,7 +26,7 @@
     import { ref, h, watch, computed, onMounted, nextTick } from 'vue'
     import { RouterLink, useRouter } from "vue-router"
     import {
-        Home, Cog, Cogs, Wrench, Database, ShieldAlt, Parking,GlobeAsia, Icons, ChartPie, UserShield, AppStore, InfoCircle, Html5, Bullhorn,
+        Home, Cog, Cogs, Wrench, Database, ShieldAlt, Parking,GlobeAsia, Icons, ChartPie, UserShield, AppStore, AppStoreIos, InfoCircle, Html5, Bullhorn,
         Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit, Download, Link
     } from "@vicons/fa"
 
@@ -64,7 +64,7 @@
     const buildMenus = ()=>{
         let items = [
             menuItem("home", "首页", Home),
-            menuItem("app-mine", "我的应用", AppStore)
+            menuItem("app-mine", "我的应用", AppStore) //AppStore
         ]
         if(isAdminOr("DBM", "DBM_ADMIN")){
             items.push(menuItem("dbm-source", "数据源维护", Database))
@@ -117,7 +117,7 @@
             //         { label: '我的关注', key:"mine-link", icon:UI.buildIcon2(Star) }
             //     ]
             // },
-            { label: '我的应用', key:"app-mine", icon: UI.buildIcon2(AppStore) },
+            { label: '我的应用', key:"app-mine", icon: UI.buildIcon2(AppStoreIos) },
             { label: '我的关注', key:"mine-link", icon: UI.buildIcon2(Star) },
             { label: '我维护的功能页', key:"mine-edit", icon: UI.buildIcon2(Edit) },
         ]

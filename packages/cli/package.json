@@ -4,9 +4,9 @@
     "description": "命令行工具",
     "main": "index.js",
     "scripts": {
-        "build": "webpack build",
+        "build": "rsbuild build && node banner.js",
         "offline": "node offline.js",
-        "package": "webpack build && node offline.js"
+        "package": "rsbuild build && node banner.js && node offline.js"
     },
     "keywords": [],
     "author": "0604hx <zxingming@foxmail.com>",
@@ -37,7 +37,6 @@
         "meta": "dist/meta-cli.cjs"
     },
     "devDependencies": {
-        "webpack-cli": "^5.1.4",
         "ws": "^8.16.0"
     }
 }
