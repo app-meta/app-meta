@@ -20,9 +20,9 @@
         </n-layout-header>
 
         <n-layout position="absolute" :style="{top: headerHeight + 'px'}" has-sider>
-            <n-split direction="horizontal" style="height: 100%" v-model:size="splitSize" :max="0.8" :min="0.2" :resize-trigger-size="5" :on-drag-end="onChangeSize">
+            <n-split direction="horizontal" style="height: 100%" v-model:size="splitSize" :max="0.8" :min="0.2" :resize-trigger-size="3" :on-drag-end="onChangeSize">
                 <template #1>
-                    <CodeEditor @keydown="handleKeyDown" v-model:value="bean.code" class="h-full" ref="editor" language="vue" style="height: 100%;" />
+                    <CodeEditor @keydown="handleKeyDown" v-model:value="bean.code" class="h-full" ref="editor" language="vue" height="100%"/>
                 </template>
                 <template #2>
                     <component v-if="inited" ref="sfc" :is="getRender(bean.ui)" :code="bean.code" :done="onLoad" />

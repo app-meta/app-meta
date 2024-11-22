@@ -38,6 +38,7 @@ export default defineConfig({
             "@"             : "./src",
             "@V"            : "./src/views",
             "@C"            : "./src/components",
+            "@CP"           : "./src/composables",
             "@CW"           : "./src/components/widget",
             "@CA"           : "./src/components/app",
             '@Pagination'   : "./src/components/mixin/Pagination",

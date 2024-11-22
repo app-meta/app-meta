@@ -53,7 +53,7 @@
             })
         },
         {
-            title:"类型", key:"template", width: 100,
+            title:"类型", key:"template", width: 110,
             render:row=> h(Template, {bean: findTemplate(row.template)}),
             filterOptions: templates.map(v=>({label:v.text, value:v.id})),
             filter: (v, row)=> row.template == v
@@ -75,7 +75,7 @@
                 NTag,
                 {
                     class:"cursor-pointer",
-                    round:true,
+                    // round:true,
                     bordered:false,
                     type:row.main?"primary":"default", disabled: isDisable(row),
                     onClick:()=> !isDisable(row) && modify(row, "main", !row.main, `⌈${row.name}⌋已设置为${row.main?"普通":"主"}页面`)

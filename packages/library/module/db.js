@@ -10,7 +10,7 @@ import { compact } from "./date"
  */
 let db = null
 
-const VERSION = 92024040800000
+const VERSION = 92024112200001
 const tables = [
     'test',
     /**
@@ -28,7 +28,14 @@ const tables = [
      * data     JSON
      * date     保存日期
      */
-    'cache'
+    'cache',
+    /**
+     * 页面访问记录
+     * id       唯一主键
+     * date     最后访问日期
+     *          其余为页面相关字段
+     */
+    { name:'history', options:{keyPath:"dbId"} }
 ]
 
 export const init = ()=> new Promise((ok, fail)=>{

@@ -62,10 +62,12 @@
     import BottomMenu from "./widget/bottom-menu.vue"
 
     import { loadContent, isUnLimitPageId } from "."
+    import { useHistory } from "@CP"
 
     const type = "primary"
     const channel =  window.isClient?"client":"browser"
 
+    const { saveHistory } = useHistory()
     const bean = reactive({app:{}, page:{}})
     /**
      * 状态：-1=加载中，0=系统自带的默认首页，1=页面可正常访问，2=页面不存在，3=页面不可见，4=页面未授权
@@ -160,7 +162,14 @@
                     //初始化 DATA 模块，对于 table 类型，无需注入 pid（可以自由查询数据）
                     // !H.data.inited() && H.data.init({aid: props.aid, pid: isUnLimitPageId(template)?"": pid, prefix: window.SERVER, debug: process.env.NODE_ENV !== "production"})
 
-                    setTimeout(()=> FETCH_JSON(window.SERVER+"/app/launch", { aid: props.aid, pid, channel }, true), 5000)
+                    setTimeout(
+                        ()=> {
+                            FETCH_JSON(window.SERVER+"/app/launch", { aid: props.aid, pid, channel }, true)
+                            //记录访问历史
+                            saveHistory(page)
+                        },
+                        5000
+                    )
                 })
                 .catch(e=> {
                     H.log.error(`读取 Page 信息出错`, e)

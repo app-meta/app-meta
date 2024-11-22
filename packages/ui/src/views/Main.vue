@@ -1,7 +1,7 @@
 <template>
     <n-layout position="absolute">
         <n-layout-header :inverted="inverted" :style="{height: headerHeight}" class="px-4" bordered>
-            <app-navigation v-if="inited" :inverted="inverted" :menus="menus" :otherMenus="otherMenus" :otherMenuClick="otherMenuClick" title-width="280px">
+            <app-navigation v-if="inited" :inverted :menus :otherMenus :otherMenuClick title-width="280px">
                 <div :class="{white: inverted }">
                     <Back :color="inverted?'white':'black'" />
                     {{appName}}

@@ -1,5 +1,5 @@
 <template>
-    <n-card segmented>
+    <n-card>
         <template #header>
             <Cog class="icon" />
             系统设置

@@ -43,7 +43,7 @@
         readOnly:{type:Boolean, default:false},
         autofocus: {type:Boolean, default:false},
         tabSize:{type:Number, default:4},
-        height: {type:String, default:"300px"},
+        height: {type:String, default:"100%"},
         placeholder:{type:String, default:"请输入代码"},
         language:{type:String, default:"js"},
         keyBinds:{type:Array, default:[]}

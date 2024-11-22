@@ -55,10 +55,23 @@
         </n-card>
 
         <CodeEditor v-model:value="code" style="height: 240px;" />
+
         <n-space justify="center">
             <n-button type="primary" secondary @click="useDefault">使用默认值</n-button>
             <n-button type="primary"  @click="toSave">保存配置</n-button>
         </n-space>
+
+        <n-card class="mt-2" size="small">
+            <template #header>首页侧边栏 <n-text depth="3" class="text-xs ml-2">修改自动保存</n-text></template>
+            <n-form inline label-placement="left" :show-feedback="false">
+                <n-form-item label="显示侧栏">
+                    <n-switch v-model:value="homeCfg.sidebar" />
+                </n-form-item>
+                <n-form-item label="侧栏宽度">
+                    <n-input-number v-model:value="homeCfg.sidebarWidth" :min="0" />
+                </n-form-item>
+            </n-form>
+        </n-card>
     </n-space>
 </template>
 
@@ -68,8 +81,10 @@
 
     import CodeEditor from "@code.editor"
 
+    import { useHomeSetting } from "@Store"
     import { saveConfig, loadConfig } from "."
 
+    const homeCfg = useHomeSetting()
     let code = ref(loadConfig())
 
     const useDefault = ()=> code.value = `{
