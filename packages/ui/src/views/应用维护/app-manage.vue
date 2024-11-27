@@ -16,7 +16,7 @@
 <script setup>
     import { ref, onMounted, h, nextTick } from 'vue'
     import { useRouter } from 'vue-router'
-    import { Search, Plus, Trash, Edit, ShieldAlt, Table, Database, CodeBranch, Microsoft, Code, TachometerAlt, Cog, EllipsisH as Ellipsis } from "@vicons/fa"
+    import { Search, Plus, Trash, Edit, ShieldAlt, Table, Database, CodeBranch, Microsoft, Code, TachometerAlt, Cog, EllipsisH as Ellipsis, ListAlt } from "@vicons/fa"
     import { NPopconfirm, NDropdown, NButtonGroup, NTag } from 'naive-ui'
 
     import { runApp } from "@S/Runner"
@@ -65,6 +65,7 @@
                             { label:"权限/角色管理", key:"auth", icon:()=> UI.iconBtn(ShieldAlt)},
                             { label:"访问数据统计", key:"dashboard", icon:()=>UI.iconBtn(TachometerAlt)},
                             { label:"管理应用数据库",icon:()=>UI.iconBtn(Database), key:"data"},
+                            { label:"查看日志", icon:()=>UI.iconBtn(ListAlt), key:"log"},
                             { label:"上架", key:"_", icon:()=>UI.iconBtn(Cog), children: [{label:"下架应用",key:"offline", disabled: row.offline}, {label:"上架应用",key:"online", disabled: !row.offline}]},
                             { type: "divider" },
                             { label:"删除", key:"delete", icon:()=> UI.iconBtn(Trash, null, {type:"error"}) }
@@ -110,6 +111,9 @@
                 break
             case "role":
                 router.push({name:"app-role", params:{id: row.id}})
+                break
+            case "log":
+                H.openUrl(router.resolve({name:`app-log`, params:{aid: row.id}}).href, {title: `${row.name} | 日志`, center:true })
                 break
             case "offline":
             case "online":

@@ -9,7 +9,7 @@
 
     <n-tabs type="line">
         <n-tab-pane name="role" tab="角色清单">
-            <n-data-table class="mt-2" :columns :loading :data :style="{height}"
+            <n-data-table :columns :loading :data :style="{height}"
                 :bordered="false" striped size="small" flex-height />
         </n-tab-pane>
         <n-tab-pane name="link" tab="分配情况" display-directive="show:lazy">

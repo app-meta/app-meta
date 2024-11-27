@@ -128,6 +128,7 @@ let router = BuildRouter(
             { path: '/app/:aid', name: 'app-view-index', component: () => import('@V/快应用/ViewWithViewer.vue') },
             //应用管理页面
             { path: '/app/role/:aid', name: 'app-role',meta:{title:"应用角色维护"}, component: () => import('@V/应用维护/权限/Index.vue') },
+            { path: '/app/log/:aid', name: 'app-log',meta:{title:"应用日志"}, component: () => import('@V/应用维护/日志.vue') },
 
             /**数据库在线管理 */
             { path: '/dbm/view/:id', name: 'dbm-view', meta:{}, component: () => import('@V/dbm/管理面板.vue') },
