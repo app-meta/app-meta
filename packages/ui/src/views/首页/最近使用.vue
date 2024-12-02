@@ -3,7 +3,7 @@
         <template #header-extra>
             <n-popconfirm :negative-text="null" @positive-click="clearHistory">
                 <template #trigger>
-                    <n-button size="tiny" secondary type="error">清空</n-button>
+                    <n-button size="tiny" tertiary type="error">清空</n-button>
                 </template>
                 删除全部本地访问记录，确定吗？
             </n-popconfirm>

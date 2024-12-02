@@ -16,7 +16,7 @@ export const runApp = appOrId=> {
 export const runPage = p =>{
     if(p.template == 'robot')   return H.app.runRobot(p.pid || p.id)
 
-    H.app.runPage(p.aid, p.pid || p.id, true)
+    H.app.runPage(p.aid, p.pid || p.id, window.OPEN_BLANK==true)
 }
 
 /**

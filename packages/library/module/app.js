@@ -70,9 +70,11 @@ export const runPage=(aid, pid, blank=false, params)=>{
             window.metaChangePage(aid, pid)
         }
         else{
-            location.href = buildUrl(aid, pid, params)
+            let newUrl = buildUrl(aid, pid, params)
             //自动刷新
-            setTimeout(()=> location.reload(), 200)
+            if(newUrl.startsWith(location.href))
+                setTimeout(()=> location.reload(), 300)
+            location.href = newUrl
         }
     }
 }
@@ -95,7 +97,7 @@ export const loadAndRun = (appOrId)=> new Promise((ok, fail)=>{
                 let width = property.winMax ? window.screen.availWidth : property.winWidth
                 let height = property.winMax ? window.screen.availHeight : property.winHeight
 
-                openAppOrPage(app.id, undefined, { title:app.name, width, height, center: !property.winMax })
+                openAppOrPage(app.id, undefined, { title:app.name, width, height, center: !property.winMax, type: window.OPEN_BLANK==true?"_blank":"" })
                 ok(app)
             })
             .catch(fail)

@@ -1,5 +1,5 @@
 <template>
-    <n-config-provider :theme="theme" :locale="locale" :date-locale="dateLocale" :theme-overrides="customVars" :hljs="hljs">
+    <n-config-provider :theme="theme" :locale="locale" :date-locale="dateLocale" :theme-overrides="uiSetting.naiveThemeOverrides" :hljs="hljs">
         <AppProvider>
             <div :class="{ 'default-background': theme != darkTheme }">
                 <!--
@@ -42,10 +42,10 @@
     import AppNavigation from '@C/Navigation.vue'
     import AppProvider from "@CN/Application.vue"
 
-    import { getPrimaryColor } from "@/theme/colors"
-
     import { useUISetting } from "@/store/uiSetting"
     const uiSetting = useUISetting()
+
+    uiSetting.initValue()
 
     const router = useRouter()
     const route = useRoute()
@@ -54,9 +54,10 @@
     let locale      = computed(()=> zhCN)
     let dateLocale  = computed(()=> dateZhCN)
     let theme       = computed(()=> {
-        let _theme = uiSetting.theme == 'dark'? darkTheme: uiSetting.theme == 'auto'? (osTheme.value === 'dark'? darkTheme: null): null
-        window.DARK = _theme == darkTheme
-        return _theme
+        // let v = uiSetting.theme
+        // return v == 'dark'? darkTheme: v == 'auto'? (osTheme.value === 'dark'? darkTheme: null): null
+        let v = uiSetting.theme
+        return window.DARK?darkTheme:null
     })
 
     let routerEnable = ref(true)
@@ -64,13 +65,7 @@
     let watermark       = ref(false)
     let water = { text:"", fontSize:16, rotate:-15, color:"rgba(128, 128, 128, .15)" }
 
-    /**
-     * @type import('naive-ui').GlobalThemeOverrides
-     */
-    let customVars  = {
-        common: getPrimaryColor(uiSetting.color)
-    }
-    window.color = customVars.common?.primaryColor
+    // window.color = customVars.common?.primaryColor
 
     let jumpTo = (pathOrObj)=> {
         let newRoute = typeof(pathOrObj)==='object'?pathOrObj:{name:pathOrObj}

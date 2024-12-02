@@ -7,8 +7,8 @@
                     <n-tab name="launch">人气热门</n-tab>
                 </n-tabs>
             </template>
-
-            <n-grid cols="2 300:1 500:2 800:3 1000:4 1200:6" :x-gap="16" :y-gap="16">
+            <!--2 300:1 500:2 800:3 1000:4 1200:6-->
+            <n-grid cols="2 300:1 500:2 800:3 1200:4 1400:6" :x-gap="16" :y-gap="16">
                 <n-gi v-for="item in beans">
                     <AppCard :runable="true" :showAction="true" :bean="item" />
                 </n-gi>

@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@app-meta/library": "workspace:1.0.0",
+        "@arco-design/color": "^0.4.0",
         "@codemirror/lang-html": "^6.4.9",
         "@codemirror/lang-javascript": "^6.2.2",
         "@codemirror/lang-json": "^6.0.1",

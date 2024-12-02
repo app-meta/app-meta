@@ -35,6 +35,9 @@
                 nextTick(viewer.value.refresh)
             }
         }
+        else if(route.name == "app-view-index"){
+            location.reload()
+        }
     })
 
     onMounted(() => {

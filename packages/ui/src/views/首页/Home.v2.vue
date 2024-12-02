@@ -3,7 +3,7 @@
     <Notice clz="mb-2" />
 
     <n-layout has-sider sider-placement="right" class="h-full">
-        <n-layout-content content-style="padding-right: 20px;">
+        <n-layout-content content-style="padding-right: 20px;" :native-scrollbar="false">
             <n-grid :cols="config.cols" :x-gap="config.x" :y-gap="config.y">
                 <template v-for="widget in config.items">
                     <n-gi :span="widget.span">
@@ -22,7 +22,7 @@
             collapse-mode="width"
             :collapsed-width="0"
             :width="homeCfg.sidebarWidth"
-            :native-scrollbar="true"
+            :native-scrollbar="false"
             show-trigger="arrow-circle"
             content-style="padding-left:8px"
             :show-collapsed-content="false"
