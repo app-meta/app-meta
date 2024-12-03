@@ -16,7 +16,8 @@ export const runApp = appOrId=> {
 export const runPage = p =>{
     if(p.template == 'robot')   return H.app.runRobot(p.pid || p.id)
 
-    H.app.runPage(p.aid, p.pid || p.id, window.OPEN_BLANK==true)
+    //打开方式：设置 OPEN_BLANK 为 true 则是新窗口，否则：首页时新开标签页
+    H.app.runPage(p.aid, p.pid || p.id, window.OPEN_BLANK==true?true: location.hash.startsWith("#/home")?1:0)
 }
 
 /**

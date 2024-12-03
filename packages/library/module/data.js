@@ -40,7 +40,7 @@ import { saveToFile } from "./io"
 
 let debug = true
 
-const log = new LogFactory("数据接口")
+const logger = new LogFactory("数据接口")
 
 /**
  *
@@ -62,7 +62,7 @@ const toOption = aidOrOption => {
  * @returns {Promise}
  */
 const send = (model, action="", json=true)=>{
-    debug && log.debug(action, model)
+    debug && logger.debug(action, model)
     return withPost(action, model, json)
 }
 
@@ -302,3 +302,17 @@ export const listAttach = (id)=> send({id}, "page/document-list")
  * @returns {Array<String>}
  */
 export const mineRoles = aid=> send(null, `/app/role/mine/${aid}`)
+
+const checkUrlHash = aid=> new Promise(ok=>{
+    if(location.hash.startsWith(`#/app/${aid}`))
+        ok()
+    else
+        logger.error(`尝试在跨应用范围对⌈${aid}⌋进行操作`)
+})
+
+/**
+ * 记录运行日志
+ * @param {String} aid
+ * @param {String} msg
+ */
+export const log = (aid,msg)=> checkUrlHash(aid).then(()=> send({aid, msg}, `/app/log-add`))

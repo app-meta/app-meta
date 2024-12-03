@@ -14,7 +14,7 @@
     const route = useRoute()
     let aid = route.params.aid
 
-    let { beans , form, pagination, refresh } = P({url:`/app/log-${aid}`, form:{ SORT_id:1 }})
+    let { beans , form, pagination, refresh } = P({url:`/app/log-list-${aid}`, form:{ SORT_id:1 }})
 
     let height = "calc(100vh - 170px)"
     const columns = [

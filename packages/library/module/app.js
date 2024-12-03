@@ -57,7 +57,7 @@ export const run=(id)=> runPage(id, null, true)
  * 运行页面
  * @param {*} aid
  * @param {*} pid
- * @param {*} blank     是否在新页面打开（新窗口）
+ * @param {*} blank     是否在新页面打开（新窗口）, true 则在新窗口，0=当前窗口，1=新标签页
  * @param {*} params    参数（通过 URL 传递）
  */
 export const runPage=(aid, pid, blank=false, params)=>{
@@ -71,10 +71,14 @@ export const runPage=(aid, pid, blank=false, params)=>{
         }
         else{
             let newUrl = buildUrl(aid, pid, params)
-            //自动刷新
-            if(newUrl.startsWith(location.href))
-                setTimeout(()=> location.reload(), 300)
-            location.href = newUrl
+            if(blank==0){
+                //自动刷新
+                if(newUrl.startsWith(location.href))
+                    setTimeout(()=> location.reload(), 300)
+                location.href = newUrl
+            }
+            else
+                openUrl(newUrl, {type:""})
         }
     }
 }
