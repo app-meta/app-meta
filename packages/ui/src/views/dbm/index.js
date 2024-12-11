@@ -1,6 +1,7 @@
 const NUM_TYPES = ['tinyint', 'smallint', 'mediumint', 'int', 'integer', 'bigint', 'float', 'double', 'decimal']
 
 export const MYSQL = "mysql"
+export const SQLITE= "sqlite"
 
 /**
  *
@@ -8,7 +9,7 @@ export const MYSQL = "mysql"
  */
 export const createSource = ()=>({name:"新建数据源", type: MYSQL, host:"localhost", port: 3306, username:"root"})
 
-export const types = UI.buildOptions([MYSQL])
+export const types = UI.buildOptions([`${MYSQL}|MySQL`, `${SQLITE}|SQLite3（单文件）`])
 
 export const loadItems = (sourceId, db="")=> new Promise((ok)=> RESULT("/dbm/items", {sourceId, db}, d=> ok(d.data)))
 

@@ -5,9 +5,10 @@
     <template v-else>
         <div>
             <n-space>
-                <Tag size="large">{{bean.type}}</Tag>
+                <Tag size="large">{{bean.type?.toUpperCase()}}</Tag>
                 <n-text class="text-3xl">{{bean.name}}</n-text>
-                <n-select @update:value="onSelectDb" style="width:200px" filterable placeholder="请选择数据库" v-model:value="model.db" :options="dbOptions"></n-select>
+                <n-select @update:value="onSelectDb" :disabled="bean.type==SQLITE"  style="width:200px" filterable
+                    :placeholder="bean.type==SQLITE?'SQLITE无需选择':'请选择数据库'" v-model:value="model.db" :options="dbOptions" />
                 <n-select @update:value="onSelectTable" style="width:200px" filterable :placeholder="tableTip" v-model:value="model.table" :options="tableOptions"></n-select>
                 <n-popover placement="bottom" trigger="click" @update:show="onDetail" style="width:560px; max-height: 620px" scrollable>
                     <template #trigger><n-button :disabled="!model.table" secondary title="选择表后可以查看其结构">显示表结构</n-button></template>
@@ -24,7 +25,7 @@
                             </tr>
                         </n-table>
                         <div class="mt-2">
-                            <n-text depth="3">展示 <Tag>DESC {表名};</Tag> 命令的结果</n-text>
+                            <n-text depth="3">展示 <Tag>{{bean.type==SQLITE?"PRAGMA table_info(表名);":"DESC 表名;"}}</Tag> 命令的结果</n-text>
                         </div>
                     </template>
                 </n-popover>
@@ -59,7 +60,7 @@
     import { ref, onMounted, reactive, nextTick } from 'vue'
     import { useRoute } from 'vue-router'
 
-    import { loadItems, detectForm } from "."
+    import { loadItems, detectForm, SQLITE } from "."
     import TableView from "./table.vue"
     import TableViewer from "./TableViewer.vue"
     import RowEdit from "./row-edit.vue"
@@ -177,16 +178,23 @@
         RESULT("/dbm/source/detail", {id}, d=> {
             let { data } = d
             if(data && data.id == id){
-                if(data.db){
-                    onDatabases(data.db)
-                    // 自动选择数据库
-                    nextTick(()=>{
-                        onSelectDb(data.db)
-                        model.db = data.db
-                    })
+                if(data.type==SQLITE){
+                    onSelectDb(SQLITE)
+                    model.db = SQLITE
+                    inited.value = true
                 }
-                else
-                    loadItems(id).then(onDatabases)
+                else{
+                    if(data.db){
+                        onDatabases(data.db)
+                        // 自动选择数据库
+                        nextTick(()=>{
+                            onSelectDb(data.db)
+                            model.db = data.db
+                        })
+                    }
+                    else
+                        loadItems(id).then(onDatabases)
+                }
 
                 bean.value = data
 

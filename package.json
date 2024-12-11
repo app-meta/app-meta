@@ -31,6 +31,6 @@
     "author": "0604hx <zxingming@foxmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "@rsbuild/core": "^1.1.7"
+        "@rsbuild/core": "^1.1.9"
     }
 }

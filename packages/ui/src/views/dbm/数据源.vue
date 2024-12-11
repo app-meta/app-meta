@@ -15,7 +15,8 @@
             <n-card size="small" footer-style="padding-bottom:5px; padding-top:5px; background: rgba(200, 200, 200, 0.1);" class="cursor-pointer" @click="toView(item)">
                 <template #header>{{item.name}}</template>
                 <template #header-extra>
-                    <img src="@/assets/mysql.svg" />
+                    <img v-if="item.type=='mysql'" src="@/assets/mysql.svg" />
+                    <img v-else-if="item.type=='sqlite'" src="@/assets/sqlite.svg" />
                 </template>
                 <Tag>地址</Tag> {{item.host}}:{{item.port}}
                 <div> <Tag>用户</Tag> {{item.username}} </div>
@@ -45,13 +46,14 @@
                     <n-select :options="types" v-model:value="bean.type"></n-select>
                 </n-form-item>
                 <n-form-item label="地址">
-                    <n-input-group>
+                    <n-input-group v-if="bean.type!='sqlite'">
                         <n-input v-model:value="bean.host"  placeholder="IP地址"/>
                         <n-input-group-label>:</n-input-group-label>
                         <n-input-number v-model:value="bean.port"  placeholder="端口" :show-button="false">
                             <template #suffix><Tag>端口</Tag></template>
                         </n-input-number>
                     </n-input-group>
+                    <n-input v-else v-model:value="bean.host"  placeholder="文件相对地址（格式：应用ID/文件名）"/>
                 </n-form-item>
                 <n-form-item label="用户名">
                     <n-input v-model:value="bean.username"> <template #suffix> <n-icon :component="UserCircle" /> </template></n-input>
@@ -81,7 +83,7 @@
 
     import { hasAnyRole } from "@S/Auth"
 
-    import { createSource, types } from "."
+    import { createSource, types, SQLITE } from "."
     import AuthView from "./权限分配.vue"
 
     const router = useRouter()
@@ -99,8 +101,11 @@
         edit.show = true
     }
     const addDo = ()=>{
-        let { name, host, port, username } = bean.value
-        if(!name || !host || !port || !username)    return M.warn(`名称、地址、端口、用户名均不能为空`)
+        let { name, host, port, username, type } = bean.value
+        if(!name || !host)    return M.warn(`名称、地址不能为空`)
+        if(type != SQLITE){
+            if(!username || !port)  return M.warn(`用户名、端口不能为空`)
+        }
 
         RESULT("/dbm/source/add", bean.value, d=> {
             M.notice.ok(`数据源⌈${name}⌋编辑成功`)
