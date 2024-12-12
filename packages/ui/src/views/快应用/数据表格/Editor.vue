@@ -53,9 +53,11 @@
             <n-table size="small" class="mt-2" :bordered="false">
                 <thead>
                     <tr>
-                        <th width="50" class="text-center">#</th>
-                        <th width="120">KEY</th>
+                        <th width="40" class="text-center">#</th>
+                        <th width="100">KEY</th>
                         <th width="180">标签名称</th>
+                        <th width="110">宽度(PX)</th>
+                        <th width="60">居中</th>
                         <th>
                             渲染函数
                             <n-text depth="3" class="ml-1 text-xs">
@@ -63,18 +65,20 @@
                             </n-text>
                         </th>
                         <th width="25">
-                            <n-button circle size="tiny" secondary type="primary" @click="bean.columns.push({label:'',key:''})"><template #icon><n-icon :component="Plus" /></template> </n-button>
+                            <n-button circle size="tiny" secondary type="primary" @click="addCols"><template #icon><n-icon :component="Plus" /></template> </n-button>
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(item, index) in bean.columns">
-                        <td class="text-center">{{index+1}}</td>
+                <tbody ref="dragEl">
+                    <tr v-for="(item, index) in bean.columns" :key="item.id">
+                        <td class="text-center"> <i class="draggable fa fa-list"></i> </td>
                         <td><n-input v-model:value="item.key"/> </td>
                         <td><n-input v-model:value="item.label"/> </td>
+                        <td><n-input-number v-model:value="item.width" placeholder=""/></td>
+                        <td><n-switch v-model:value="item.center" /></td>
                         <td><n-input v-model:value="item.render"/> </td>
                         <td class="text-center">
-                            <n-button circle size="tiny" @click="bean.columns.splice(index,1)" tertiary type="error"><template #icon><n-icon :component="Trash" /></template> </n-button>
+                            <n-button circle size="tiny" @click="bean.columns.splice(index,1)" tertiary type="error"><template #icon><n-icon :component="TrashAlt" /></template> </n-button>
                         </td>
                     </tr>
                 </tbody>
@@ -129,8 +133,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
-    import { Search,Check, Plus, Columns, Trash, Divide, Database, Download } from "@vicons/fa"
+    import { ref, onMounted, useId } from 'vue'
+    import { Search,Check, Plus, Columns, TrashAlt, Divide, Database, Download } from "@vicons/fa"
+    import { useDraggable } from 'vue-draggable-plus'
 
     import { pageEditor } from "../"
     import { tableConfig, buildQueryFilter, operations } from "./"
@@ -140,18 +145,25 @@
     import FieldFilter from "./field-filter.vue"
     import PageSelector from "./page-selector.vue"
 
-    let { id, aid, bean, inited, loading , updateContent } = pageEditor(tableConfig(), d=> JSON.parse(d) )
-
     let fields = ref([])
+    let dragEl = ref()
+    let { id, aid, bean, inited, loading , updateContent } = pageEditor(
+        tableConfig(),
+        d=> JSON.parse(d),
+        {
+            afterInit:()=>useDraggable(dragEl, bean.value.columns, {handle:".draggable"})
+        }
+    )
 
     let loadOneLine = ()=> {
         let pid = bean.value.pid||""
         H.data.query({pageSize:1, pid, aid }).then(d=>{
+            //查询单条记录时，d.data 为对象
             let { data } = d
-            if(data.length <= 0)
+            if(!data || !data.id)
                 return M.dialog({title:"系统查询不到数据", content:UI.html(`数据范围/表ID ⌈${fid}⌋ 下无数据，请先录入再查询`),type:"warning"})
 
-            let v = Object.keys(data[0].v)
+            let v = Object.keys(data.v)
             fields.value = UI.buildOptions(v)
             M.dialog({
                 type:"success",
@@ -166,7 +178,7 @@
     }
 
     let addCols = (items, overwrite=false)=>{
-        let cols = items.map(key=>({key, label: key}))
+        let cols = items ? items.map(key=>({key, label: key, id: useId()})) : [{label:'',key:'', id: useId()}]
         overwrite? bean.value.columns = cols: bean.value.columns.push(...cols)
     }
 

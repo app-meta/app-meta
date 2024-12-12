@@ -32,7 +32,7 @@
                 </template>
             </n-space>
 
-            <n-grid v-if="canFilter" x-gap="12" y-gap="4" :cols="3" class="mt-2">
+            <n-grid v-if="canFilter" x-gap="12" y-gap="4" :cols="2" class="mt-2">
                 <n-gi v-if="filters.length" v-for="(item, index) in filters">
                     <FieldFilter :bean="item" :fields="fields" @delete="()=> filters.splice(index,1)" />
                 </n-gi>
@@ -239,7 +239,10 @@
             let _columns = basicColumns(config.defaultCol)
             config.columns.forEach(c=>{
                 let col = { title: c.label, key:c.key, resizable, ellipsis }
-                col.render = !!c.render? row=> new Function('row', 'return '+c.render)(row.v) : row=> row.v[c.key]
+                if(c.center==true)  col.align = "center"
+                if(c.width>=0)      col.width = c.width
+
+                col.render = !!c.render? row=> new Function('row', 'h', 'return '+c.render)(row.v, h) : row=> row.v[c.key]
                 _columns.push(col)
                 names[c.key] = c.label
             })
@@ -248,9 +251,9 @@
             fields = UI.buildOptions(config.columns.filter(c=>!!c.key).map(c=>`${c.key}|${c.label}`))
         }
 
-        if(!config.pid){
-            return M.dialog({title:"功能配置缺失",content: `该数据表格未关联页面（PID 为空），请联系管理员进行分配后再使用`,type:"error"})
-        }
+        // if(!config.pid){
+        //     return M.dialog({title:"功能配置缺失",content: `该数据表格未关联页面（PID 为空），请联系管理员进行分配后再使用`,type:"error"})
+        // }
 
         refresh()
     })

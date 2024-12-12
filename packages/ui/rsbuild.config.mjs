@@ -14,6 +14,7 @@ import pkg from './package.json'
 
 const BACKEND_CONTEXT   = "/app-meta"      //后端服务地址前缀
 const BACKEND_HOST      =  "http://localhost:10086"
+const base              = isProduction? `${BACKEND_CONTEXT}/`: "/"
 
 const VERSION = (()=>{
     let now = new Date
@@ -25,7 +26,7 @@ const VERSION = (()=>{
  */
 export default defineConfig({
     server:{
-        base: isProduction? `${BACKEND_CONTEXT}/`: "/",
+        base,
         port: 3000,
         host: "localhost",
         proxy: { [BACKEND_CONTEXT]: BACKEND_HOST }
@@ -64,6 +65,7 @@ export default defineConfig({
         },
         define:{
             "process.env.VUE_APP_CONTEXT": JSON.stringify(BACKEND_CONTEXT),
+            "BASE_URL": JSON.stringify(base),
             "_MARKDOWN_LIB_": JSON.stringify(MARKDOWN),
             "_APPNAME_": JSON.stringify(pkg.appName),
             "_VERSION_": JSON.stringify(isProduction? VERSION : process.env.NODE_ENV),
@@ -73,7 +75,10 @@ export default defineConfig({
     },
     html:{
         title: pkg.appName,
-        mountId: "app"
+        mountId: "app",
+        favicon: "./public/icons.png",
+        template: "./index.html"
+
     },
     output:{
         // distPath:{

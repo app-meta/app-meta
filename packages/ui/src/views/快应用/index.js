@@ -109,6 +109,7 @@ export function pageManage(router){
  * @property {Number} cacheDelay - 每次缓存的间隔，单位秒，默认 60
  * @property {Number} cacheLimit - 缓存数量上限，默认 10
  * @property {Function} cacheHandler - 读取缓存数据后的处理函数
+ * @property {Function} afterInit - 初始化后的回调函数
  *
  * @param {*} defaultVal
  * @param {Function} translator
@@ -133,6 +134,8 @@ export function pageEditor(defaultVal, translator, config){
                 bean.value = translator?translator(d.data):d.data
 
             inited.value = true
+            if(config.afterInit)
+                config.afterInit()
         }
         else {
             alert(d.message)
