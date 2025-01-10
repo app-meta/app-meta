@@ -28,11 +28,11 @@ let md5AppJSFile = (regx=/index\./)=>{
         let content = fs.readFileSync(path.resolve(dist, assetsDir, f))
         data = md5(md5(content)+data)
         signs.push(`${assetsDir}/${f} ${data}`)
-        console.log(`添加签名 ${f} ${data}`)
+        console.info(`添加签名 ${f} ${data}`)
     })
 
     fs.writeFileSync(`${dist}/SIGN`, signs.join("\n"))
-    console.log(`MD5签名信息(${regx})写入成功：`)
+    console.info(`MD5签名信息(${regx})写入成功：`)
     signs.forEach(s=>console.log(`\t${s}`))
 }
 
@@ -47,8 +47,8 @@ var archive = archiver('zip', {
 
 // listen for all archive data to be written
 outputFile.on('close', function() {
-    console.log(archive.pointer() + ' total bytes');
-    console.log('archiver has been finalized and the output file is:'+outputFile.path);
+    console.info(archive.pointer() + ' total bytes');
+    console.info('archiver has been finalized and the output file is:'+outputFile.path);
     outputFile.end()
 });
 
@@ -60,5 +60,5 @@ archive.on('error', function(err) {
 archive.pipe(outputFile)
 archive.directory(dist, false)
 
-console.log("开始压缩前端文件："+dist)
+console.info("开始压缩前端文件："+dist)
 archive.finalize()

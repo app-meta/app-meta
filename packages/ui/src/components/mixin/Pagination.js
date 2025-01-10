@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-03-31 17:50:26
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2024-11-13 23:14:22
+ * @Last Modified time: 2024-12-18 11:54:20
  *
  * 分页复用模块
  */
@@ -10,17 +10,17 @@
 import { ref, onMounted,reactive, createVNode } from 'vue'
 
 export default (api, autoLoad=true, loader=undefined)=>{
-    let ps = typeof(api) == 'object'? api: { url: api, form:{}, aid:"" }
+    let ps = typeof(api) == 'object'? api: { url: api, form:{}, aid:"", pageSize:20 }
     let beans = ref([])
     let pagination = reactive({
         loading: false,
         page:1,
-        pageSize: 20,
+        pageSize: ps.pageSize??20,
         showSizePicker:true,
         pageSizes: [20, 50, 100, 200],
         itemCount:0,
         prefix: info=> createVNode('div', {}, `加载 ${beans.value.length} 条数据（数据总数 ${info.itemCount}）`),
-        onUpdateValue: page=> {
+        onUpdatePage: page=> {
             pagination.page = page
             refresh(false)
         },

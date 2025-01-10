@@ -77,7 +77,7 @@
 
                     snip("M.showData(${},{title:'${}', width: '800px'})", {label:"H.showData", detail, type, info:"以对话框形式展示数据"}),
                     snip("M.ok(`${}`)", {label:"M.ok", detail, type, info:"弹出成功消息"}),
-                    snip("H.notice.ok(`${}`)", {label:"M.notice.ok", detail, type, info:"在右上角弹出成功提示框"}),
+                    snip("M.notice.ok(`${}`)", {label:"M.notice.ok", detail, type, info:"在右上角弹出成功提示框"}),
                     snip("UI.buildOptions(`${}`)", {label:"UI.buildOptions", detail, type, info:"转换为下拉框列表"}),
                     snip("H.debug(`${}`)", {label:"debug", detail, type, info:"打印DEBUG日志（带时间）"}),
 

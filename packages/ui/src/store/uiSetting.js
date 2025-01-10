@@ -2,7 +2,7 @@
  * @Author: 0604hx/集成显卡
  * @Date: 2022-03-26 21:58:12
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2024-12-02 17:35:05
+ * @Last Modified time: 2024-12-20 09:19:18
  *
  * UI 相关配置
  */
@@ -28,16 +28,6 @@ const colors = {
     '日暮': '#d46b08',
     '火山': '#d4380d',
     '薄暮': '#cf1322',
-}
-
-let detectTheme = v =>{
-    let theme = v || H.store.get("ui.theme", "auto")
-    let _dark = theme==='dark'
-    if(!_dark && theme==='auto'){
-        let hour = new Date().getHours()
-        _dark = hour >= 18 || hour<=8
-    }
-    return _dark?"dark":"light"
 }
 
 /**

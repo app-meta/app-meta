@@ -65,7 +65,7 @@
                             </n-text>
                         </th>
                         <th width="25">
-                            <n-button circle size="tiny" secondary type="primary" @click="addCols"><template #icon><n-icon :component="Plus" /></template> </n-button>
+                            <n-button circle size="tiny" secondary type="primary" @click="addCols()"><template #icon><n-icon :component="Plus" /></template> </n-button>
                         </th>
                     </tr>
                 </thead>
