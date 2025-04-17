@@ -85,10 +85,15 @@ export const renderProps = {
 
 export function pageManage(router){
     let toView = row=>{
-        if(row.template == 'robot')
-            return M.confirm(`运行机器人`, `确定执行网页机器人⌈${row.name}⌋吗？`, ()=> H.app.runRobot(row.id))
-        // let r = router.resolve({name:`app-view`, params:{aid:row.aid, pid: row.id}})
-        // H.openUrl(r.href, {title: row.name, center:true })
+        if(row.template == 'robot'){
+            return M.confirm(`运行 RPA 机器人`, `确定执行网页机器人⌈${row.name}⌋吗？`, ()=> {
+                try{
+                    H.app.runRobot(row.id)
+                }catch(e){
+                    M.showError(e.message)
+                }
+            })
+        }
         H.app.runPage(row.aid, row.id, true)
     }
 

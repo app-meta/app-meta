@@ -1,6 +1,6 @@
 const { isDev } = require("../../Runtime")
 const logger = require("../../common/logger")
-const { runRobot, repairAndCheck } = require("../../core/RobotManage")
+const { runRobot, repairAndCheck, runRobotWithDebug } = require("../../core/RobotManage")
 const { callServer } = require("../../service/Http")
 
 module.exports ={
@@ -12,7 +12,7 @@ module.exports ={
      */
     run: async (id, params={}, config) => {
         config = Object.assign({link:undefined, hideWindow: false, reportLaunch:true}, config)
-        logger.debug(`尝试启动机器人 #${id} 环境=${JSON.stringify(config)}`)
+        if(isDev)   logger.debug(`尝试启动机器人 #${id} 环境=${JSON.stringify(config)}`)
 
         let { data } = await callServer("/page/detail", {id})
         if(data == null)    throw `无法获取机器人 #${id} 的信息（可能未启用或已被移除，请联系管理员）`
@@ -32,5 +32,17 @@ module.exports ={
             }),
             config
         )
+    },
+
+    /**
+     *
+     * @param {String} url
+     */
+    debug: async (url, debuger)=>{
+        if(isDev)   logger.debug(`尝试启动页面调试 ${url} （调试工具：${debuger?.name}）`)
+        if(!url || !url.startsWith("http"))
+            throw `[${url}]不是一个有效的地址`
+
+        runRobotWithDebug(url, debuger)
     }
 }

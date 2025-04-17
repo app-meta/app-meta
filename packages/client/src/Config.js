@@ -2,7 +2,7 @@
  * @Author: 集成显卡
  * @Date: 2022-02-04 22:58:23
  * @Last Modified by: 集成显卡
- * @Last Modified time: 2023-10-19 10:59:23
+ * @Last Modified time: 2025-04-17 11:20:33
  */
 const { existsSync, readFileSync } = require('fs')
 
@@ -24,7 +24,7 @@ let C = {
     /**
      * 服务端设置
      */
-    serverHost: "http://168.55.6.15:6060",
+    serverHost: process.env.NODE_ENV === 'production'?"http://168.55.6.15:6060":"http://localhost:10086",
     serverContext: "/app-meta",
 
     windowMax: false,                       //是否启用全屏

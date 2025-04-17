@@ -5,16 +5,16 @@
             <Robot class="icon mr-1 primary" /> 网页脚本机器人设置
         </template>
         <template #header-extra>
-            <n-button type="primary" @click="toSave">保存</n-button>
+            <n-button type="primary" @click="toSave">保存配置</n-button>
         </template>
 
         <n-form v-if="inited" :model="bean" label-placement="top" label-width="120" :show-feedback="false">
-            <n-grid :x-gap="12" :y-gap="12" cols="4 xs:2 s:3 m:4 xl:6 l:5" responsive="screen"> <!--4 s:2 m:3 xl:5 l:4-->
-                <n-form-item-gi label="首页地址">
+            <n-grid :x-gap="24" :y-gap="20" cols="4 xs:2 s:3 m:4 xl:9 l:5" responsive="screen"> <!--4 s:2 m:3 xl:5 l:4-->
+                <n-form-item-gi label="首页地址" span="2">
                     <n-input v-model:value="bean.url" placeholder="WEB 地址（必须以 http 开头）" />
                 </n-form-item-gi>
 
-                <n-form-item-gi label="窗口宽度（单位 px）">
+                <n-form-item-gi label="窗口宽度（单位 px）" span="2">
                     <n-input-group>
                         <n-input-number :bordered="true" class="w-full" v-model:value="bean.windowWidth" min="100" step="50">
                             <template #prefix> <Tag>宽</Tag></template>
@@ -23,6 +23,17 @@
                             <template #prefix> <Tag>高</Tag> </template>
                         </n-input-number>
                     </n-input-group>
+                </n-form-item-gi>
+
+                <n-form-item-gi>
+                    <template #label>
+                        开发者工具
+                        <n-tooltip trigger="hover">
+                            <template #trigger> <QuestionCircle class="icon ml-1 info" /> </template>
+                            运行任务后是否打开⌈开发者工具⌋，对于某些禁止⌈开发者工具⌋的网页，请不要打开
+                        </n-tooltip>
+                    </template>
+                    <n-select :options v-model:value="bean.devtool" />
                 </n-form-item-gi>
 
                 <n-form-item-gi>
@@ -86,7 +97,14 @@
                                 <n-text depth="3" class="ml-1">仅支持标准 javascript 代码噢</n-text>
                             </div>
 
-                            <n-button @click="toImport" size="small" secondary type="primary" class="fr">从文件中导入</n-button>
+                            <n-space>
+                                <n-dropdown trigger="click" @select="toDebug" :disabled="!isClient" :options="debugOptions" :show-arrow="true">
+                                    <n-button size="small" secondary type="primary" title="打开自定义调试窗口，此功能仅在客户端模式下有效">
+                                        打开调试窗口
+                                    </n-button>
+                                </n-dropdown>
+                                <n-button @click="toImport" size="small" secondary type="primary">从文件中导入</n-button>
+                            </n-space>
                         </n-space>
                     <div class="mt-2">
                         <CodeEditor v-model:value="bean.code" height="calc(100vh - 315px)" :tabSize="4" />
@@ -104,9 +122,17 @@
 
     import CodeEditor from "@code.editor"
 
-    import { createRobot } from "."
+    import { createRobot, getDebugers } from "."
 
     let { id, bean, inited, loading , updateContent } = pageEditor(createRobot, d=> JSON.parse(d), { padding: false })
+    const options = [{ value:-1, label:"总不打开"}, { value:0, label:"开发时打开"}, { value:1, label:"总是打开" }]
+    const { isClient } = window.Config
+    const debugers = getDebugers()
+
+    let debugOptions = [
+        { type:"group", label:"请选择调试工具"},
+        ...debugers.map(v=>({ label:v.label, key:v.name }))
+    ]
 
     const toImport = ()=> H.io.chooseAndRead(".js").then(d=> {
         bean.value.code = d.result
@@ -117,6 +143,20 @@
         if(!url || !code) return M.warn(`首页地址或脚本代码不能为空`)
 
         updateContent(JSON.stringify(bean.value))
+    }
+    const toDebug = key=> {
+        let debuger = debugers.find(v=>v.name==key)
+        if(!debuger)    return M.warn(`无效的调试工具：${key}`)
+
+        /**@type {{ url:String }} */
+        let { url, windowWidth, windowHeight } = bean.value
+        if(!url || !url.startsWith("http"))
+            return M.warn(`请先填写正确的URL`)
+
+        console.debug(`即将启动页面调试 ${url}（DEBUGER=${debuger.name}）`)
+        debuger.windowWidth = windowWidth
+        debuger.windowHeight = windowHeight
+        META.runRobotWithDebug(url, debuger)
     }
 
     initCtrlAndS(toSave)

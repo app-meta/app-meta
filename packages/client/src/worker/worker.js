@@ -3,7 +3,6 @@ const { isDev, verbose, appPath } = require("../Runtime")
 const logger = require("../common/logger")
 
 const Robot = require('../sdk/module/robot')
-// const { runRobot, repairAndCheck } = require("../core/RobotManage")
 const { decrypt } = require("../service/rsa")
 
 /**
@@ -63,16 +62,6 @@ const handlers = {
         }catch(e){
             fail(e)
         }
-
-        // try{
-        //     ps = repairAndCheck(ps)
-        // }
-        // catch(e){
-        //     return fail(e)
-        // }
-        // runRobot(ps)
-        // ok(``)
-
     }),
     /**
      * @returns

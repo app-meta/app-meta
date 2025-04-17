@@ -1,4 +1,5 @@
 const { versions } = require("process")
+const { BrowserWindow } = require("electron")
 const C = require("../Config")
 const R = require("../Runtime")
 const logger = require("../common/logger")
@@ -7,6 +8,8 @@ const { iconPath } = require("./App")
 const ScriptRobot = require("./Robot")
 const { callServer } = require("../service/Http")
 const { broadcastAll } = require("../service/Global")
+const { preload } = require(".")
+const { buildRemoteUrl } = require("../service/Helper")
 
 const PAGE = "page"
 
@@ -201,5 +204,62 @@ module.exports = {
         })
         R.verbose && logger.info(`从 WindowID=${windowId} 获取到机器人详情`, detail)
         return detail
+    },
+
+    /**
+     *
+     * @param {String} url
+     * @param {WebDebuger} debuger - 调试工具，默认为 vConsole
+     */
+    runRobotWithDebug: (url, debuger)=>{
+        if(!debuger || !debuger.name)   throw `无效的调试工具（请配置 debuger 参数）`
+
+        const window = new BrowserWindow({
+            show            : true,
+            frame           : true,
+            width           : debuger.windowWidth ?? C.windowWidth,
+            height          : debuger.windowHeight ?? C.windowHeight,
+            webPreferences  : {
+                contextIsolation: true,
+                nodeIntegration: false,
+                preload
+            }
+        })
+        window.on('closed', ()=> {
+            R.isDev && logger.debug(`关闭调试窗口#${window.id}`)
+            delete window
+        })
+        window.webContents.on('dom-ready', () => {
+            R.isDev && logger.debug(`页面加载完成，即将注入调试工具 ${debuger.name}...`)
+
+            let scriptUrl = debuger.url || buildRemoteUrl(`/static/tools/${debuger.name}.js`)
+
+            let scripts = [`const script = document.createElement('script');`]
+            scripts.push(`script.src = '${scriptUrl}';`)
+            scripts.push(`script.onload = () => { ${debuger.code||""} }`)   //`${debuger=='vConsole'?"new window.VConsole()":"eruda.init()"};`
+            scripts.push(`document.body.appendChild(script);`)
+
+            window.webContents.executeJavaScript(scripts.join("\n"), true).catch(e=>logger.error(`注入调试工具：${e.message}`))
+
+            // if(debuger == 'vConsole'){
+            //     // 注入 vConsole
+            //     window.webContents.executeJavaScript(`
+            //         const script = document.createElement('script');
+            //         script.src = '${scriptUrl}';//'https://unpkg.com/vconsole@latest/dist/vconsole.min.js';
+            //         script.onload = () => new window.VConsole();
+            //         document.body.appendChild(script);
+            //     `)
+            // }
+            // else{
+            //     // 注入 Eruda
+            //     window.webContents.executeJavaScript(`
+            //         const script = document.createElement('script');
+            //         script.src = '${scriptUrl}';//'https://cdn.jsdelivr.net/npm/eruda';
+            //         script.onload = () => eruda.init();
+            //         document.body.appendChild(script);
+            //     `);
+            // }
+        });
+        window.loadURL(url)
     }
 }

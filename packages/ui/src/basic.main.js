@@ -44,6 +44,7 @@ const customConfig = (ps = {}) => {
             appName: window.document.title || _APPNAME_,    //应用名称
 
             isDev   : !isProduction,                        //是否为开发模式
+            isClient: !!window.META,                        //是否为客户端运行
         },
         ps
     )

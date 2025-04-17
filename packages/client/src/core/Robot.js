@@ -5,10 +5,10 @@
  *
  * 网页机器人执行工具
  */
-const { join } = require("path")
 const { BrowserWindow } = require("electron")
 const Mustache = require('mustache')
 
+const { preload } = require(".")
 const { compact, datetime } = require("../common/date")
 const logger = require("../common/logger")
 const C = require("../Config")
@@ -16,7 +16,7 @@ const R = require("../Runtime")
 const U = require("../common/util")
 const { writeFileSync } = require("fs")
 
-const preload   = join(__dirname, '../preload/api-robot.js')
+// const preload   = join(__dirname, '../preload/api-robot.js')
 
 const CODES = {
     '-1': "失败",
@@ -26,18 +26,20 @@ const CODES = {
 }
 
 /**
- * 任务对象属性如下
- *
- * windowWidth      窗口高度，单位 px
- * windowsHeight    窗口宽度，单位 px
- * snapshot         是否在任务结束时截图，默认 true
- * merge            是否将数据保存到同一目录下，默认 true
- * timeout          执行超时，单位 秒，默认 180
- * headers          额外的 header，用换行符 \n 进行分割
- * delay            延时执行脚本，单位 秒，默认 2
- * url              网站首页
- * code             机器人脚本代码
+ * @typedef {Object} RobotBean - 机器人对象
+ * @property {Number} windowWidth - 窗口高度，单位 px
+ * @property {Number} windowsHeight - 窗口宽度，单位 px
+ * @property {Boolean} snapshot - 是否在任务结束时截图，默认 true
+ * @property {Boolean} merge - 是否将数据保存到同一目录下，默认 true
+ * @property {Number} timeout - 执行超时，单位 秒，默认 180
+ * @property {String} headers - 额外的 header，用换行符 \n 进行分割
+ * @property {Boolean} delay - 延时执行脚本，单位 秒，默认 2
+ * @property {String} url - 网站首页
+ * @property {String} code - 机器人脚本代码
+ * @property {Number} devtool - 是否打开开发者工具，-1=总不打开，0=开发环境下打开，1=总是打开
  */
+
+
 module.exports = class {
     startOn     = 0                         //开始时间点
     endOn       = 0                         //结束时间点，不管成功与否
@@ -53,9 +55,10 @@ module.exports = class {
     context     = {}
 
     /**
-     * @param {Object} page      页面对象
-     * @param {Object} bean      机器人对象
-     * @param {Object} params    运行时参数
+     * @param {Object} bean
+     * @param {Object} bean.page      页面对象
+     * @param {RobotBean} bean.bean      机器人对象
+     * @param {Object} bean.params    运行时参数
      * @param {RobotContext} context
      */
     constructor({ page, bean, params={} }, context){
@@ -120,12 +123,12 @@ module.exports = class {
                 if(this.context.hideWindow !== true)
                     this.window.show()
 
-                if(R.isDev) this.window.webContents.openDevTools()
+                if(this.bean.devtool == 1 || (this.bean.devtool==0 && R.isDev))
+                    this.window.webContents.openDevTools()
             })
 
             this.window.on('close', ()=> this.onComplete())
             this.window.on('closed', ()=> this.log("任务窗口已关闭..."))
-            this.window.onE
         }
 
         let web = this.window.webContents
@@ -334,7 +337,8 @@ module.exports = class {
         // }
 
         //先判断是否任务中已经存在 script 属性
-        if (this.bean.code) scriptStack.push(this.bean.code)
+        if(this.bean.code)
+            scriptStack.push(this.bean.code)
 
         return this.#handingScriptBeforeExec(scriptStack.join(';'))
     }

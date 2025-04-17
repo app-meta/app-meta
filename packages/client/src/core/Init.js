@@ -14,7 +14,7 @@ function initKeyboard() {
         let curWin = BrowserWindow.getFocusedWindow()
         if(curWin != null){
             curWin.webContents.isDevToolsOpened() ? curWin.webContents.closeDevTools() : curWin.webContents.openDevTools()
-            if(R.isDev) logger.debug(`CTRL+F12 快捷键...`)
+            if(R.isDev) logger.debug(`用户按下 CTRL+F12 快捷键...`)
         }
     })
 

@@ -18,5 +18,18 @@ export const createRobot = ({
     headers         : "",
     delay           : 2,
     url             : "",
-    code            : ""
+    code            : "",
+    devtool         : 0,
 })
+
+/**
+ * 对于开发环境，返回的是3000端口的资源路径
+ * @returns {Array<Object>}
+ */
+export const getDebugers = ()=>{
+    let { isDev } = Config
+    return [
+        { name:"vConsole", label:"vConsole（腾讯）", code:"new window.VConsole()", url: isDev?"http://localhost:3000/static/tools/vConsole.js":"" },
+        { name:"eruda", label:"Eruda", code:"eruda.init()", url: isDev?"http://localhost:3000/static/tools/eruda.js":"" }
+    ]
+}

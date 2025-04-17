@@ -109,7 +109,7 @@ exports.REMOTE_UPLOAD = async function(url, data, options={}){
  */
 exports.callServer = async (action, json, options={})=>{
     if(!MUA)  throw Error(`用户 TOKEN 未设置`)
-    let url = `${C.serverHost}${C.serverContext}${action}`
+    let url = buildRemoteUrl(action)
 
     if(isDev) logger.debug(`调用接口 ${url}， 参数：${JSON.stringify(json)}`)
 
@@ -152,9 +152,13 @@ exports.loadTokenFromServer = (secretKey, uid)=>new Promise((ok, fail)=>{
         .catch(e=>fail(e.message))
 })
 
+/**
+ *
+ * @param {String} token
+ */
 exports.setToken = token => {
-    MUA = token
-    if(isDev) logger.debug(`设置 token`, token)
+    MUA = token?.trim()
+    if(isDev) logger.debug(`设置 token`, MUA)
 }
 
 /**
