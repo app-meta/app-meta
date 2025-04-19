@@ -1,6 +1,6 @@
 <template>
     <n-form v-if="inited" class="p-3" label-placement="left" label-align="right" label-width="110" :show-feedback="false">
-        <n-card size="small">
+        <n-card>
             <template #header> <Search class="icon primary mr-2" /> 检索设置 </template>
             <n-space vertical>
                 <n-form-item label="标题内容"> <n-input v-model:value="bean.title" /> </n-form-item>
@@ -42,7 +42,7 @@
             </n-space>
         </n-card>
 
-        <n-card size="small" class="mt-2">
+        <n-card class="mt-2">
             <template #header> <Columns class="icon primary mr-2" /> 字段（表格列）设置 </template>
 
             <n-form-item label="显示默认数据列">
@@ -88,7 +88,15 @@
             </div>
         </n-card>
 
-        <n-card size="small" class="mt-2">
+        <n-card class="mt-2">
+            <template #header>
+                <PowerOff class="icon primary mr-2" /> 自定义按钮
+                <n-text depth="3" class="ml-2 text-xs">可配置数据行（表格内）的按钮</n-text>
+            </template>
+            <ButtonPane :items="bean.buttons" />
+        </n-card>
+
+        <n-card class="mt-2">
             <template #header> <Download class="icon primary mr-2" /> 数据导出配置 </template>
 
             <n-space vertical>
@@ -113,7 +121,7 @@
             </n-space>
         </n-card>
 
-        <n-card size="small" class="mt-2">
+        <n-card class="mt-2">
             <template #header> <Divide class="icon primary mr-2" /> 分页及数据排序 </template>
             <n-form-item label="倒序排列">
                 <n-switch v-model:value="bean.desc" /> <n-text depth="3" class="ml-3">勾选后，优先显示新插入的数据 </n-text>
@@ -134,7 +142,7 @@
 
 <script setup>
     import { ref, onMounted, useId } from 'vue'
-    import { Search,Check, Plus, Columns, TrashAlt, Divide, Database, Download } from "@vicons/fa"
+    import { Search,Check, Plus, Columns, TrashAlt, Divide, Database, Download, PowerOff } from "@vicons/fa"
     import { useDraggable } from 'vue-draggable-plus'
 
     import { pageEditor } from "../"
@@ -142,6 +150,7 @@
 
     import CodeEditor from "@code.editor"
 
+    import ButtonPane from './按钮.vue'
     import FieldFilter from "./field-filter.vue"
     import PageSelector from "./page-selector.vue"
 
@@ -149,7 +158,12 @@
     let dragEl = ref()
     let { id, aid, bean, inited, loading , updateContent } = pageEditor(
         tableConfig(),
-        d=> JSON.parse(d),
+        d=> {
+            let obj = JSON.parse(d)
+            if(!obj.buttons)
+                obj.buttons = []
+            return obj
+        },
         {
             afterInit:()=>useDraggable(dragEl, bean.value.columns, {handle:".draggable"})
         }

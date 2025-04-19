@@ -1,3 +1,46 @@
+/**
+ * @typedef {Object} ColumnBean
+ * @property {String} key
+ * @property {String} label
+ * @property {Boolean} center
+ * @property {Number} width
+ * @property {String} render
+ *
+ * @typedef {Object} ButtonBean
+ * @property {String} label
+ * @property {String} category
+ * @property {String} icon - 图标，仅支持 fa 样式
+ * @property {String} type - 类型，info、primary、warning、error、success
+ * @property {String} handler - 处理函数
+ */
+import { h } from 'vue'
+import { NSpace, NButton } from 'naive-ui'
+import { Search, Plus, Trash, Edit, User, Table, Home, Copy, ListAltRegular, Chrome, GlobeAsia, Coins, PaperPlane, Download, CheckCircle } from "@vicons/fa"
+
+const resizable = true
+const ellipsis  = { tooltip: true }
+
+/**
+ * 常用的图标
+ */
+export const icons = {
+    Search: Search,
+    Plus: Plus,
+    Trash: Trash,
+    Edit: Edit,
+    User: User,
+    Table: Table,
+    Home: Home,
+    Copy: Copy,
+    List: ListAltRegular,
+    Chrome: Chrome,
+    Earth: GlobeAsia,
+    Coins: Coins,
+    PaperPlane: PaperPlane,
+    Download:Download,
+    CheckCircle: CheckCircle
+}
+
 export const tableConfig = ()=>({
     title:      "数据筛选",
 
@@ -7,6 +50,7 @@ export const tableConfig = ()=>({
     filters:    [],     //预设的筛选条件，如果为空则允许用户自行添加条件
     defaultCol: true,   //是否显示默认的列
     columns:    [],     //字段设置
+    buttons:    [],
     pading:     false,  //是否允许分页
     pageSize:   200,    //每页查询的数据量
     desc:       false,
@@ -31,6 +75,100 @@ export function basicColumns(defaultCol=true){
     }
 
     return cols
+}
+
+function _triggerWithoutPromise(body, paramsNames, params){
+    try{
+        if(typeof(body) === 'function')
+            return body(...params)
+        return new Function(...paramsNames, buildFuncBody(body, false))(...params)
+    }
+    catch(e){
+        console.error(e)
+        M.showError(`执行函数回调出错：${UI.wrapHtml(e.message)}`)
+    }
+}
+
+/**
+ *
+ * @param {ButtonBean} btn
+ * @param {Object} row
+ * @param {Number} rowIndex
+ */
+const onBtnClick = (btn, row, rowIndex)=>{
+    _triggerWithoutPromise(btn.handler, ['row', 'rowIndex'], [row, rowIndex])
+}
+
+/**
+ *
+ * @param {Boolean} defaultCol - 是否显示默认列
+ * @param {Array<ColumnBean>} customCols - 自定义列
+ * @param {Array<ButtonBean>} customBtns - 自定义操作按钮
+ * @returns {Object}
+ */
+export const buildCustomColumns = (defaultCol=true, customCols=[], customBtns=[])=>{
+    let columns = basicColumns(defaultCol)
+    let labels = {}
+    customCols.forEach(c=>{
+        /**@type {ColumnBean} */
+        let col = { title: c.label, key:c.key, resizable, ellipsis }
+        if(c.center==true)  col.align = "center"
+        if(c.width>=0)      col.width = c.width
+
+        //日期列（录入时间）
+        if(c.key == "#date#"){
+            col.width ??= 180
+            col.render = row=> H.date.datetime(row.addOn)
+        }
+        //序号列
+        else if(c.key == '#index#'){
+            col.width ??= 60
+            col.render = (r,i)=> `${i+1}`
+        }
+        //自定义渲染函数
+        else{
+            col.render = !!c.render? row=> new Function('row', 'h', 'return '+c.render)(row.v, h) : row=> row.v[c.key]
+        }
+
+        columns.push(col)
+        labels[c.key] = c.label
+    })
+
+    // 自定义按钮
+    if(Array.isArray(customBtns) && customBtns.length){
+        let ctrlCol = { title:"操作", resizable, align: "center" }
+        ctrlCol.width = customBtns.reduce((c,v)=>c+v.label.length*30+(v.icon?40:0), 80)
+
+        ctrlCol.render = (row, rowIndex)=> h(NSpace, {size:"small", justify: CENTER }, ()=>customBtns.map(btn=>{
+            let slots = { default: ()=> btn.label }
+            if(btn.icon)
+                slots['icon'] = ()=>h(icons[btn.icon])
+            let onClick = undefined
+            //删除数据行
+            if(btn.category=='del'){
+                onClick = ()=>M.confirm(
+                    `删除数据`,
+                    btn.handler ? H.io.render(btn.handler, row.v) : `确定删除该行数据吗？`,
+                    ()=> H.data.remove({ id: row.id }).then(()=>{
+                        console.debug(`数据行删除成功`)
+                    })
+                )
+            }
+            else if(btn.category=='view'){
+                onClick = ()=>{
+                    console.debug(`查看详情`, row)
+                }
+            }
+            else
+                onClick = ()=>_triggerWithoutPromise(btn.handler, ['row', 'rowIndex'], [row, rowIndex])
+
+            return h(NButton, { type: btn.type||"default", onClick }, slots)
+        }))
+
+        columns.push(ctrlCol)
+    }
+
+    return { columns, labels }
 }
 
 /**

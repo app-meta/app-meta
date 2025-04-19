@@ -58,7 +58,7 @@
     import { runScript } from "@S/Runner"
 
     import { renderProps } from "../"
-    import { tableConfig , basicColumns, buildQueryFilter } from "./"
+    import { tableConfig , basicColumns, buildQueryFilter, buildCustomColumns } from "./"
 
     const props = defineProps(renderProps)
 
@@ -236,18 +236,20 @@
 
     onMounted(() => {
         if(Array.isArray(config.columns) && config.columns.length>0){
-            let _columns = basicColumns(config.defaultCol)
-            config.columns.forEach(c=>{
-                let col = { title: c.label, key:c.key, resizable, ellipsis }
-                if(c.center==true)  col.align = "center"
-                if(c.width>=0)      col.width = c.width
+            // let _columns = basicColumns(config.defaultCol)
+            // config.columns.forEach(c=>{
+            //     let col = { title: c.label, key:c.key, resizable, ellipsis }
+            //     if(c.center==true)  col.align = "center"
+            //     if(c.width>=0)      col.width = c.width
 
-                col.render = !!c.render? row=> new Function('row', 'h', 'return '+c.render)(row.v, h) : row=> row.v[c.key]
-                _columns.push(col)
-                names[c.key] = c.label
-            })
+            //     col.render = !!c.render? row=> new Function('row', 'h', 'return '+c.render)(row.v, h) : row=> row.v[c.key]
+            //     _columns.push(col)
+            //     names[c.key] = c.label
+            // })
+            let { columns, labels } = buildCustomColumns(config.defaultCol, config.columns)
 
             columns.value = _columns
+            names = labels
             fields = UI.buildOptions(config.columns.filter(c=>!!c.key).map(c=>`${c.key}|${c.label}`))
         }
 
