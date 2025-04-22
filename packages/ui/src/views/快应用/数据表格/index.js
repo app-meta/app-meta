@@ -12,9 +12,15 @@
  * @property {String} icon - 图标，仅支持 fa 样式
  * @property {String} type - 类型，info、primary、warning、error、success
  * @property {String} handler - 处理函数
+ *
+ * @typedef {Object} CustomControl - 自定义操作列
+ * @property {Array<ButtonBean>} buttons - 自定义按钮
+ * @property {String} size - 按钮大小
+ * @property {Number} width - 自定义列宽度
+ * @property {String} type - 按钮样式
  */
 import { h } from 'vue'
-import { NSpace, NButton } from 'naive-ui'
+import { NSpace, NButton, NIcon } from 'naive-ui'
 import { Search, Plus, Trash, Edit, User, Table, Home, Copy, ListAltRegular, Chrome, GlobeAsia, Coins, PaperPlane, Download, CheckCircle } from "@vicons/fa"
 
 const resizable = true
@@ -77,6 +83,16 @@ export function basicColumns(defaultCol=true){
     return cols
 }
 
+
+function buildFuncBody(body, usePromise=true){
+    return usePromise?
+        `return new Promise((resolve, reject)=>{
+            ${body}
+        })`
+        :
+        body
+}
+
 function _triggerWithoutPromise(body, paramsNames, params){
     try{
         if(typeof(body) === 'function')
@@ -91,22 +107,12 @@ function _triggerWithoutPromise(body, paramsNames, params){
 
 /**
  *
- * @param {ButtonBean} btn
- * @param {Object} row
- * @param {Number} rowIndex
- */
-const onBtnClick = (btn, row, rowIndex)=>{
-    _triggerWithoutPromise(btn.handler, ['row', 'rowIndex'], [row, rowIndex])
-}
-
-/**
- *
  * @param {Boolean} defaultCol - 是否显示默认列
  * @param {Array<ColumnBean>} customCols - 自定义列
- * @param {Array<ButtonBean>} customBtns - 自定义操作按钮
+ * @param {CustomControl} control - 自定义操作按钮
  * @returns {Object}
  */
-export const buildCustomColumns = (defaultCol=true, customCols=[], customBtns=[])=>{
+export const buildCustomColumns = (defaultCol=true, customCols=[], control={})=>{
     let columns = basicColumns(defaultCol)
     let labels = {}
     customCols.forEach(c=>{
@@ -134,15 +140,18 @@ export const buildCustomColumns = (defaultCol=true, customCols=[], customBtns=[]
         labels[c.key] = c.label
     })
 
+    let { buttons } = control
     // 自定义按钮
-    if(Array.isArray(customBtns) && customBtns.length){
+    if(Array.isArray(buttons) && buttons.length){
         let ctrlCol = { title:"操作", resizable, align: "center" }
-        ctrlCol.width = customBtns.reduce((c,v)=>c+v.label.length*30+(v.icon?40:0), 80)
+        ctrlCol.width = control.width ?? buttons.reduce((c,v)=>c+v.label.length*24+(v.icon?65:0), 10)
 
-        ctrlCol.render = (row, rowIndex)=> h(NSpace, {size:"small", justify: CENTER }, ()=>customBtns.map(btn=>{
-            let slots = { default: ()=> btn.label }
+        ctrlCol.render = (row, rowIndex)=> h(NSpace, {size:"small", justify: "center" }, ()=>buttons.map(btn=>{
+            let slots = { }
+            if(!!btn.label)
+                slots['default'] = ()=> btn.label
             if(btn.icon)
-                slots['icon'] = ()=>h(icons[btn.icon])
+                slots['icon'] = ()=> h(NIcon, {component: icons[btn.icon], class:'icon'})//h(icons[btn.icon], {class:"icon"})
             let onClick = undefined
             //删除数据行
             if(btn.category=='del'){
@@ -156,13 +165,29 @@ export const buildCustomColumns = (defaultCol=true, customCols=[], customBtns=[]
             }
             else if(btn.category=='view'){
                 onClick = ()=>{
-                    console.debug(`查看详情`, row)
+                    M.showData(
+                        {
+                            "键值": Object.entries(row.v),
+                            "基本信息":[
+                                ["数据编号", row.id],
+                                ["应用编号", row.aid],
+                                ["页面编号", row.pid],
+                                ["用户编号", row.uid],
+                                ["数据来源", row.channel],
+                                ["录入日期", H.date.datetime(row.addOn)]
+                            ]
+                        },
+                        { title: `数据信息` }
+                    )
                 }
             }
             else
                 onClick = ()=>_triggerWithoutPromise(btn.handler, ['row', 'rowIndex'], [row, rowIndex])
 
-            return h(NButton, { type: btn.type||"default", onClick }, slots)
+            let ps = { type: btn.type||"default", onClick, size: control.size }
+            if(control.type)
+                ps[control.type] = true
+            return h(NButton, ps, slots)
         }))
 
         columns.push(ctrlCol)

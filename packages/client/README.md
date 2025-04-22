@@ -55,6 +55,10 @@ spawn E:\workspace\nerve\app-meta\node_modules\app-builder-bin\win\x64\app-build
 
 最后使用`shamefully-hoist=true`的配置可以解决该问题
 
+* ERROR: Cannot create symbolic link :lib\libcrypto.dylib
+
+以`管理员`运行 cmd，再执行构建命令
+
 ## 附录
 
 ### 开发时工具
@@ -65,3 +69,8 @@ spawn E:\workspace\nerve\app-meta\node_modules\app-builder-bin\win\x64\app-build
 
 * [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript)
 * [从零搭建Electron开发环境（无Vue无React）](https://zhuanlan.zhihu.com/p/601918587)
+
+### electron 版本升级
+
+* 2025-04-22 升级到`35.2.0`
+    * 依赖增加：@discoveryjs/json-ext、@types\dompurify、dompurify

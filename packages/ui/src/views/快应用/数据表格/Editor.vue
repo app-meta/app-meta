@@ -93,7 +93,7 @@
                 <PowerOff class="icon primary mr-2" /> 自定义按钮
                 <n-text depth="3" class="ml-2 text-xs">可配置数据行（表格内）的按钮</n-text>
             </template>
-            <ButtonPane :items="bean.buttons" />
+            <ButtonPane :bean="bean.control" />
         </n-card>
 
         <n-card class="mt-2">
@@ -160,8 +160,8 @@
         tableConfig(),
         d=> {
             let obj = JSON.parse(d)
-            if(!obj.buttons)
-                obj.buttons = []
+            if(!obj.control)
+                obj.control = { buttons:[] }
             return obj
         },
         {

@@ -170,7 +170,7 @@
                         h(NTabs, {}, ()=>Object.keys(data).map((title, index)=>h(
                             NTabPane,
                             {name: "DIALOG-TAB-"+index, tab:title},
-                            Array.isArray(data[title])?
+                            ()=>Array.isArray(data[title])?
                                 renderTable(data[title], ps.onRowClick)
                                 :
                                 renderHTML([title])

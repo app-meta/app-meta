@@ -246,7 +246,7 @@
             //     _columns.push(col)
             //     names[c.key] = c.label
             // })
-            let { columns, labels } = buildCustomColumns(config.defaultCol, config.columns)
+            let { columns:_columns, labels } = buildCustomColumns(config.defaultCol, config.columns, config.control)
 
             columns.value = _columns
             names = labels
