@@ -24,10 +24,14 @@ const iconPath  = name=> R.resDir(`icon/${name}.png`)
 const _icon     = name=> nativeImage.createFromPath(iconPath(name))
 
 exports.icons = {
+    robot   : _icon("robot"),
     logo    : _icon("logo"),
     about   : _icon("about"),
     refresh : _icon("refresh"),
-    quit    : _icon("quit")
+    quit    : _icon("quit"),
+    fail    : _icon("fail"),
+    cog     : _icon("cog"),
+    debug   : _icon("debug"),
 }
 
 exports.loadAndStart = (app)=>{

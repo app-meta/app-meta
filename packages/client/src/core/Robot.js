@@ -5,7 +5,7 @@
  *
  * 网页机器人执行工具
  */
-const { BrowserWindow } = require("electron")
+const { BrowserWindow, Menu } = require("electron")
 const Mustache = require('mustache')
 
 const { preload } = require(".")
@@ -15,8 +15,7 @@ const C = require("../Config")
 const R = require("../Runtime")
 const U = require("../common/util")
 const { writeFileSync } = require("fs")
-
-// const preload   = join(__dirname, '../preload/api-robot.js')
+const { icons } = require("./App")
 
 const CODES = {
     '-1': "失败",
@@ -183,6 +182,8 @@ module.exports = class {
 
                 return {action: 'deny'}
             })
+
+            this.#buildMenu()
         }
     }
 
@@ -190,6 +191,7 @@ module.exports = class {
     * 任务结束时的后续操作
     */
     onComplete() {
+        this.window.setMenu(null)
         this.window = null
         this.complete = true
         this.endOn = Date.now()
@@ -219,7 +221,7 @@ module.exports = class {
             this.log(`任务${CODES[p]}, ${C.rpa.closeDelay} 秒后关闭窗口...`)
 
             let snapshot = this.bean.snapshot ?? false
-            logger.debug(`${this.uuid} 任务窗口即将关闭(snapshot=${snapshot})...`)
+            R.isDev && logger.debug(`${this.uuid} 任务窗口即将关闭(snapshot=${snapshot})...`)
             if(snapshot){
                 //截图到附件目录
                 this.window.capturePage().then(image=>{
@@ -286,6 +288,46 @@ module.exports = class {
         )
     }
 
+    #buildMenu (){
+        let scripts = [
+            { id:1, name:"模拟机器人A", code:`META.log("来自机器人的日志 "+Date.now())` },
+            { id:2, name:"模拟机器人B", code:`console.debug("这是一个手动出发的脚本代码😄")` },
+            { id:3, name:"模拟机器人C", code:``, enabled: false },
+        ]
+
+        let menu = Menu.buildFromTemplate([
+            {
+                label:"执行RPA机器人",
+                // sublabel:'仅显示匹配当前任务URL的机器人脚本',
+                icon: icons.refresh,
+                submenu: scripts.map(s=>({
+                    label: s.name,
+                    enabled: s.enabled != false,
+                    click: ()=> this.#execJavaScript(s.code)
+                }))
+            },
+            { type:'separator' },
+            {
+                label: "操作",
+                icon: icons.cog,
+                submenu:[
+                    { label:"重新加载", role:'reload' },
+                    {
+                        label:"情况脚本数据缓存",
+                        click:()=>{
+                            this.caches = {}
+                            this.log(`用户清空数据缓存...`)
+                        }
+                    },
+                    { type:'separator'},
+                    //使用 role:"close" 或者 this.window.close() 都会导致全部窗口关闭😶
+                    { label:"关闭窗口", click:()=> this.window.destroy() }
+                ]
+            }
+        ])
+        this.window.setMenu(menu)
+    }
+
     // ===============================================================================================================
     // START 任务脚本注入相关
     // ===============================================================================================================
@@ -295,9 +337,6 @@ module.exports = class {
             return this.log(`window 对象为空或者无效窗口，无法执行脚本： ${script}`)
 
         this.window.webContents.executeJavaScript(script, true)
-            // .then(result=>{
-            //     this.log(`执行${category}脚本成功：${result}`)
-            // })
             .catch(e=>{
                 this.log(`执行脚本失败：${e.message}`)
                 R.verbose && logger.error(`机器人 #${this.getUUID()} 执行脚本出错`, e)
@@ -313,7 +352,7 @@ module.exports = class {
         let script = this.#buildScript()
 
         if(script){
-            logger.debug(`开始执行任务脚本（len=${script.length}）...`)
+            R.isDev && logger.debug(`开始执行任务脚本（len=${script.length}）...`)
             // if(R.isDev) console.debug(script)
             this.window.webContents.executeJavaScript(script, true)
                 .then(result =>{

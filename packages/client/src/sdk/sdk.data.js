@@ -5,17 +5,72 @@ const { getWindowId } = require("./tool")
 const { verbose } = require("../Runtime")
 const logger = require("../common/logger")
 
-const _buildMatchModel = (modelOrId, pid)=>{
-    let model = { }
-    if(typeof(modelOrId) !== 'object')
-        model.id = modelOrId
-    else{
-        ["pid", "uid", "timeFrom", "timeEnd"].forEach(k=> { if(k in modelOrId) model[k] = modelOrId[k] })
-        if(!!pid)   model['pid'] = pid
+/**
+ * 详见 packages\library\module\data.js
+ *
+ * @typedef {Object} MatchItem
+ * @property {String} field - 字段名称
+ * @property {String} op - 查询类型（详见下方说明）
+ * @property {*} value
+ *
+ * @typedef {Object} DataOption
+ * @property {String} aid - 应用ID
+ * @property {Number|String} pid - 页面ID
+ * @property {String} id - 对象ID，通常是数据行ID
+ * @property {String} uid - 限定用户ID
+ * @property {Number} page - 👉查询用👈 分页
+ * @property {Number} pageSize - 👉查询用👈 每页显示的数据量
+ * @property {Array<MatchItem>} match - 👉查询用👈 筛选数组
+ * @property {String} timeFrom - 👉查询用👈 筛选开始时间
+ * @property {String} timeEnd - 👉查询用👈 筛选结束时间
+ *
+ * 筛选条件中的 op 可选值：
+ *  const operations = [
+        { label:"等于", value:"EQ" },
+        { label:"包含", value:"LIKE" },
+        { label:"小于", value:"LT" },
+        { label:"不大于", value:"LTE" },
+        { label:"大于", value:"GT" },
+        { label:"不小于", value:"GTE" },
+        { label:"不等于", value:"NE" },
+        { label:"在", value:"IN" },
+        { label:"不在", value:"NIN" }
+    ]
+ */
 
-        modelOrId.match && (model.match = Array.isArray(modelOrId.match)? modelOrId.match : [modelOrId.match])
+// const _buildMatchModel = (modelOrId, pid)=>{
+//     let model = { }
+//     if(typeof(modelOrId) !== 'object')
+//         model.id = modelOrId
+//     else{
+//         ["pid", "uid", "timeFrom", "timeEnd"].forEach(k=> { if(k in modelOrId) model[k] = modelOrId[k] })
+//         if(!!pid)   model['pid'] = pid
+
+//         modelOrId.match && (model.match = Array.isArray(modelOrId.match)? modelOrId.match : [modelOrId.match])
+//     }
+//     return model
+// }
+/**
+ *
+ * @param {String|DataOption} opt
+ * @returns {DataOption}
+ */
+const _buildMatchModel = opt =>{
+    let m = typeof(opt)=='string'? { aid: opt } : { aid: opt.aid }
+
+    if(!!opt.id){
+        m.id = opt.id
     }
-    return model
+    else{
+        if(opt.pid)         m.pid = opt.pid
+        if(opt.uid)         m.uid = opt.uid
+        if(opt.timeFrom)    m.timeFrom = opt.timeFrom
+        if(opt.timeEnd)     m.timeEnd = opt.timeEnd
+
+        opt.match && (m.match = Array.isArray(opt.match)? opt.match : [opt.match])
+    }
+
+    return m
 }
 
 const buildServiceUrl = (path, aid)=> `/service/${aid}/${path.startsWith("/")?path.substr(1):path}`
@@ -50,15 +105,25 @@ const withRobot = (e, handler)=>{
 module.exports = {
     /**
      * 插入数据，不支持批次功能
-     * @param {*} e
-     * @param {*} rows
-     * @param {*} specialPid
+     *
+     * @typedef {Object} InsertOption - 插入选项
+     * @property {Number} pid - 指定 pid
+     * @property {String} batch - 批次号
+     * @property {String} origin - 源头
+     *
+     * @param {IpcRendererEvent} e
+     * @param {Array|Object} rows
+     * @param {InsertOption} option
      * @returns
      */
-    'data.insert': (e, rows, specialPid)=>withRobot(e, (aid, pid)=>{
-        let model = { aid , pid: specialPid || pid }
+    'data.insert': (e, rows, option)=>withRobot(e, (aid, pid)=>{
+        let model = { aid , pid: option.pid || pid }
         let isBatch = Array.isArray(rows)
         model[isBatch?"objs":"obj"] = rows
+        if(option.batch)
+            model.batch = option.batch
+        if(option.origin)
+            model.origin = option.origin
 
         return RESULT("/data/create", model)
     }),
@@ -71,7 +136,13 @@ module.exports = {
      */
     'data.query': (e,modelOrId)=> withRobot(e, (aid, pid)=>{
         let model = _buildMatchModel(modelOrId, pid)
-        model.aid = aid
+        if(!model.aid)
+            model.aid = aid
+
+        // 对于查询，还可以定义更多的限定（如分页）
+        if(typeof(opt) == 'object')
+            ["page", "pageSize", "desc"].forEach(k=> { if(k in opt) model[k] = opt[k] })
+
         return RESULT("/data/query", model)
     }),
 

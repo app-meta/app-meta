@@ -27,7 +27,7 @@
     import { RouterLink, useRouter } from "vue-router"
     import {
         Home, Cog, Cogs, Wrench, Database, ShieldAlt, Parking,GlobeAsia, Icons, ChartPie, UserShield, AppStore, AppStoreIos, InfoCircle, Html5, Bullhorn,
-        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit, Download, Link
+        Star, Users, Sitemap, TachometerAlt, Server, IdCard ,Code, UserCircle, Edit, Download, Link, Bug
     } from "@vicons/fa"
 
     import Banner from "@CC/Banner.vue"
@@ -37,6 +37,7 @@
 
     import LocalDev from "./widget/dev.local.vue"
     import ServiceMapping from "./widget/dev.service-mapping.vue"
+    import WebPageDebug from "./widget/dev.web-debug.vue"
 
     import { hasAnyRole, isAdminOr } from "@S/Auth"
 
@@ -45,6 +46,7 @@
 
     const router = useRouter()
 
+    const maskClosable = false
     const headerHeight = "40px"
     const inverted = computed(()=> uiSetting.darkNav)      //反转头部导航
     const inited = ref(false)
@@ -125,6 +127,8 @@
             items.push({ type:"divider"})
             items.push({ label:"访问本地前端项目", key:"dev-h5", icon: UI.buildIcon2(Html5) })
             items.push({ label:"配置 SERVICE 映射", key:"dev-mapping", icon: UI.buildIcon2(Link)})
+            if(Config.isClient)
+                items.push({ label:"打开网页调试", key:"dev-debug", icon: UI.buildIcon2(Bug)})
         }
 
         items.push({ type:"divider"})
@@ -135,8 +139,9 @@
     }
 
     const otherMenuHandlers = {
-        'dev-h5'            : ()=> M.dialog({title:`访问本地前端项目`, showIcon:false, content:()=> h(LocalDev), style:{width:"640px"}}),
-        'dev-mapping'       : ()=> M.dialog({title:`配置 SERVICE 映射`, showIcon:false, content:()=> h(ServiceMapping), style:{width:"820px"}}),
+        'dev-h5'            : ()=> M.dialog({title:`访问本地前端项目`, showIcon:false, maskClosable, content:()=> h(LocalDev), style:{width:"640px"}}),
+        'dev-mapping'       : ()=> M.dialog({title:`配置 SERVICE 映射`, showIcon:false, maskClosable, content:()=> h(ServiceMapping), style:{width:"820px"}}),
+        'dev-debug'         : ()=> M.dialog({title:`客户端网页调试工具`, showIcon:false, maskClosable, content:()=> h(WebPageDebug)}),
         'home-custom'       : ()=> H.openUrl(router.resolve({name:`home-custom`}).href, { center: true }),
         'download-client'   : ()=> M.confirm(
             `下载平台客户端程序包`,

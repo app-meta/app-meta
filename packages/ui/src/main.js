@@ -135,6 +135,8 @@ let router = BuildRouter(
             { path: '/dbm/log/:id', name: 'dbm-log', meta:{}, component: () => import('@V/dbm/操作日志.vue') },
 
             { path: '/home/custom', name: 'home-custom', meta:{}, component: () => import('@V/首页/自助配置.vue') },
+
+            { path: '/client-input', name: 'client-input', meta:{}, component: () => import('@V/客户端/输入框.vue') },
         ],
         blankRoutes
     }

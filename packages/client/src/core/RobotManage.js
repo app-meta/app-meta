@@ -1,15 +1,16 @@
 const { versions } = require("process")
-const { BrowserWindow } = require("electron")
+const { BrowserWindow, Menu } = require("electron")
 const C = require("../Config")
 const R = require("../Runtime")
 const logger = require("../common/logger")
-const { notice } = require("../service/notice")
-const { iconPath } = require("./App")
+const { notice, fail } = require("../service/notice")
+const { iconPath, icons } = require("./App")
 const ScriptRobot = require("./Robot")
 const { callServer } = require("../service/Http")
 const { broadcastAll } = require("../service/Global")
 const { preload } = require(".")
 const { buildRemoteUrl } = require("../service/Helper")
+const { inputDialog, inputTypes } = require("../components/InputDialog")
 
 const PAGE = "page"
 
@@ -79,7 +80,7 @@ module.exports = {
         setTimeout(()=>{
             if(robot.startOn > 0){
                 workers.push(robot)
-                logger.debug(`Robot#${robot.getUUID()} 加入队列...`)
+                R.isDev && logger.debug(`Robot#${robot.getUUID()} 加入队列...`)
                 // 统计执行次数
                 config.reportLaunch && callServer("/app/launch", {aid: robot.aid, pid:robot.pid}).catch(e=> logger.error(`调用 /app/launch 接口失败`, e))
 
@@ -92,7 +93,7 @@ module.exports = {
                     let index = workers.findIndex(w=>w.uuid == uuid)
                     if(index>=0){
                         workers.splice(index, 1)
-                        logger.debug(`Robot#${uuid} 从队列中移除...`)
+                        R.isDev && logger.debug(`Robot#${uuid} 从队列中移除...`)
 
                         //上传机器人运行信息
                         let d = {
@@ -110,7 +111,7 @@ module.exports = {
                         }
 
                         config.reportLaunch && callServer("/page/robot/save", d)
-                            .then(v=> logger.debug(`保存 ROBOT 运行信息（返回ID=${v.data}）`))
+                            .then(v=> logger.info(`保存 ROBOT 运行信息（返回ID=${v.data}）`))
                             .catch(e=> logger.error(`保存 ROBOT 运行信息出错`, e))
 
                         //广播事件
@@ -227,38 +228,61 @@ module.exports = {
         })
         window.on('closed', ()=> {
             R.isDev && logger.debug(`关闭调试窗口#${window.id}`)
-            delete window
+            if(!!window) {
+                window.setMenu(null)
+                delete window
+            }
         })
+
+        // if(debuger == 'vConsole'){
+        //     // 注入 vConsole
+        //     window.webContents.executeJavaScript(`
+        //         const script = document.createElement('script');
+        //         script.src = '${scriptUrl}';//'https://unpkg.com/vconsole@latest/dist/vconsole.min.js';
+        //         script.onload = () => new window.VConsole();
+        //         document.body.appendChild(script);
+        //     `)
+        // }
+        // else{
+        //     // 注入 Eruda
+        //     window.webContents.executeJavaScript(`
+        //         const script = document.createElement('script');
+        //         script.src = '${scriptUrl}';//'https://cdn.jsdelivr.net/npm/eruda';
+        //         script.onload = () => eruda.init();
+        //         document.body.appendChild(script);
+        //     `);
+        // }
+        let scripts = [`const script = document.createElement('script');`]
+        scripts.push(`script.src = '${debuger.url || buildRemoteUrl(`/static/tools/${debuger.name}.js`)}';`)
+        scripts.push(`script.onload = () => { ${debuger.code||""} }`)   //`${debuger=='vConsole'?"new window.VConsole()":"eruda.init()"};`
+        scripts.push(`document.body.appendChild(script);`)
+        let script = scripts.join("\n")
+
+        const click = ()=>window.webContents.executeJavaScript(script, true).catch(e=>logger.error(`注入调试工具：${e.message}`))
+
+        const menu = Menu.buildFromTemplate([
+            {
+                label   : `手动注入 ${debuger.name} 调试工具`,
+                icon    : icons.debug,
+                click
+            },
+            {
+                label   :"执行自定义脚本",
+                click: async ()=> {
+                    let code = await inputDialog("请输入代码", inputTypes.CODE)
+                    R.isDev && logger.debug(`执行用户输入代码`, code)
+                    window.webContents.executeJavaScript(code, true).catch(e=>{
+                        logger.error(`代码执行失败：${e.message}`)
+                        fail(e.message, `代码执行失败`)
+                    })
+                }
+            }
+        ])
+        window.setMenu(menu)
+
         window.webContents.on('dom-ready', () => {
             R.isDev && logger.debug(`页面加载完成，即将注入调试工具 ${debuger.name}...`)
-
-            let scriptUrl = debuger.url || buildRemoteUrl(`/static/tools/${debuger.name}.js`)
-
-            let scripts = [`const script = document.createElement('script');`]
-            scripts.push(`script.src = '${scriptUrl}';`)
-            scripts.push(`script.onload = () => { ${debuger.code||""} }`)   //`${debuger=='vConsole'?"new window.VConsole()":"eruda.init()"};`
-            scripts.push(`document.body.appendChild(script);`)
-
-            window.webContents.executeJavaScript(scripts.join("\n"), true).catch(e=>logger.error(`注入调试工具：${e.message}`))
-
-            // if(debuger == 'vConsole'){
-            //     // 注入 vConsole
-            //     window.webContents.executeJavaScript(`
-            //         const script = document.createElement('script');
-            //         script.src = '${scriptUrl}';//'https://unpkg.com/vconsole@latest/dist/vconsole.min.js';
-            //         script.onload = () => new window.VConsole();
-            //         document.body.appendChild(script);
-            //     `)
-            // }
-            // else{
-            //     // 注入 Eruda
-            //     window.webContents.executeJavaScript(`
-            //         const script = document.createElement('script');
-            //         script.src = '${scriptUrl}';//'https://cdn.jsdelivr.net/npm/eruda';
-            //         script.onload = () => eruda.init();
-            //         document.body.appendChild(script);
-            //     `);
-            // }
+            click()
         });
         window.loadURL(url)
     }

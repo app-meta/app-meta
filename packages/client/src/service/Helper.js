@@ -23,6 +23,17 @@ exports.buildUrl = (suffix="", page="index.html")=>{
  */
 exports.buildRemoteUrl = suffix => `${C.serverHost}${C.serverContext}${suffix}`
 
+/**
+ * 构建 HTML 资源的地址（区分开发环境及生产环境）
+ * @param {String} suffix
+ */
+exports.buildHtmlUrl = suffix=>{
+    if(R.isProd)
+        return `${C.serverHost}${C.serverContext}${suffix}`
+
+    return `${process.env.HOME_PAGE}${suffix}`
+}
+
 exports.mainPreload = preload
 
 /**

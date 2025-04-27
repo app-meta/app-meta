@@ -122,7 +122,7 @@
 
     import CodeEditor from "@code.editor"
 
-    import { createRobot, getDebugers } from "."
+    import { createRobot, getDebugers, debugForUrl } from "."
 
     let { id, bean, inited, loading , updateContent } = pageEditor(createRobot, d=> JSON.parse(d), { padding: false })
     const options = [{ value:-1, label:"总不打开"}, { value:0, label:"开发时打开"}, { value:1, label:"总是打开" }]
@@ -150,13 +150,11 @@
 
         /**@type {{ url:String }} */
         let { url, windowWidth, windowHeight } = bean.value
-        if(!url || !url.startsWith("http"))
-            return M.warn(`请先填写正确的URL`)
 
-        console.debug(`即将启动页面调试 ${url}（DEBUGER=${debuger.name}）`)
         debuger.windowWidth = windowWidth
         debuger.windowHeight = windowHeight
-        META.runRobotWithDebug(url, debuger)
+
+        debugForUrl(url, debuger)
     }
 
     initCtrlAndS(toSave)

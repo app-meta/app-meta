@@ -33,3 +33,17 @@ export const getDebugers = ()=>{
         { name:"eruda", label:"Eruda", code:"eruda.init()", url: isDev?"http://localhost:3000/static/tools/eruda.js":"" }
     ]
 }
+
+/**
+ *
+ * @param {String} url
+ * @param {Object} debuger
+ * @returns
+ */
+export const debugForUrl = (url, debuger) =>{
+    if(!url || !url.startsWith("http"))
+        return M.warn(`请先填写正确的URL`)
+
+    console.debug(`即将启动页面调试 ${url}（DEBUGER=${debuger.name}）`)
+    META.runRobotWithDebug(url, debuger)
+}

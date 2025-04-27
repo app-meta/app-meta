@@ -25,6 +25,7 @@ module.exports ={
     isLinux     : process.platform === 'linux',
     mode        : process.env.NODE_ENV,
     isDev,
+    isProd      : process.env.NODE_ENV === 'production',
     verbose     : isDev,                            //是否显示详细的日志
     mainWindowID: -1,
     dataDir     : sub =>{
