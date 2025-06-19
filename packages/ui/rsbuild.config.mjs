@@ -25,16 +25,7 @@ const VERSION = (()=>{
  * 2024-11-14 更新到 rsbuild，构建时间 23s（vite 为 56s）
  */
 export default defineConfig({
-    server:{
-        base,
-        port: 3000,
-        host: "localhost",
-        proxy: { [BACKEND_CONTEXT]: BACKEND_HOST }
-    },
-    source:{
-        entry: {
-            index: './src/main.js'
-        },
+    resolve:{
         alias:{
             "@"             : "./src",
             "@V"            : "./src/views",
@@ -62,6 +53,17 @@ export default defineConfig({
             '@md.editor'    : `./src/components/markdown/${MARKDOWN}/md.editor.vue`,
             '@code.editor'  : `./src/components/code/codemirror.vue`,//代码编辑器，可选：codemirror、monaco（VsCode）
 
+        }
+    },
+    server:{
+        base,
+        port: 3000,
+        host: "localhost",
+        proxy: { [BACKEND_CONTEXT]: BACKEND_HOST }
+    },
+    source:{
+        entry: {
+            index: './src/main.js'
         },
         define:{
             "process.env.VUE_APP_CONTEXT": JSON.stringify(BACKEND_CONTEXT),

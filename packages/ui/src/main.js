@@ -124,6 +124,8 @@ let router = BuildRouter(
             //指定了具体页面ID
             // { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/View.vue') },
             { path: '/app/:aid/:pid', name: 'app-view', component: () => import('@V/快应用/ViewWithViewer.vue') },
+            //公开访问（需要配置页面完全公共）
+            { path: '/app-public/:pid', name: 'app-view-public', component: () => import('@V/快应用/ViewWithPublic.vue') },
             //未指定页面ID，在 View 视图中自定计算
             { path: '/app/:aid', name: 'app-view-index', component: () => import('@V/快应用/ViewWithViewer.vue') },
             //应用管理页面

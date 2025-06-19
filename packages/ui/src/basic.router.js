@@ -6,7 +6,7 @@ import { checkRole, tryLoginWithCAS } from "@S/Auth"
 let isProduction = process.env.NODE_ENV == 'production'
 let version = _VERSION_
 const LOGIN = "login"
-const IGNORES = [ LOGIN, 'login-cas', "app-form-designer", "logout" ]
+const IGNORES = [ LOGIN, 'login-cas', "app-form-designer", "logout", "app-view-public" ]
 
 /**
  *
@@ -62,10 +62,11 @@ export default function ( mainComponent, ps) {
     })
 
     router.beforeEach((to, from, next) => {
+        console.debug(IGNORES.includes(to.name), to.name, IGNORES)
         if ( !IGNORES.includes(to.name) && !window.TOKEN ) {
             console.debug(`检测到用户未登录，即将跳转到登录页面`)
 
-            return tryLoginWithCAS(to.fullPath) && next({ name: LOGIN })
+            // return tryLoginWithCAS(to.fullPath) && next({ name: LOGIN })
         }
         else {
             //判断权限
