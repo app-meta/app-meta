@@ -21,7 +21,10 @@
     import { useRoute, useRouter } from 'vue-router'
     import { NTag, NSwitch,NTooltip, NSpace, NButtonGroup } from 'naive-ui'
 
-    import { Plus,Trash,Check, Edit, Eye, ShieldAlt, ShieldVirus, FileWord, Download, Upload, SyncAlt, EllipsisH as Ellipsis,PlaneDeparture, CopyRegular } from '@vicons/fa'
+    import {
+        Plus,Trash,Check, Edit, Eye, ShieldAlt, ShieldVirus, FileWord, Download, Upload,
+        SyncAlt, EllipsisH as Ellipsis,PlaneDeparture, CopyRegular, History
+    } from '@vicons/fa'
 
     import { templates, findTemplate, pageManage } from "./"
     import CreatePage from "./create-page.vue"
@@ -31,6 +34,7 @@
     import DocumentManager from "./document-manage.vue"
     import Count from "@VW/count.vue"
     import AppSelector from "@VW/app.selector.vue"
+    import PageHistory from "./widget/page-launch.vue"
 
     let aid = useRoute().params.id
     const router = useRouter()
@@ -135,6 +139,8 @@
         { label:"复制编号", key:"copyId", icon:()=>UI.iconBtn(CopyRegular)},
         { label:"权限分配",icon:()=>UI.iconBtn(ShieldAlt), key:"auth", children: [{label:"访问权限",key:"serviceAuth"}, {label:"修改/维护权限",key:"editAuth"}] },
         { label:"附件管理", key:"doc", icon:()=>UI.iconBtn(FileWord) },
+        { type: "divider" },
+        { label:"查看访问记录", key:"history", icon:()=> UI.iconBtn(History)},
         { label:"导出为 JSON", key:"download", icon:()=> UI.iconBtn(Download)},
         { label:"迁移到", key:"move", icon:()=> UI.iconBtn(PlaneDeparture)},
         { type: "divider" },
@@ -252,6 +258,15 @@
                         beans.value.splice(menu.index, 1)
                     })
                 )
+                break
+            case "history":
+                M.dialog({
+                    title:`${curRow.name}/最近15天的访问统计`,
+                    showIcon:false,
+                    transformOrigin:"center",
+                    style:{width: "900px"},
+                    content: () => h(PageHistory, { pid: curRow.id, height:'400px' })
+                })
                 break
         }
         nextTick(()=> menu.show = false)

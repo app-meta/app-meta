@@ -97,7 +97,7 @@
         let keys = Object.keys(beans[0]).filter(v=>!defFields.includes(v))
         let rows = [["日期","交卷人","耗时(秒)", ...keys]]
         beans.forEach(b=> rows.push([b.date, b.user, b.used, ...keys.map(k=>b[k])]))
-        H.saveToCSV(rows, `问卷结果导出`)
+        H.io.saveToCSV(rows, `问卷结果导出`)
     }
 
     onMounted(() => {
