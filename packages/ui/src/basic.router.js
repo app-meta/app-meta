@@ -62,11 +62,10 @@ export default function ( mainComponent, ps) {
     })
 
     router.beforeEach((to, from, next) => {
-        console.debug(IGNORES.includes(to.name), to.name, IGNORES)
         if ( !IGNORES.includes(to.name) && !window.TOKEN ) {
             console.debug(`检测到用户未登录，即将跳转到登录页面`)
 
-            // return tryLoginWithCAS(to.fullPath) && next({ name: LOGIN })
+            return tryLoginWithCAS(to.fullPath) && next({ name: LOGIN })
         }
         else {
             //判断权限
