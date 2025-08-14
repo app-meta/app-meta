@@ -71,7 +71,7 @@
     const medals = ['🥇','🥈','🥉']
     const rank = (value, index)=> `${medals[index]??''} ${value}`
 
-    onMounted(() => RESULT("/app/overview", {id: props.aid}, d=>{
+    onMounted(() => RESULT("/app/overview", { aid: props.aid }, d=>{
         bean = d.data
 
         inited.value = true

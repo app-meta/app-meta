@@ -19,7 +19,7 @@
         "dayjs": "^1.11.13",
         "mustache": "^4.2.0",
         "pako": "^2.1.0",
-        "papaparse": "^5.5.2",
+        "papaparse": "^5.5.3",
         "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
     }
 }
