@@ -50,6 +50,13 @@ if(process.env.NODE_ENV==='test'){
     )
 }
 
+// 仅当开发环境才加载
+if(process.env.NODE_ENV==='development'){
+    blankRoutes.push(
+        { path: '/dev/vant-sfc', name: 'dev-vant-sfc', component: () => import('@V/@DEV/vant-sfc.vue') },
+    )
+}
+
 let router = BuildRouter(
     Main,
     {

@@ -6,7 +6,7 @@ import { checkRole, tryLoginWithCAS } from "@S/Auth"
 let isProduction = process.env.NODE_ENV == 'production'
 let version = _VERSION_
 const LOGIN = "login"
-const IGNORES = [ LOGIN, 'login-cas', "app-form-designer", "logout", "app-view-public" ]
+const IGNORES = [ LOGIN, 'login-cas', "app-form-designer", "logout", "app-view-public", "dev-vant-sfc" ]
 
 /**
  *

@@ -22,7 +22,7 @@
     const columns = [
         { title:"序号", width:55, align:"center", render:(row, i)=> i+1},
         { title:"用户ID", key:"uid" },
-        { title:"部门", width:200, key:"depart" },
+        { title:"部门", width:240, key:"depart" },
         { title:"渠道", width:100, key:"channel" },
         { title:"IP", width: 140, key:"ip" },
         { title:"访问日期",key:"addOn", render:r=>H.date.datetime(r.addOn), width:180 }
