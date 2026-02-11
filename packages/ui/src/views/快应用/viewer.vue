@@ -56,6 +56,8 @@
     import ChartRender from "./统计图表/Render.vue"
     import SFCRender from "./SFC/Render.vue"
     import H5Render from "./小程序/Render.vue"
+    import VideoRender from "./视频/Render.vue"
+
 
     import DefaultHome from "./Home.vue"
     import About from "./widget/about.vue"
@@ -88,6 +90,7 @@
             tpl=='chart'?       ChartRender:
             tpl=='sfc'?         SFCRender:
             tpl=='h5'?          H5Render:
+            tpl=='video'?       VideoRender:
             null
         if(com == null) {
             state.value = 5

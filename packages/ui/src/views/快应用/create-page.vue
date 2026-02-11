@@ -1,6 +1,6 @@
 <template>
-    <n-dropdown trigger="click" :options="options" :show-arrow="true" width="150" @select="onSelect" :render-option="render">
-        <n-button circle type="primary" size="small" secondary><template #icon><n-icon :component="Plus"/></template></n-button>
+    <n-dropdown trigger="click" :options="options" :size :show-arrow="true" width="140" @select="onSelect" :render-option="render">
+        <n-button circle type="primary" :size secondary><template #icon><n-icon :component="Plus"/></template></n-button>
     </n-dropdown>
 </template>
 
@@ -15,6 +15,8 @@
 
     const emits = defineEmits(['add'])
     const pros = defineProps({aid:{type:String}})
+
+    const size = "small"
 
     /**
      * 2023-03-31 增加分组

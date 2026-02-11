@@ -1,5 +1,5 @@
 <template>
-    <n-upload :action="context+action" class="n-upload--dragger-inside" :headers="headers" :data="data" :show-file-list="false" :accept="accept" @finish="onImportFinish" @error="onImportError" @before-upload="onBeforeUpload" :disabled="loading">
+    <n-upload :action="context+action" class="n-upload--dragger-inside" :headers="headers" :data="data" :showFileList :accept="accept" @finish="onImportFinish" @error="onImportError" @before-upload="onBeforeUpload" :disabled="loading">
         <n-spin :show="loading">
             <slot slot="default"></slot>
         </n-spin>
@@ -14,7 +14,8 @@
         action: {type:String, default:""},
         accept: {type:String, default:""},
         data: {type:Object, default:()=>{}},
-        noticeOnOk: {type:Boolean, default: true}
+        noticeOnOk: {type:Boolean, default: true},
+        showFileList: {type:Boolean, default: false}
     })
 
     let headers = { MUA: window.TOKEN }
@@ -27,7 +28,7 @@
         if(resp.success===true){
             if(props.noticeOnOk)
                 M.notice.ok(resp.data||resp.message, `文件导入成功`, file.name)
-            emits("ok", resp)
+            emits("ok", resp, file)
         }
         else
             M.notice.error(resp.message, '文件导入失败', file.name)

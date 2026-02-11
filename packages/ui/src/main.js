@@ -111,9 +111,12 @@ let router = BuildRouter(
                     { path: '/app/:aid/markdown/:id', name: 'app-page-markdown', meta:{title:"文档维护·应用页面"}, component: () => import('@V/快应用/文档页/Editor.vue') },
                     { path: '/app/:aid/table/:id', name: 'app-page-table', meta:{title:"表格维护·应用页面"  }, component: () => import('@V/快应用/数据表格/Editor.vue') },
                     { path: '/app/:aid/wenjuan/:id', name: 'app-page-wenjuan', meta:{title:"问卷维护·应用页面"  }, component: () => import('@V/快应用/问卷/Index.vue') },
+                    
                     { path: '/app/:aid/data/:id', name: 'app-page-data', meta:{title:"数据分发维护·应用页面"  }, component: () => import('@V/快应用/数据分发/Editor.vue') },
                     { path: '/app/:aid/import/:id', name: 'app-page-import', meta:{title:"数据维护·应用页面"  }, component: () => import('@V/快应用/数据维护/Editor.vue') },
                     { path: '/app/:aid/chart/:id', name: 'app-page-chart', meta:{title:"统计图表维护·应用页面"  }, component: () => import('@V/快应用/统计图表/Editor.vue') },
+                    { path: '/app/:aid/video/:id', name: 'app-page-video', meta:{title:"视频维护·应用页面"  }, component: () => import('@V/快应用/视频/Editor.vue') },
+                    
                     { path: '/app/:aid/robot/:id', name: 'app-page-robot', meta:{title:"网页机器人·应用页面"  }, component: () => import('@V/快应用/网页机器人/Editor.vue') },
                     { path: '/app/:aid/sfc/:id', name: 'app-page-sfc', meta:{title:"SFC维护·应用页面"  }, component: () => import('@V/快应用/SFC/Editor.vue') },
                     { path: '/app/:aid/h5/:id', name: 'app-page-h5', meta:{title:"小程序维护·应用页面"  }, component: () => import('@V/快应用/小程序/Editor.vue') },

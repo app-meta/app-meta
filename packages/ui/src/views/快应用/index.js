@@ -1,6 +1,9 @@
 import { ref, onMounted,onUnmounted, h } from 'vue'
 import { useRoute } from 'vue-router'
-import { Table, ChartPie, Wpforms, Html5, ListAltRegular, Database, Tools, ExclamationTriangle, Server, Robot, FileWordRegular as DOC, Vuejs, Code } from "@vicons/fa"
+import { 
+    Table, ChartPie, Wpforms, Html5, ListAltRegular, Database, Tools, ExclamationTriangle, 
+    Server, Robot, FileWordRegular as DOC, Vuejs, Code, Video
+} from "@vicons/fa"
 
 import ChooseSFCUI from './SFC/choose-sfc-ui.vue'
 
@@ -43,6 +46,7 @@ export const templates = [
     { id:"wenjuan",text:"调查问卷", theme: INPUT, icon:ListAltRegular, summary:"运用统一设计的问卷向被调查者了解情况或征询意见收集信息的调查方法"},
     { id:"table",text:"数据表格", theme: OUTPUT, icon:Table, summary:"以二维表格的形式展示数据，支持多条件筛选、自定义列"},
     { id:"chart",text:"统计图表", theme: OUTPUT, icon:ChartPie, summary:"用于制作台账、统计图等数据可视化页面"},
+    { id:"video",text:"视频页", theme: OUTPUT, icon:Video, summary:"用于播放一个视频文件"},
     { id:"robot",text:"RPA机器人", theme: MIX, icon: Robot, summary:"基于 WEB 的 RPA 机器人（主要用于数据采集，需要目标网站支持 Chrome 浏览器），需要在客户端环境下运行"},
     //SFC add on 2023-06-02
     {
