@@ -1,6 +1,6 @@
 <template>
     <n-card :title="title">
-        <n-grid :gutter="10">
+        <n-grid :gutter="10" style="width:1000px; margin:0px auto;">
             <n-grid-item :span>
                 <div ref="playerDiv" :style="style"></div>
             </n-grid-item>
@@ -9,7 +9,7 @@
                     <n-table size="small" :bordered="true" :single-line="false">
                         <tbody>
                             <tr>
-                                <td class="text-center" width="120">大小</td>
+                                <td class="text-center" width="90">大小</td>
                                 <td>{{filesize(video.size)}}</td>
                             </tr>
                             <tr>
@@ -17,8 +17,8 @@
                                 <td>{{ video.user }}</td>
                             </tr>
                             <tr>
-                                <td class="text-center">上传时间</td>
-                                <td>{{ video.time? toDate(video.time) : "" }}</td>
+                                <td class="text-center">上传于</td>
+                                <td>{{ video.addOn? toDate(video.addOn) : "" }}</td>
                             </tr>
                         </tbody>
                     </n-table>
@@ -42,6 +42,7 @@
     const props = defineProps(renderProps)
 
     const height = window.innerHeight - 160
+    const width = 640
     let player = null
 
     let title = ref(props.page.name)
@@ -53,15 +54,15 @@
     let span = ref(24)
     const playerDiv = ref()
     const style = reactive({
-        margin: "5px auto",
-        height: `${height}px`,
+        margin: "0px auto",
+        width: `${width}px`,
         overflow: "hidden"
     })
 
     onMounted(() => {
         let { ratio = 16/9, highlight = [], path, showInfo } = video
         //计算宽度
-        style.width = `${Math.floor(height * ratio)}px`
+        style.height = `${Math.floor(width / ratio)}px`
         span.value = showInfo ? 16 : 24
 
         let url = path ? window.SERVER+"/"+path : null
@@ -92,7 +93,8 @@
             fullscreen: true,           //是否在底部控制栏里显示播放器 窗口全屏 按钮
             fullscreenWeb: true,        //是否在底部控制栏里显示播放器 网页全屏 按钮
             pip: true,                  //是否在底部控制栏里显示 画中画 的开关按钮
-            theme: window.color,        //播放器主题颜色，目前用于 进度条 和 高亮元素 上
+            ////播放器主题颜色，目前用于 进度条 和 高亮元素 上
+            theme: window.color||"#ffad00",
             miniProgressBar: true,      //迷你进度条，只在播放器失去焦点后且正在播放时出现
             highlight: highlights,      //在进度条上显示高亮信息，格式为：[ { time:60, text:`前方高能` }]
             autoPlayback: true,         //是否使用自动 回放功能

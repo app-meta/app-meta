@@ -61,7 +61,7 @@ export const useUISetting = defineStore('ui', {
             //写入全局变量
             window.DARK = code
             window.OPEN_BLANK = this.openBlank
-            window.color = colors[this.color||"默认"]
+            window.color = colors[this.color] || colors["默认"]
 
             if(computeColor)
                 this.setColor()
